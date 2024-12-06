@@ -6,6 +6,16 @@ The V2X-ROS-Conversion package contains two ROS nodes origionally developed and 
 
 The core components in CARMA Messenger contains two ROS nodes origionally developed for the CARMA Platform communication stack: Message node and J2735 Convertor Node. The Message node takes in a ROS message and uses asn1c lib generated code to convert it to a binary blob and forwards it to the DSRC driver, such that any OBU/RSU can broadcast the message directly. The J2735 Converter converts the data from a ROS message based on the J2735 standard units to another message using more usable SI units and vice-versa.
 
+### Example Setup
+
+```
+# Clone repo
+git clone https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git
+
+# Build development config
+cd v2x-ros-conversion/docker
+./build-image.sh
+
 ## Contribution
 Welcome to the CARMA contributing guide. Please read this guide to learn about our development process, how to propose pull requests and improvements, and how to build and test your changes to this project. [CARMA Contributing Guide](https://github.com/usdot-fhwa-stol/CARMAPlatform/blob/develop/Contributing.md) 
 
