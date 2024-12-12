@@ -12,10 +12,10 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 ARG DOCKER_ORG="usdotfhwastoldev"
-ARG DOCKER_TAG="develop"
+ARG DOCKER_TAG="develop-humble"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
 FROM base_image as setup
-ARG GIT_BRANCH="develop" 
+ARG GIT_BRANCH="develop-humble" 
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
@@ -39,9 +39,9 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-messeng
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-COPY --from=setup /opt/carma/install_ros2 /opt/carma/install_ros2
-RUN sudo chmod -R +x /opt/carma/install_ros2
+COPY --from=setup /opt/carma/install /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "wait-for-it", "localhost:11311", "--", "roslaunch", "carma-messenger", "carma-messenger.launch"]
+CMD  [ "source", "/opt/carma/install/setup.bash", "&&", "ros2", "launch", "carma-messenger", "carma-messenger.launch.py"]
+
