@@ -16,7 +16,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(cpp_message)
 
-set(ros_environment_DIR "/usr/local/lib/cmake")
+set(ros_environment_DIR "usr/local/lib/cmake")
 
 # Declare carma package and check ROS version
 find_package(carma_cmake_common REQUIRED)
