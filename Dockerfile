@@ -1,4 +1,4 @@
-#  Copyright (C) 2018-2021 LEIDOS.
+#  Copyright (C) 2018-2024 LEIDOS.
 # 
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
@@ -44,4 +44,4 @@ RUN sudo chmod -R +x /opt/carma/install_ros2
 
 RUN pip install future
 
-CMD  [ "wait-for-it", "localhost:11311", "--", "roslaunch", "carma-messenger", "carma-messenger.launch"]
+CMD  [ "message.launch"]
