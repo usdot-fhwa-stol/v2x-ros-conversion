@@ -1,4 +1,4 @@
-# Copyright (C) 2024 LEIDOS.
+# Copyright (C) 2022 LEIDOS.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ def generate_launch_description():
             )
 
     carma_v2x_container = ComposableNodeContainer(
-        package='v2x-ros-conversion',
+        package='carma_ros2_utils',
         name='carma_v2x_container',
         executable='carma_component_container_mt',
         namespace=GetCurrentNamespace(),
@@ -82,6 +82,42 @@ def generate_launch_description():
         on_exit= Shutdown()
     )
 
+    ros2_cmd = launch.substitutions.FindExecutable(name='ros2')
+
+    process_configure_cpp_message = launch.actions.ExecuteProcess(
+        cmd=[ros2_cmd, "lifecycle", "set", "/cpp_message_node", "configure"],
+    )
+
+    process_configure_j2735_convertor = launch.actions.ExecuteProcess(
+        cmd=[ros2_cmd, "lifecycle", "set", "/j2735_convertor_node", "configure"],
+    )
+
+    configuration_trigger = launch.actions.TimerAction(
+        period=configuration_delay,
+        actions=[
+            process_configure_cpp_message,
+            process_configure_j2735_convertor
+        ]
+    )
+
+    configured_event_handler_cpp_message = launch.actions.RegisterEventHandler(launch.event_handlers.OnExecutionComplete(
+            target_action=process_configure_cpp_message,
+            on_completion=[ 
+                launch.actions.ExecuteProcess(
+                    cmd=[ros2_cmd, "lifecycle", "set", "/cpp_message_node", "activate"],
+                )
+            ]
+        )
+    )
+
+    configured_event_handler_j2735_convertor = launch.actions.RegisterEventHandler(launch.event_handlers.OnExecutionComplete(
+        target_action=process_configure_cpp_message, on_completion=[ 
+            launch.actions.ExecuteProcess(
+                cmd=[ros2_cmd, "lifecycle", "set", "/j2735_convertor_node", "activate"],
+            )
+        ])
+    )
+
     return LaunchDescription([ 
         declare_configuration_delay_arg,
         carma_v2x_container,
@@ -89,3 +125,4 @@ def generate_launch_description():
         configured_event_handler_cpp_message,
         configured_event_handler_j2735_convertor
     ]) 
+

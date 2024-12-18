@@ -19,4 +19,4 @@ cd ~/
 source /home/carma/catkin/setup.bash
 source /opt/ros/foxy/setup.bash
 ls
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --build-base ~/build_ros2 --install-base /opt/carma/install_ros2 
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --build-base ~/build --install-base /opt/carma/install

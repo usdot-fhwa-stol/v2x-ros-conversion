@@ -39,9 +39,9 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-messeng
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-COPY --from=setup /opt/carma/install_ros2 /opt/carma/install_ros2
-RUN sudo chmod -R +x /opt/carma/install_ros2
+COPY --from=setup /opt/carma/install /opt/carma/install
+RUN sudo chmod -R +x /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "message.launch"]
+CMD  [ "wait-for-it", "localhost:11311", "--", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch"]
