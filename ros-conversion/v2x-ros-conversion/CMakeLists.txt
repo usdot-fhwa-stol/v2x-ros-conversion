@@ -41,7 +41,6 @@ if(${ROS_VERSION} EQUAL 1) # ROS 1
     launch
     log-config
     scripts
-    ui
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
 
@@ -52,7 +51,7 @@ else() # ROS 2
 
 
   ament_auto_package(
-          INSTALL_TO_SHARE cpp_message j2735_convertor v2x-ros-conversion
+          INSTALL_TO_SHARE launch log-config scripts
   )
 
 endif()
