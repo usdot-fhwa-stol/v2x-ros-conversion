@@ -23,7 +23,7 @@ RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
 RUN ~/src/docker/install.sh
 
-#FROM base_image
+FROM base_image
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
@@ -39,9 +39,9 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-messeng
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-#COPY --from=setup /opt/carma/install /opt/carma/install
+COPY --from=setup /opt/carma/install /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "source", "/opt/carma/install/setup.bash"
+CMD  [ "wait-for-it", "localhost:11311", "--", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch" ]
 
