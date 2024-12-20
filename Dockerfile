@@ -44,4 +44,4 @@ RUN sudo chmod -R +x /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "wait-for-it", "localhost:11311", "--", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch"]
+CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install_ros2/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch"]
