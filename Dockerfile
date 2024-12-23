@@ -1,4 +1,4 @@
-#  Copyright (C) 2018-2021 LEIDOS.
+#  Copyright (C) 2018-2024 LEIDOS.
 # 
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
@@ -43,5 +43,5 @@ COPY --from=setup /opt/carma/install /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "wait-for-it", "localhost:11311", "--", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch" ]
+CMD  [ "wait-for-it", "localhost:11311", "--", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py" ]
 
