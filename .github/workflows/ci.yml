@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - develop
+      - develop-foxy
       - master
       - "release/*"
   pull_request:
