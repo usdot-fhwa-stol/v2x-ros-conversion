@@ -33,7 +33,8 @@ jobs:
         with:
           context: .
           pull: true
-          tags: ${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}/v2x-ros-conversion:${{ needs.determine_docker_org_and_tag.outputs.docker_image_tag }}
+          push: false
+          tags: ${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}/v2x-ros-conversion:develop
           build-args: |
             DOCKER_ORG=${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}
-            DOCKER_TAG=develop
+            DOCKER_TAG=develop-humble
