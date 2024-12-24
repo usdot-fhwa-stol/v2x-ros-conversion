@@ -40,7 +40,7 @@ jobs:
       - name: Build and Push v2x-ros-conversion Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./carma-messenger-ui/
+          context: .
           push: true
           tags: usdotfhwastoldev/v2x-ros-conversion:${{ github.ref_name }}
           build-args: |
