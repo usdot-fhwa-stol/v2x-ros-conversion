@@ -6,6 +6,7 @@
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/usdotfhwastoldev/v2x-ros-conversion)
 
 # v2x-ros-conversion
+The V2X-ROS-Conversion package contains two ROS nodes that converts a ROS message to a binary message that can be forwarded to a OBU/RSU to broadcast the message. This package uses ROS2 Humble.
 
 ## Architecture
 
