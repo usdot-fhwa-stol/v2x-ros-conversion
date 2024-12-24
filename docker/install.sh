@@ -16,6 +16,6 @@
 
 # Build ros2
 cd ~/
-#source /home/carma/catkin/setup.bash
+source /home/carma/catkin/setup.bash
 source /opt/ros/humble/setup.bash
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --install-base /opt/carma/install
