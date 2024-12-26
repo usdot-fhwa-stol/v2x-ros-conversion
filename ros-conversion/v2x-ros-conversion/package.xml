@@ -21,9 +21,8 @@
 
   <maintainer email="carma@dot.gov">carma</maintainer>
 
-  <license>Apache 2.0</license>
+  <license>Apache 2.0</license>       
 
-  <!-- TODO once all of carma-messenger is converted to ROS2 add actual exec dependencies to package.xml -->
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
   <build_depend>carma_cmake_common</build_depend>

@@ -21,6 +21,9 @@ RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
+RUN ~/src/docker/install_dependencies.sh
+
+
 RUN ~/src/docker/install.sh
 
 FROM base_image
