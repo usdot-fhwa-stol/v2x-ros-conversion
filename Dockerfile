@@ -11,6 +11,8 @@
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under
 #  the License.
+#ARG UBUNTU_VERSION=jammy-20230126
+
 ARG DOCKER_ORG="usdotfhwastoldev"
 ARG DOCKER_TAG="develop"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image

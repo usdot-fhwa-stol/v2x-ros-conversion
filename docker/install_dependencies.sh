@@ -7,6 +7,11 @@ set -e
 . /etc/lsb-release
 
 # add the STOL APT repository
-echo "deb [trusted=yes] http://s3.amazonaws.com/stol-apt-repository ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/stol-apt-repository.list
+echo "deb [trusted=yes] http://s3.amazonaws.com/stol-apt-repository focal main" | sudo tee /etc/apt/sources.list.d/stol-apt-repository.list
+
+#${DISTRIB_CODENAME}
 
 sudo apt-get update
+
+# install all things needed for deployment, always done
+sudo apt-get install -y carma-j2735-1
