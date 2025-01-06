@@ -1,10 +1,10 @@
 # v2x-ros-conversion
 
-The V2X-ROS-Conversion package contains two ROS nodes: Message node and J2735 Convertor Node, both work in tandem to convert a ROS message to a J2735 message with SI units. 
+The V2X-ROS-Conversion package contains two ROS nodes that converts a ROS message to a binary message that can be forwarded to a OBU/RSU to broadcast the message. This package uses ROS2 Humble.
 
 ## Architecture
 
- The Message node takes in a ROS message and uses asn1c lib generated code to convert it to a binary blob and forwards it to the DSRC driver, such that any OBU/RSU can broadcast the message directly. The J2735 Converter converts the data from a ROS message based on the J2735 standard units to another message using more usable SI units and vice-versa.
+The core components in CARMA Messenger contains two ROS nodes: Message node and J2735 Convertor Node. The Message node takes in a ROS message and uses asn1c lib generated code to convert it to a binary blob and forwards it to the DSRC driver, such that any OBU/RSU can broadcast the message directly. The J2735 Converter converts the data from a ROS message based on the J2735 standard units to another message using more usable SI units and vice-versa.
 
 ### Example Setup
 

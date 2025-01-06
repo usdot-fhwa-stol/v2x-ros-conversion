@@ -1,5 +1,5 @@
 
-# Copyright (C) 2022-2024 LEIDOS.
+# Copyright (C) 2022-2023 LEIDOS.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -16,14 +16,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(cpp_message)
 
-set(ros_environment_DIR "/usr/local/lib/cmake")
+set(ros_environment_DIR "usr/local/lib/cmake")
 
 # Declare carma package and check ROS version
 find_package(carma_cmake_common REQUIRED)
-#find_package(asn1c REQUIRED)
-
-list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake")
-find_package(carma_j2735 REQUIRED)
+find_package(asn1c REQUIRED)
 
 carma_check_ros_version(2)
 carma_package()
@@ -39,9 +36,7 @@ set(node_lib cpp_message_node)
 # Includes
 include_directories(
 	include
-)
-link_directories(
-        /opt/carma/lib
+	include/generated       
 )
 
 ament_export_include_directories(include)
@@ -63,24 +58,16 @@ ament_auto_add_library(${node_lib} SHARED
         )
 
 
-# add_library(testlib SHARED IMPORTED)
+add_library(testlib SHARED IMPORTED)
 
-# # Following is asn1c library install path outside the container, which is usually fixed as /opt/carma/install/
-# set(ASN1C_INSTALL_PATH ${asn1c_DIR}/../../../)
+# Following is asn1c library install path outside the container, which is usually fixed as /opt/carma/install/
+set(ASN1C_INSTALL_PATH ${asn1c_DIR}/../../../)
 
-# set_target_properties(testlib PROPERTIES
-#   IMPORTED_LOCATION ${ASN1C_INSTALL_PATH}/lib/libasn1c.so
-# )
+set_target_properties(testlib PROPERTIES
+  IMPORTED_LOCATION ${ASN1C_INSTALL_PATH}/lib/libasn1c.so
+)
 
-# target_link_libraries(${node_lib} testlib)
-
-target_link_libraries(${node_lib} ::carma_j2735)
-target_include_directories(${node_lib}
-        PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                $<INSTALL_INTERFACE:include>
-                /opt/carma/include/carma_j2735
-)                       
+target_link_libraries(${node_lib} testlib)
 
 ament_auto_add_executable(${node_exec} 
         src/main.cpp 
