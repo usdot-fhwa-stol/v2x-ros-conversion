@@ -32,8 +32,6 @@ jobs:
         TERM: xterm
       options: "--user root"
     steps:
-      name: Install carma-j2735 package from STOL APT repo
-      run: docker/install_dependencies.sh
     - name: Checkout ${{ github.event.repository.name }}
       uses: actions/checkout@v4
       with:
@@ -49,6 +47,8 @@ jobs:
         else
           echo git_branch="$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
         fi
+    - name: Install carma-j2735 package from STOL APT repo
+      run: ./src/${{ github.event.repository.name }}/docker/install_dependencies.sh
     - name: Checkout dependencies
       run: |
         source "$INIT_ENV"
