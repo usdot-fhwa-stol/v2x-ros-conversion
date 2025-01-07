@@ -20,7 +20,6 @@ set(ros_environment_DIR "/usr/local/lib/cmake")
 
 # Declare carma package and check ROS version
 find_package(carma_cmake_common REQUIRED)
-#find_package(asn1c REQUIRED)
 
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake")
 find_package(carma_j2735 REQUIRED)
