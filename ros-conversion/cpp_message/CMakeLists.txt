@@ -1,5 +1,5 @@
 
-# Copyright (C) 2022-2024 LEIDOS.
+# Copyright (C) 2022-2023 LEIDOS.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -16,12 +16,12 @@
 cmake_minimum_required(VERSION 3.5)
 project(cpp_message)
 
-set(ros_environment_DIR "/usr/local/lib/cmake")
-
 # Declare carma package and check ROS version
 find_package(carma_cmake_common REQUIRED)
 
-list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake")
+# STOL Debian package CMake install path
+list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
+
 find_package(carma_j2735 REQUIRED)
 
 carma_check_ros_version(2)
@@ -62,25 +62,14 @@ ament_auto_add_library(${node_lib} SHARED
         )
 
 
-# add_library(testlib SHARED IMPORTED)
-
-# # Following is asn1c library install path outside the container, which is usually fixed as /opt/carma/install/
-# set(ASN1C_INSTALL_PATH ${asn1c_DIR}/../../../)
-
-# set_target_properties(testlib PROPERTIES
-#   IMPORTED_LOCATION ${ASN1C_INSTALL_PATH}/lib/libasn1c.so
-# )
-
-# target_link_libraries(${node_lib} testlib)
-
 target_link_libraries(${node_lib} ::carma_j2735)
 target_include_directories(${node_lib}
         PUBLIC
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>
                 /opt/carma/include/carma_j2735
-)                       
-
+                )
+                
 ament_auto_add_executable(${node_exec} 
         src/main.cpp 
 )
@@ -90,14 +79,17 @@ rclcpp_components_register_nodes(${node_lib} "cpp_message::Node")
 
 # All locally created targets will need to be manually linked
 # ament auto will handle linking of external dependencies
-target_link_libraries(${node_exec}
-        ${node_lib}
-)
-
-# Testing
+target_link_libraries(${node_exec} ${node_lib})
+target_include_directories(${node_exec}
+        PUBLIC
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                $<INSTALL_INTERFACE:include>)
+# # Testing
 if(BUILD_TESTING)  
 
   find_package(ament_lint_auto REQUIRED)
+  find_package(carma_j2735 REQUIRED)
+
   ament_lint_auto_find_test_dependencies() # This populates the ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} variable
 
   ament_add_gtest(test_cpp_message_node 
@@ -116,9 +108,18 @@ if(BUILD_TESTING)
                         test/test_SDSM.cpp
                         )
 
-  ament_target_dependencies(test_cpp_message_node ${${PROJECT_NAME}_FOUND_TEST_DEPENDS})
+  ament_target_dependencies(test_cpp_message_node ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} )
+
+  link_directories(/opt/carma/lib)
 
   target_link_libraries(test_cpp_message_node ${node_lib})
+  target_link_libraries(test_cpp_message_node ::carma_j2735)
+
+  target_include_directories(test_cpp_message_node
+        PUBLIC
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                $<INSTALL_INTERFACE:include>
+                )
 
 endif()
 
