@@ -2,7 +2,7 @@ services:
   v2x-ros-conversion:
     build: 
       context: ..
-      dockerfile: .devcontainer/Dockerfile.builder
+      dockerfile: Dockerfile
     container_name: v2x_ros_conversion
     network_mode: host
     volumes:

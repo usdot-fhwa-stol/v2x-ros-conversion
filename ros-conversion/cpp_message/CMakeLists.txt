@@ -21,6 +21,7 @@ find_package(carma_cmake_common REQUIRED)
 
 # STOL Debian package CMake install path
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
+set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 
 find_package(carma_j2735 REQUIRED)
 
@@ -69,9 +70,9 @@ target_include_directories(${node_lib}
                 $<INSTALL_INTERFACE:include>
                 /opt/carma/include/carma_j2735
                 )
-                
-ament_auto_add_executable(${node_exec} 
-        src/main.cpp 
+
+ament_auto_add_executable(${node_exec}
+        src/main.cpp
 )
 
 # Register component
@@ -85,14 +86,13 @@ target_include_directories(${node_exec}
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>)
 # # Testing
-if(BUILD_TESTING)  
+if(BUILD_TESTING)
 
   find_package(ament_lint_auto REQUIRED)
-  find_package(carma_j2735 REQUIRED)
 
   ament_lint_auto_find_test_dependencies() # This populates the ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} variable
 
-  ament_add_gtest(test_cpp_message_node 
+  ament_add_gtest(test_cpp_message_node
                         test/test_MobilityOperations.cpp
                         test/test_EmergencyVehicleAck.cpp
                         test/test_EmergencyVehicleResponse.cpp
@@ -110,11 +110,7 @@ if(BUILD_TESTING)
 
   ament_target_dependencies(test_cpp_message_node ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} )
 
-  link_directories(/opt/carma/lib)
-
   target_link_libraries(test_cpp_message_node ${node_lib})
-  target_link_libraries(test_cpp_message_node ::carma_j2735)
-
   target_include_directories(test_cpp_message_node
         PUBLIC
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -22,8 +22,8 @@ RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
-RUN ~/src/docker/install_dependencies.sh
-
+ADD docker/install_dependencies.sh /usr/local/bin/
+RUN /usr/local/bin/install_dependencies.sh
 
 RUN ~/src/docker/install.sh
 
@@ -42,6 +42,10 @@ LABEL org.label-schema.url="https://highways.dot.gov/research/research-programs/
 LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-messenger"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
+
+ADD docker/install_dependencies.sh /usr/local/bin/
+RUN /usr/local/bin/install_dependencies.sh
+
 
 COPY --from=setup /opt/carma/install /opt/carma/install
 RUN sudo chmod -R +x /opt/carma/install
