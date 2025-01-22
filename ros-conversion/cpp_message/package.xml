@@ -29,6 +29,7 @@
   <depend>rclcpp</depend>
   <depend>carma_ros2_utils</depend>
   <depend>rclcpp_components</depend>
+  <depend>class_loader</depend>
 
   <depend>carma_j2735</depend>
 

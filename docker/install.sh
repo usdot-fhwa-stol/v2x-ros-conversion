@@ -15,8 +15,14 @@
 #  the License.
 
 # Build ros2
+
 cd ~/
+rm -rf src/build src/install src/log
+
 source /home/carma/catkin/setup.bash
 source /opt/ros/foxy/setup.bash
-ls
+
+source /home/carma/.base-image/ros2_msgs_ws/install/setup.bash
+
+
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --build-base ~/build --install-base /opt/carma/install

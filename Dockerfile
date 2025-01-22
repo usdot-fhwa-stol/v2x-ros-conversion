@@ -17,17 +17,14 @@ ARG DOCKER_TAG="develop"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
 FROM base_image as setup
 ARG GIT_BRANCH="develop" 
+ENV LD_LIBRARY_PATH="/opt/ros/foxy/lib:${LD_LIBRARY_PATH}"
 
-RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
-ADD docker/install_dependencies.sh /usr/local/bin/
-RUN /usr/local/bin/install_dependencies.sh
+RUN ~/src/docker/install_dependencies.sh
 
 RUN ~/src/docker/install.sh
-
-FROM base_image
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
@@ -43,13 +40,8 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-messeng
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-ADD docker/install_dependencies.sh /usr/local/bin/
-RUN /usr/local/bin/install_dependencies.sh
-
-
-COPY --from=setup /opt/carma/install /opt/carma/install
 RUN sudo chmod -R +x /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install_ros2/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py"]
+CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py"]

@@ -63,6 +63,13 @@ ament_auto_add_library(${node_lib} SHARED
         )
 
 
+ament_target_dependencies(${node_lib}
+        rclcpp
+        rclcpp_components
+        class_loader
+        )
+
+
 target_link_libraries(${node_lib} ::carma_j2735)
 target_include_directories(${node_lib}
         PUBLIC
@@ -116,6 +123,8 @@ if(BUILD_TESTING)
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>
                 )
+  set_tests_properties(test_cpp_message_node PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=/opt/carma/lib:$ENV{LD_LIBRARY_PATH}")
+
 
 endif()
 
