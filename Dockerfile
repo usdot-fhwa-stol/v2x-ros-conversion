@@ -15,16 +15,19 @@
 ARG DOCKER_ORG="usdotfhwastoldev"
 ARG DOCKER_TAG="develop"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
+COPY --chown=carma . /home/carma/src/
+
+RUN ~/src/docker/install_dependencies.sh
+
 FROM base_image as setup
 ARG GIT_BRANCH="develop" 
 ENV LD_LIBRARY_PATH="/opt/ros/foxy/lib:${LD_LIBRARY_PATH}"
 
-COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
-RUN ~/src/docker/install_dependencies.sh
-
 RUN ~/src/docker/install.sh
+
+RUN rm -rf /home/carma/src/
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
