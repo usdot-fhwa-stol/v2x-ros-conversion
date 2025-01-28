@@ -15,11 +15,9 @@ cmake_minimum_required(VERSION 3.5)
 project(v2x-ros-conversion)
 
 find_package(carma_cmake_common REQUIRED)
+carma_check_ros_version(2)
 carma_package()
 
-find_package(ros_environment REQUIRED)
-
-set(ROS_VERSION $ENV{ROS_VERSION})
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
