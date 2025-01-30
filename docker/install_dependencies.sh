@@ -1,5 +1,5 @@
 #!/bin/sh
-#  Copyright (C) 2018-2025 LEIDOS.
+#  Copyright (C) 2025 LEIDOS.
 # 
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
@@ -25,4 +25,4 @@ echo "deb [trusted=yes] http://s3.amazonaws.com/stol-apt-repository ${DISTRIB_CO
 sudo apt-get update
 
 # install carma-j2735 library for encoding/decoding of messages
-sudo apt-get install -y carma-j2735-1
+sudo apt-get install -y stol-j2735-1
