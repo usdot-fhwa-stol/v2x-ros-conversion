@@ -24,8 +24,10 @@
   <license>Apache 2.0</license>
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
-
   <build_depend>carma_cmake_common</build_depend>
+
+  <depend>cpp_message</depend>
+  <depend>j2735_convertor</depend>
 
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
