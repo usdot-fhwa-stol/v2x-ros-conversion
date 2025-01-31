@@ -23,7 +23,7 @@ find_package(carma_cmake_common REQUIRED)
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
 set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 
-find_package(stol_j2735 REQUIRED)
+find_package(stol-j2735 REQUIRED)
 
 carma_check_ros_version(2)
 carma_package()
@@ -70,12 +70,12 @@ ament_target_dependencies(${node_lib}
         )
 
 
-target_link_libraries(${node_lib} ::carma_j2735)
+target_link_libraries(${node_lib} ::stol-j2735)
 target_include_directories(${node_lib}
         PUBLIC
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>
-                /opt/carma/include/stol_j2735
+                /opt/carma/include/stol-j2735
                 )
 
 ament_auto_add_executable(${node_exec}
