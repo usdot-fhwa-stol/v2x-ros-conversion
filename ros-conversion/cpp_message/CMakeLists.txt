@@ -123,7 +123,6 @@ if(BUILD_TESTING)
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>
                 )
-  #set_tests_properties(test_cpp_message_node PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=/opt/carma/lib:$ENV{LD_LIBRARY_PATH}")
 
 
 endif()
