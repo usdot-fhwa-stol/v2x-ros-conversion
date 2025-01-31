@@ -21,7 +21,6 @@ RUN ~/src/docker/install_dependencies.sh
 
 FROM base_image as setup
 ARG GIT_BRANCH="develop-humble" 
-ENV LD_LIBRARY_PATH="/opt/ros/humble/lib:${LD_LIBRARY_PATH}" 
 
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
