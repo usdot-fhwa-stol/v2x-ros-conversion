@@ -1,4 +1,4 @@
-#  Copyright (C) 2018-2024 LEIDOS.
+#  Copyright (C) 2018-2025 LEIDOS.
 # 
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
@@ -11,19 +11,22 @@
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under
 #  the License.
+
 ARG DOCKER_ORG="usdotfhwastoldev"
 ARG DOCKER_TAG="develop"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
+COPY --chown=carma . /home/carma/src/
+
+RUN ~/src/docker/install_dependencies.sh
+
 FROM base_image as setup
 ARG GIT_BRANCH="develop" 
 
-RUN mkdir ~/src
-COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
 RUN ~/src/docker/install.sh
 
-FROM base_image
+RUN rm -rf /home/carma/src/
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
@@ -39,9 +42,8 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-messeng
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-COPY --from=setup /opt/carma/install /opt/carma/install
 RUN sudo chmod -R +x /opt/carma/install
 
 RUN pip install future
 
-CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install_ros2/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py"]
+CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py"]
