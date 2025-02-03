@@ -62,14 +62,6 @@ ament_auto_add_library(${node_lib} SHARED
         src/SDSM_Message.cpp
         )
 
-
-ament_target_dependencies(${node_lib}
-        rclcpp
-        rclcpp_components
-        class_loader
-        )
-
-
 target_link_libraries(${node_lib} ::stol-j2735)
 target_include_directories(${node_lib}
         PUBLIC
