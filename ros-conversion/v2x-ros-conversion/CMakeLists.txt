@@ -19,6 +19,8 @@ project(v2x-ros-conversion)
 find_package(carma_cmake_common REQUIRED)
 carma_package()
 
+carma_check_ros_version(2)
+
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
 set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 
