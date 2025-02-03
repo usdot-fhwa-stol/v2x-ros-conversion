@@ -26,6 +26,8 @@
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
   <build_depend>carma_cmake_common</build_depend>
+  <build_depend>cpp_message</build_depend>
+  <build_depend>j2735_convertor</build_depend>
 
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>

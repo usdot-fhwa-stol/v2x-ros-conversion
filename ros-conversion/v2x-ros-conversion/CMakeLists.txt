@@ -19,11 +19,10 @@ project(v2x-ros-conversion)
 find_package(carma_cmake_common REQUIRED)
 carma_package()
 
-find_package(ros_environment REQUIRED)
+carma_check_ros_version(2)
 
-set(ROS_VERSION $ENV{ROS_VERSION})
-
-# ROS 2
+list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
+set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
