@@ -1,4 +1,6 @@
+
 # Copyright (C) 2024 LEIDOS.
+#
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
 # the License at
@@ -15,12 +17,16 @@ cmake_minimum_required(VERSION 3.5)
 project(v2x-ros-conversion)
 
 find_package(carma_cmake_common REQUIRED)
-carma_check_ros_version(2)
 carma_package()
+
+carma_check_ros_version(2)
+
+list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
+set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
+
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
-
 
 ament_auto_package(
         INSTALL_TO_SHARE launch log-config scripts
