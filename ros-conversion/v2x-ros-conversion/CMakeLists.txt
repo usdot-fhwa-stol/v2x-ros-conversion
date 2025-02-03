@@ -19,10 +19,6 @@ project(v2x-ros-conversion)
 find_package(carma_cmake_common REQUIRED)
 carma_package()
 
-find_package(ros_environment REQUIRED)
-
-set(ROS_VERSION $ENV{ROS_VERSION})
-
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
 set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 

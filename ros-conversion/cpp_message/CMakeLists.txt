@@ -77,13 +77,6 @@ ament_auto_add_executable(${node_exec}
 # Register component
 rclcpp_components_register_nodes(${node_lib} "cpp_message::Node")
 
-# All locally created targets will need to be manually linked
-# ament auto will handle linking of external dependencies
-# target_link_libraries(${node_exec} ${node_lib})
-# target_include_directories(${node_exec}
-#         PUBLIC
-#                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#                 $<INSTALL_INTERFACE:include>)
 # # Testing
 if(BUILD_TESTING)
 
