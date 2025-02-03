@@ -23,9 +23,12 @@ find_package(ros_environment REQUIRED)
 
 set(ROS_VERSION $ENV{ROS_VERSION})
 
+list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
+set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
+
+
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
-
 
 ament_auto_package(
         INSTALL_TO_SHARE launch log-config scripts
