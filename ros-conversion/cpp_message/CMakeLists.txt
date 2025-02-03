@@ -62,14 +62,6 @@ ament_auto_add_library(${node_lib} SHARED
         src/SDSM_Message.cpp
         )
 
-
-ament_target_dependencies(${node_lib}
-        rclcpp
-        rclcpp_components
-        class_loader
-        )
-
-
 target_link_libraries(${node_lib} ::stol-j2735)
 target_include_directories(${node_lib}
         PUBLIC
@@ -87,11 +79,11 @@ rclcpp_components_register_nodes(${node_lib} "cpp_message::Node")
 
 # All locally created targets will need to be manually linked
 # ament auto will handle linking of external dependencies
-target_link_libraries(${node_exec} ${node_lib})
-target_include_directories(${node_exec}
-        PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                $<INSTALL_INTERFACE:include>)
+# target_link_libraries(${node_exec} ${node_lib})
+# target_include_directories(${node_exec}
+#         PUBLIC
+#                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#                 $<INSTALL_INTERFACE:include>)
 # # Testing
 if(BUILD_TESTING)
 
