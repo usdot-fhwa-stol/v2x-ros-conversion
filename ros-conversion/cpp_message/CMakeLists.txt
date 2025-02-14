@@ -23,7 +23,7 @@ find_package(carma_cmake_common REQUIRED)
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
 set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 
-find_package(stol-j2735 REQUIRED)
+find_package(stol-j2735-201603-carma REQUIRED)
 
 carma_check_ros_version(2)
 carma_package()
@@ -37,12 +37,12 @@ set(node_exec cpp_message_node_exec)
 set(node_lib cpp_message_node)
 
 # Includes
-include_directories(
-	include
-)
-link_directories(
-        /opt/carma/lib
-)
+# include_directories(
+# 	include
+# )
+# link_directories(
+#         /opt/carma/lib
+# )
 
 ament_export_include_directories(include)
 
@@ -62,12 +62,12 @@ ament_auto_add_library(${node_lib} SHARED
         src/SDSM_Message.cpp
         )
 
-target_link_libraries(${node_lib} ::stol-j2735)
+target_link_libraries(${node_lib} ::stol-j2735-201603-carma)
 target_include_directories(${node_lib}
         PUBLIC
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>
-                /opt/carma/include/stol-j2735
+                /opt/carma/include/stol-j2735-201603-carma
                 )
 
 ament_auto_add_executable(${node_exec}
