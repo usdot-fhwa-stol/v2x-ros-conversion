@@ -48,8 +48,6 @@ jobs:
         else
           echo git_branch="$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
         fi
-    - name: Install stol-j2735 package from STOL APT repo
-      run: ./src/${{ github.event.repository.name }}/docker/install_dependencies.sh
     - name: Checkout dependencies
       run: |
         source "$INIT_ENV"
