@@ -36,14 +36,6 @@ ament_auto_find_build_dependencies()
 set(node_exec cpp_message_node_exec)
 set(node_lib cpp_message_node)
 
-# Includes
-# include_directories(
-# 	include
-# )
-# link_directories(
-#         /opt/carma/lib
-# )
-
 ament_export_include_directories(include)
 
 # Build
