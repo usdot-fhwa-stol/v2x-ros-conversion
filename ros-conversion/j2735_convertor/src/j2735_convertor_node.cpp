@@ -26,13 +26,11 @@ namespace j2735_convertor
 
   carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &)
   {
-
       // J2735 BSM Subscriber
     auto j2735_bsm_cb_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions j2735_bsm_options;
     j2735_bsm_options.callback_group = j2735_bsm_cb_group;
     j2735_bsm_sub_ = create_subscription<j2735_v2x_msgs::msg::BSM>("incoming_j2735_bsm", 100, std::bind(&Node::j2735BsmHandler, this, std_ph::_1), j2735_bsm_options);
-
     // BSM Publisher
     converted_bsm_pub_ = create_publisher<carma_v2x_msgs::msg::BSM>("incoming_bsm", 100);
 
@@ -42,7 +40,6 @@ namespace j2735_convertor
     outbound_bsm_options.callback_group = outbound_bsm_cb_group;
     outbound_bsm_sub_ = create_subscription<carma_v2x_msgs::msg::BSM>("outgoing_bsm", 1, std::bind(&Node::BsmHandler,
                                           this, std_ph::_1), outbound_bsm_options);  // Queue size of 1 as we should never publish outdated BSMs
-
     // BSM Publisher
     outbound_j2735_bsm_pub_ = create_publisher<j2735_v2x_msgs::msg::BSM>("outgoing_j2735_bsm", 1);  // Queue size of 1 as we should never publish outdated BSMs
 
@@ -51,7 +48,6 @@ namespace j2735_convertor
     rclcpp::SubscriptionOptions j2735_psm_options;
     j2735_psm_options.callback_group = j2735_psm_cb_group;
     j2735_psm_sub_ = create_subscription<j2735_v2x_msgs::msg::PSM>("incoming_j2735_psm", 100, std::bind(&Node::j2735PsmHandler, this, std_ph::_1), j2735_psm_options);
-
     // PSM Publisher
     converted_psm_pub_ = create_publisher<carma_v2x_msgs::msg::PSM>("incoming_psm", 100);
 
@@ -61,7 +57,6 @@ namespace j2735_convertor
     outbound_psm_options.callback_group = outbound_psm_cb_group;
     outbound_psm_sub_ = create_subscription<carma_v2x_msgs::msg::PSM>("outgoing_psm", 1, std::bind(&Node::PsmHandler,
                                           this, std_ph::_1), outbound_psm_options);  // Queue size of 1 as we should never publish outdated PSMs
-
     // PSM Publisher
     outbound_j2735_psm_pub_ = create_publisher<j2735_v2x_msgs::msg::PSM>("outgoing_j2735_psm", 1);  // Queue size of 1 as we should never publish outdated PSMs
 
@@ -69,9 +64,8 @@ namespace j2735_convertor
     // J2735 SPAT Subscriber
     auto j2735_spat_cb_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions j2735_spat_options;
-    j2735_spat_options.callback_group = j2735_bsm_cb_group;
+    j2735_spat_options.callback_group = j2735_spat_cb_group;
     j2735_spat_sub_ = create_subscription<j2735_v2x_msgs::msg::SPAT>("incoming_j2735_spat", 100, std::bind(&Node::j2735SpatHandler, this, std_ph::_1), j2735_spat_options);
-
     // SPAT Publisher TODO think about queue sizes
     converted_spat_pub_ = create_publisher<carma_v2x_msgs::msg::SPAT>("incoming_spat", 100);
 
@@ -80,7 +74,6 @@ namespace j2735_convertor
     rclcpp::SubscriptionOptions j2735_map_options;
     j2735_map_options.callback_group = j2735_map_cb_group;
     j2735_map_sub_ = create_subscription<j2735_v2x_msgs::msg::MapData>("incoming_j2735_map", 50, std::bind(&Node::j2735MapHandler, this, std_ph::_1), j2735_map_options);
-
     // MAP Publisher TODO think about queue sizes
     converted_map_pub_ = create_publisher<carma_v2x_msgs::msg::MapData>("incoming_map", 50);
 
@@ -91,7 +84,6 @@ namespace j2735_convertor
     rclcpp::SubscriptionOptions j3224_sdsm_options;
     j3224_sdsm_options.callback_group = j3224_sdsm_cb_group;
     j3224_sdsm_sub_ = create_subscription<j3224_v2x_msgs::msg::SensorDataSharingMessage>("incoming_j3224_sdsm", 100, std::bind(&Node::j3224SdsmHandler, this, std_ph::_1), j3224_sdsm_options);
-
     // SDSM carma Publisher
     converted_sdsm_pub_ = create_publisher<carma_v2x_msgs::msg::SensorDataSharingMessage>("incoming_sdsm", 100);
 
@@ -101,7 +93,6 @@ namespace j2735_convertor
     outbound_sdsm_options.callback_group = outbound_sdsm_cb_group;
     outbound_sdsm_sub_ = create_subscription<carma_v2x_msgs::msg::SensorDataSharingMessage>("outgoing_sdsm", 1, std::bind(&Node::SdsmHandler,
                                           this, std_ph::_1), outbound_sdsm_options);  // Queue size of 1 as we should never publish outdated PSMs
-
     // SDSM j3224 Publisher
     outbound_j3224_sdsm_pub_ = create_publisher<j3224_v2x_msgs::msg::SensorDataSharingMessage>("outgoing_j3224_sdsm", 1);
 
