@@ -69,7 +69,7 @@ namespace j2735_convertor
     // J2735 SPAT Subscriber
     auto j2735_spat_cb_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions j2735_spat_options;
-    j2735_spat_options.callback_group = j2735_bsm_cb_group;
+    j2735_spat_options.callback_group = j2735_spat_cb_group;
     j2735_spat_sub_ = create_subscription<j2735_v2x_msgs::msg::SPAT>("incoming_j2735_spat", 100, std::bind(&Node::j2735SpatHandler, this, std_ph::_1), j2735_spat_options);
     RCLCPP_ERROR_STREAM(rclcpp::get_logger(), "Created incoming spat subscription");
     // SPAT Publisher TODO think about queue sizes
