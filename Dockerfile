@@ -12,15 +12,15 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-ARG DOCKER_ORG="usdotfhwastoldev"
-ARG DOCKER_TAG="develop-humble"
+ARG DOCKER_ORG="usdotfhwastolcandidate"
+ARG DOCKER_TAG="test_run-humble"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
 COPY --chown=carma . /home/carma/src/
 
 RUN ~/src/docker/install_dependencies.sh
 
 FROM base_image as setup
-ARG GIT_BRANCH="develop-humble" 
+ARG GIT_BRANCH="release/test_run" 
 
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
