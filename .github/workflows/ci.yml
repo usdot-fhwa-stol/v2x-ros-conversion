@@ -6,6 +6,7 @@ on:
       - develop
       - master
       - "release/*"
+      - sync_test_run
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
