@@ -11,7 +11,7 @@ The V2X-ROS-Conversion package contains two ROS nodes that converts a ROS messag
 
 ## Architecture
 
-The core components in CARMA Messenger contains two ROS nodes: Message node and J2735 Convertor Node. The Message node takes in a ROS message and uses asn1c lib generated code to convert it to a binary blob and forwards it to the DSRC driver, such that any OBU/RSU can broadcast the message directly. The J2735 Converter converts the data from a ROS message based on the J2735 standard units to another message using more usable SI units and vice-versa.
+The core components in the v2x-ros-conversion package contains two ROS nodes: cpp_message node and J2735 Convertor Node. The cpp_message node takes in a ROS message and uses asn1c lib generated code to convert it to a binary blob and forwards it to the DSRC driver, such that any OBU/RSU can broadcast the message directly. The J2735 Converter converts the data from a ROS message based on the J2735 standard units to another message using more usable SI units and vice-versa.
 
 ### Example Setup
 
@@ -36,10 +36,10 @@ sudo ~/src/v2x-ros-conversion/docker/install_dependencies.sh
 Once the dependencies are installed, build the image as shown above.
 
 ### Build From Source
-Ensure that a version of Ubuntu 22 is installed with the humble version of carma-base. Once installed, follow the following steps in install the v2x-ros-conversion package into the project.
+Ensure that a version of Ubuntu 22 is installed with the foxy version of carma-base. Once installed, follow the following steps in install the v2x-ros-conversion package into the project.
 1. Clone the repository into the workspace
 ```
-git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ${dir}/src/v2x-ros-conversion --branch "develop"
+git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ${dir}/src/v2x-ros-conversion --branch "develop-foxy"
 ```
 2. Clone the v2x-ros-conversion package dependencies into the workspace
 ```
