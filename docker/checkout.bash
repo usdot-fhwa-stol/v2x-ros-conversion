@@ -20,7 +20,7 @@
 #set -exo pipefail
 
 dir=~
-BRANCH=develop  # The script will use this unless the -b flag updates it
+BRANCH=carma-system-4.8.0  # The script will use this unless the -b flag updates it
 while [[ $# -gt 0 ]]; do
       arg="$1"
       case $arg in
@@ -37,6 +37,6 @@ while [[ $# -gt 0 ]]; do
       esac
 done
 
-git clone https://github.com/usdot-fhwa-stol/carma-msgs.git ${dir}/src/CARMAMsgs --branch develop
-git clone https://github.com/usdot-fhwa-stol/carma-utils.git ${dir}/src/CARMAUtils --branch develop
+git clone https://github.com/usdot-fhwa-stol/carma-msgs.git ${dir}/src/CARMAMsgs --branch carma-system-4.8.0
+git clone https://github.com/usdot-fhwa-stol/carma-utils.git ${dir}/src/CARMAUtils --branch carma-system-4.8.0
 
