@@ -12,15 +12,15 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-ARG DOCKER_ORG="usdotfhwastoldev"
-ARG DOCKER_TAG="develop"
+ARG DOCKER_ORG="usdotfhwastol"
+ARG DOCKER_TAG="carma-system-4.5.0"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
 COPY --chown=carma . /home/carma/src/
 
 RUN ~/src/docker/install_dependencies.sh
 
 FROM base_image as setup
-ARG GIT_BRANCH="develop" 
+ARG GIT_BRANCH="carma-system-4.8.0" 
 
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
