@@ -28,12 +28,8 @@ To incorporate the v2x-ros-conversion package into a docker project, call the fo
 ```
 git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ${dir}/src/v2x-ros-conversion --branch "develop"
 ```
-Once installed, the required dependencies for the v2x-ros-conversion package need to be installed prior to building the package. To do so, run 
-```
-sudo ~/src/v2x-ros-conversion/docker/install_dependencies.sh
-```
 
-Once the dependencies are installed, build the image as shown above.
+Once installed, run the build image script for the v2x-ros-conversion package. This will also install all the necessary prerequisites needed for the package.
 
 ### Build From Source
 Ensure that a version of Ubuntu 22 is installed with the humble version of carma-base. Once installed, follow the following steps in install the v2x-ros-conversion package into the project.
