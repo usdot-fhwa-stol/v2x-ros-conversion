@@ -41,11 +41,11 @@ Once the dependencies are installed, build the image as shown above.
 Ensure that a version of Ubuntu 20.04 (Focal Fossa) is installed with the foxy version of carma-base. Once installed, follow the following steps in install the v2x-ros-conversion package into the project.
 1. Clone the repository into the workspace
 ```
-git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ~/src/v2x-ros-conversion --branch "develop-foxy"
+git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ~/src/v2x-ros-conversion --branch "carma-system-4.8.0"
 ```
 2. Clone the v2x-ros-conversion package dependencies into the workspace
 ```
-sudo ~/src/v2x-ros-conversion/docker/checkout.bash
+sudo ~/src/v2x-ros-conversion/docker/checkout.bash  
 ```
 3. Install the v2x-ros-conversion package
 ```
