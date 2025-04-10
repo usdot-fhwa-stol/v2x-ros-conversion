@@ -25,6 +25,20 @@ git clone https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git
 cd v2x-ros-conversion/docker
 ./build-image.sh
 ```
+### Recommended Setup
+
+To incorporate the v2x-ros-conversion package into a docker project, call the following command to clone the v2x-ros-conversion package into the project:
+```
+git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ${dir}/src/v2x-ros-conversion --branch "develop-foxy"
+```
+Once installed, run the build image script for the v2x-ros-conversion package. This will also install all the necessary prerequisites needed for the package.
+```
+sudo ~/src/v2x-ros-conversion/docker/build_image.sh
+```
+
+Once the dependencies are installed, build the image as shown above.
+
+
 ## Contribution
 Welcome to the CARMA contributing guide. Please read this guide to learn about our development process, how to propose pull requests and improvements, and how to build and test your changes to this project. [CARMA Contributing Guide](https://github.com/usdot-fhwa-stol/CARMAPlatform/blob/develop/Contributing.md) 
 
