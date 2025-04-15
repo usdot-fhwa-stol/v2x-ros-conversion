@@ -1351,6 +1351,7 @@ namespace cpp_message
                 // PositionOffsetXYZ - offsetX
                 long offset_x = sdsm_core.objects.list.array[obj_itr]->detObjCommon.pos.offsetX;
                 if(offset_x > j3224_v2x_msgs::msg::ObjectDistance::MAX_OBJECT_DISTANCE){
+                    RCLCPP_WARN_STREAM(node_logging_->get_logger(), "SDSM offset_x: "<< offset_x);
                     RCLCPP_WARN(node_logging_->get_logger(), "Decoded SDSM object offsetX above max, setting to max");
                     offset_x = j3224_v2x_msgs::msg::ObjectDistance::MAX_OBJECT_DISTANCE;
                 }

@@ -45,7 +45,7 @@ void SDSMConvertor::convert(const j3224_v2x_msgs::msg::SensorDataSharingMessage&
     // Go through the array of j3224 detected objects and convert their DetectedObjectData
     for(auto in_object : in_msg.objects.detected_object_data){
         carma_v2x_msgs::msg::DetectedObjectData out_object;
-        
+
         convert(in_object, out_object);
 
         // Add the converted object to the carma_v2x_msgs array
@@ -77,7 +77,7 @@ void SDSMConvertor::convert(const carma_v2x_msgs::msg::SensorDataSharingMessage&
     // Go through the array of carma detected objects and convert their DetectedObjectData
     for(auto in_object : in_msg.objects.detected_object_data){
         j3224_v2x_msgs::msg::DetectedObjectData out_object;
-        
+
         convert(in_object, out_object);
 
         // Add the converted object to the j3224_v2x_msgs array
@@ -119,7 +119,7 @@ void SDSMConvertor::convert(const carma_v2x_msgs::msg::Position3D& in_msg, j2735
     if(in_msg.elevation_exists){
         out_msg.elevation_exists = true;
         out_msg.elevation = in_msg.elevation * units::DECI_M_PER_M;
-    } 
+    }
 }
 
 
@@ -297,11 +297,11 @@ void SDSMConvertor::convert(const carma_v2x_msgs::msg::VehicleHeight& in_msg, j2
 }
 
 
-void SDSMConvertor::convert(const j2735_v2x_msgs::msg::AttachmentRadius& in_msg, carma_v2x_msgs::msg::AttachmentRadius& out_msg) 
+void SDSMConvertor::convert(const j2735_v2x_msgs::msg::AttachmentRadius& in_msg, carma_v2x_msgs::msg::AttachmentRadius& out_msg)
 {
     out_msg.attachment_radius = in_msg.attachment_radius / units::DECI_M_PER_M;
 }
-void SDSMConvertor::convert(const carma_v2x_msgs::msg::AttachmentRadius& in_msg, j2735_v2x_msgs::msg::AttachmentRadius& out_msg) 
+void SDSMConvertor::convert(const carma_v2x_msgs::msg::AttachmentRadius& in_msg, j2735_v2x_msgs::msg::AttachmentRadius& out_msg)
 {
     out_msg.attachment_radius = in_msg.attachment_radius * units::DECI_M_PER_M;
 }
@@ -458,7 +458,6 @@ void SDSMConvertor::convert(const carma_v2x_msgs::msg::MeasurementTimeOffset& in
 
 void SDSMConvertor::convert(const j3224_v2x_msgs::msg::PositionOffsetXYZ& in_msg, carma_v2x_msgs::msg::PositionOffsetXYZ& out_msg)
 {
-    out_msg.presence_vector |= in_msg.presence_vector;
 
     if(in_msg.presence_vector){
         convert(in_msg.offset_x, out_msg.offset_x);
@@ -471,13 +470,13 @@ void SDSMConvertor::convert(const j3224_v2x_msgs::msg::PositionOffsetXYZ& in_msg
 }
 void SDSMConvertor::convert(const carma_v2x_msgs::msg::PositionOffsetXYZ& in_msg, j3224_v2x_msgs::msg::PositionOffsetXYZ& out_msg)
 {
-    out_msg.presence_vector |= in_msg.presence_vector;
 
     if(in_msg.presence_vector){
         convert(in_msg.offset_x, out_msg.offset_x);
         convert(in_msg.offset_y, out_msg.offset_y);
     }
 
+    out_msg.presence_vector |= in_msg.presence_vector;
     if(carma_v2x_msgs::msg::PositionOffsetXYZ::HAS_OFFSET_Z & in_msg.presence_vector){
         convert(in_msg.offset_z, out_msg.offset_z);
     }
@@ -660,7 +659,7 @@ void SDSMConvertor::convert(const carma_v2x_msgs::msg::RollRate& in_msg, j3224_v
     }
     else{
         out_msg.roll_rate = j3224_v2x_msgs::msg::RollRate::UNAVAILABLE;
-    }    
+    }
 }
 
 
