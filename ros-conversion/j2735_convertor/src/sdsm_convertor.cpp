@@ -458,13 +458,13 @@ void SDSMConvertor::convert(const carma_v2x_msgs::msg::MeasurementTimeOffset& in
 
 void SDSMConvertor::convert(const j3224_v2x_msgs::msg::PositionOffsetXYZ& in_msg, carma_v2x_msgs::msg::PositionOffsetXYZ& out_msg)
 {
-
     convert(in_msg.offset_x, out_msg.offset_x);
     convert(in_msg.offset_y, out_msg.offset_y);
-
+    out_msg.presence_vector |= in_msg.presence_vector;
     if(j3224_v2x_msgs::msg::PositionOffsetXYZ::HAS_OFFSET_Z & in_msg.presence_vector){
         convert(in_msg.offset_z, out_msg.offset_z);
     }
+    
 }
 void SDSMConvertor::convert(const carma_v2x_msgs::msg::PositionOffsetXYZ& in_msg, j3224_v2x_msgs::msg::PositionOffsetXYZ& out_msg)
 {
