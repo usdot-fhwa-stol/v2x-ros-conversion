@@ -1,11 +1,11 @@
 #  Copyright (C) 2018-2025 LEIDOS.
-# 
+#
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
 #  the License at
-# 
+#
 #  http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,10 +17,8 @@ ARG DOCKER_TAG="develop-humble"
 FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
 COPY --chown=carma . /home/carma/src/
 
-RUN ~/src/docker/install_dependencies.sh
-
 FROM base_image as setup
-ARG GIT_BRANCH="develop-humble" 
+ARG GIT_BRANCH="develop-humble"
 
 RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
