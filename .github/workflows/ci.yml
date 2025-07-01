@@ -1,4 +1,3 @@
-
 name: CI
 on:
   push:
@@ -17,6 +16,8 @@ jobs:
     steps:
       - id: docker-org-and-tag
         uses: usdot-fhwa-stol/actions/docker-org-and-tag@main
+        with:
+          docker_tag_suffix: humble
   build:
     needs: determine_docker_org_and_tag
     defaults:
@@ -26,7 +27,7 @@ jobs:
     # Specify the runner environment
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}/carma-base:develop-humble
+      image: ${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}/carma-base:${{ needs.determine_docker_org_and_tag.outputs.docker_image_tag }}
       env:
         INIT_ENV: "/home/carma/.base-image/init-env.sh"
         ROS_2_ENV: "/opt/ros/humble/setup.bash"
