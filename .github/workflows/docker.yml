@@ -1,41 +1,11 @@
 name: Docker build
+
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened, synchronize, reopened]
+      types: [opened, synchronize, reopened]   
 jobs:
-  determine_docker_org_and_tag:
-    runs-on: ubuntu-latest
-    outputs:
-      docker_organization: ${{ steps.docker-org-and-tag.outputs.docker_organization }}
-      docker_image_tag: develop-humble
-    steps:
-      - id: docker-org-and-tag
-        uses: usdot-fhwa-stol/actions/docker-org-and-tag@main
-
-  build:
-    needs: determine_docker_org_and_tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and Push v2x-ros-conversion Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          pull: true
-          push: false
-          tags: ${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}/v2x-ros-conversion:develop
-          build-args: |
-            DOCKER_ORG=${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}
-            DOCKER_TAG=develop-humble
+  docker:
+    uses: usdot-fhwa-stol/actions/.github/workflows/docker.yml@main
+    with:
+      tag_name_suffix: humble
