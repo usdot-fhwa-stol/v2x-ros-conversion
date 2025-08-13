@@ -179,9 +179,11 @@ namespace cpp_message
 
     void Node::inbound_binary_callback(carma_driver_msgs::msg::ByteArray::UniquePtr msg)
     {
+        std::string message_type = msg->message_type;  // Local copy, thread-safe
+        std::vector<uint8_t> array = msg->content;     // Local copy, thread-safe
+
         // only handle TrafficControlRequest for now
-        if(msg->message_type == "TrafficControlRequest") {
-            std::vector<uint8_t> array = msg->content;
+        if(message_type == "TrafficControlRequest") {
             auto output = decode_geofence_request(array);
             if(output)
             {
@@ -193,8 +195,7 @@ namespace cpp_message
         }
 
             // handle TrafficControlMessage
-        else if(msg->message_type == "TrafficControlMessage") {
-            std::vector<uint8_t> array = msg->content;
+        else if(message_type == "TrafficControlMessage") {
             auto output = decode_geofence_control(array);
             if(output)
             {
@@ -205,9 +206,8 @@ namespace cpp_message
             }
         }
 
-        else if(msg->message_type=="MobilityOperation")
+        else if(message_type=="MobilityOperation")
         {
-            std::vector<uint8_t> array=msg->content;
             Mobility_Operation decode(this->get_node_logging_interface());
             auto output=decode.decode_mobility_operation_message(array);
             if(output)
@@ -221,9 +221,8 @@ namespace cpp_message
 
         }
 
-        else if(msg->message_type=="EmergencyVehicleAck")
+        else if(message_type=="EmergencyVehicleAck")
         {
-            std::vector<uint8_t> array=msg->content;
             Emergency_Vehicle_Ack decode(this->get_node_logging_interface());
             auto output=decode.decode_emergency_vehicle_ack_message(array);
             if(output)
@@ -237,9 +236,8 @@ namespace cpp_message
 
         }
 
-        else if(msg->message_type=="EmergencyVehicleResponse")
+        else if(message_type=="EmergencyVehicleResponse")
         {
-            std::vector<uint8_t> array=msg->content;
             Emergency_Vehicle_Response decode(this->get_node_logging_interface());
             auto output=decode.decode_emergency_vehicle_response_message(array);
             if(output)
@@ -253,9 +251,8 @@ namespace cpp_message
 
         }
 
-        else if(msg->message_type=="MobilityResponse")
+        else if(message_type=="MobilityResponse")
         {
-            std::vector<uint8_t> array=msg->content;
             Mobility_Response decode(this->get_node_logging_interface());
             auto output=decode.decode_mobility_response_message(array);
             if(output)
@@ -268,9 +265,8 @@ namespace cpp_message
             }
 
         }
-        else if(msg->message_type=="MobilityPath")
+        else if(message_type=="MobilityPath")
         {
-            std::vector<uint8_t> array=msg->content;
             Mobility_Path decode(this->get_node_logging_interface());
             auto output=decode.decode_mobility_path_message(array);
             if(output)
@@ -283,9 +279,8 @@ namespace cpp_message
             }
 
         }
-        else if(msg->message_type=="MobilityRequest")
+        else if(message_type=="MobilityRequest")
         {
-            std::vector<uint8_t> array=msg->content;
             Mobility_Request decode(this->get_node_logging_interface());
             auto output=decode.decode_mobility_request_message(array);
             if(output)
@@ -298,9 +293,8 @@ namespace cpp_message
             }
 
         }
-        else if(msg->message_type=="BSM")
+        else if(message_type=="BSM")
         {
-            std::vector<uint8_t> array=msg->content;
             BSM_Message decode(this->get_node_logging_interface());
             auto output=decode.decode_bsm_message(array);
             if(output)
@@ -313,9 +307,8 @@ namespace cpp_message
             }
 
         }
-        else if(msg->message_type=="SPAT")
+        else if(message_type=="SPAT")
         {
-            std::vector<uint8_t> array=msg->content;
             SPAT_Message decode;
             auto output = decode.decode_spat_message(array);
             if(output)
@@ -326,9 +319,8 @@ namespace cpp_message
                 RCLCPP_WARN_STREAM( get_logger(), "Cannot decode SPAT message");
             }
         }
-        else if(msg->message_type=="MAP")
+        else if(message_type=="MAP")
         {
-            std::vector<uint8_t> array=msg->content;
             Map_Message decode(this->get_node_logging_interface());
             auto output = decode.decode_map_message(array);
             if(output)
@@ -340,10 +332,9 @@ namespace cpp_message
                 RCLCPP_WARN_STREAM( get_logger(), "Cannot decode MapData Message");
             }
         }
-        else if(msg->message_type=="PSM"){
+        else if(message_type=="PSM"){
             auto current_time = this->now();
             RCLCPP_DEBUG_STREAM(get_logger(), "Incoming PSM timestamp in nanoseconds: "<<current_time.nanoseconds());
-            std::vector<uint8_t> array = msg->content;
             PSM_Message decode(this->get_node_logging_interface());
             auto output = decode.decode_psm_message(array);
             if(output)
@@ -355,8 +346,7 @@ namespace cpp_message
             }
         }
         // else if SDSM to decode
-        else if(msg->message_type=="SensorDataSharingMessage"){
-            std::vector<uint8_t> array=msg->content;
+        else if(message_type=="SensorDataSharingMessage"){
             SDSM_Message decode(this->get_node_logging_interface());
             auto output=decode.decode_sdsm_message(array);
             if(output)
