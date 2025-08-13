@@ -44,7 +44,8 @@ namespace cpp_message
     carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &)
     {
         // Create separate callback groups for each subscriber to prevent blocking
-        auto inbound_binary_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+        // RE-ENTRANT inbound_binary_callback enables parallel processing of inbound binary messages
+        auto inbound_binary_cbg = create_callback_group(rclcpp::CallbackGroupType::Reentrant);
         auto outbound_geofence_request_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
         auto outbound_geofence_control_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
         auto mobility_operation_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
@@ -58,7 +59,7 @@ namespace cpp_message
         auto sdsm_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
         // Publishers (these don't need callback groups)
-        outbound_binary_message_pub_ = create_publisher<carma_driver_msgs::msg::ByteArray>("outbound_binary_msg", 5);
+        outbound_binary_message_pub_ = create_publisher<carma_driver_msgs::msg::ByteArray>("outbound_binary_msg", 100);
         inbound_geofence_request_message_pub_ = create_publisher<j2735_v2x_msgs::msg::TrafficControlRequest>("incoming_j2735_geofence_request", 5);
         inbound_geofence_control_message_pub_ = create_publisher<j2735_v2x_msgs::msg::TrafficControlMessage>("incoming_j2735_geofence_control", 5);
         mobility_operation_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityOperation>("incoming_mobility_operation", 5);
@@ -112,7 +113,7 @@ namespace cpp_message
 
         // Subscribers with their respective callback groups
         inbound_binary_message_sub_ = create_subscription<carma_driver_msgs::msg::ByteArray>(
-            "inbound_binary_msg", 5,
+            "inbound_binary_msg", 100,
             std::bind(&Node::inbound_binary_callback, this, std_ph::_1),
             inbound_binary_options);
 
