@@ -42,139 +42,110 @@ namespace cpp_message
     }
 
     carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &)
-    {
-        // Create separate callback groups for each subscriber to prevent blocking
-        // RE-ENTRANT inbound_binary_callback enables parallel processing of inbound binary messages
-        auto inbound_binary_cbg = create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-        auto outbound_geofence_request_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto outbound_geofence_control_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto mobility_operation_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto emergency_vehicle_ack_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto emergency_vehicle_response_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto mobility_response_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto mobility_path_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto mobility_request_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto bsm_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto psm_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-        auto sdsm_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-
-        // Publishers (these don't need callback groups)
-        outbound_binary_message_pub_ = create_publisher<carma_driver_msgs::msg::ByteArray>("outbound_binary_msg", 100);
-        inbound_geofence_request_message_pub_ = create_publisher<j2735_v2x_msgs::msg::TrafficControlRequest>("incoming_j2735_geofence_request", 5);
-        inbound_geofence_control_message_pub_ = create_publisher<j2735_v2x_msgs::msg::TrafficControlMessage>("incoming_j2735_geofence_control", 5);
-        mobility_operation_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityOperation>("incoming_mobility_operation", 5);
-        emergency_vehicle_ack_message_pub_ = create_publisher<carma_v2x_msgs::msg::EmergencyVehicleAck>("incoming_emergency_vehicle_ack", 5);
-        emergency_vehicle_response_message_pub_ = create_publisher<carma_v2x_msgs::msg::EmergencyVehicleResponse>("incoming_emergency_vehicle_response", 5);
-        mobility_response_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityResponse>("incoming_mobility_response", 5);
-        mobility_path_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityPath>("incoming_mobility_path", 5);
-        mobility_request_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityRequest>("incoming_mobility_request", 5);
-        bsm_message_pub_ = create_publisher<j2735_v2x_msgs::msg::BSM>("incoming_j2735_bsm", 5);
-        spat_message_pub_ = create_publisher<j2735_v2x_msgs::msg::SPAT>("incoming_j2735_spat", 5);
-        map_message_pub_ = create_publisher<j2735_v2x_msgs::msg::MapData>("incoming_j2735_map", 5);
-        psm_message_pub_ = create_publisher<j2735_v2x_msgs::msg::PSM>("incoming_j2735_psm", 5);
-        sdsm_message_pub_ = create_publisher<j3224_v2x_msgs::msg::SensorDataSharingMessage>("incoming_j3224_sdsm", 5);
-
-        // Create subscription options for each callback group
-        rclcpp::SubscriptionOptions inbound_binary_options;
-        inbound_binary_options.callback_group = inbound_binary_cbg;
-
-        rclcpp::SubscriptionOptions outbound_geofence_request_options;
-        outbound_geofence_request_options.callback_group = outbound_geofence_request_cbg;
-
-        rclcpp::SubscriptionOptions outbound_geofence_control_options;
-        outbound_geofence_control_options.callback_group = outbound_geofence_control_cbg;
-
-        rclcpp::SubscriptionOptions mobility_operation_options;
-        mobility_operation_options.callback_group = mobility_operation_cbg;
-
-        rclcpp::SubscriptionOptions emergency_vehicle_ack_options;
-        emergency_vehicle_ack_options.callback_group = emergency_vehicle_ack_cbg;
-
-        rclcpp::SubscriptionOptions emergency_vehicle_response_options;
-        emergency_vehicle_response_options.callback_group = emergency_vehicle_response_cbg;
-
-        rclcpp::SubscriptionOptions mobility_response_options;
-        mobility_response_options.callback_group = mobility_response_cbg;
-
-        rclcpp::SubscriptionOptions mobility_path_options;
-        mobility_path_options.callback_group = mobility_path_cbg;
-
-        rclcpp::SubscriptionOptions mobility_request_options;
-        mobility_request_options.callback_group = mobility_request_cbg;
-
-        rclcpp::SubscriptionOptions bsm_options;
-        bsm_options.callback_group = bsm_cbg;
-
-        rclcpp::SubscriptionOptions psm_options;
-        psm_options.callback_group = psm_cbg;
-
-        rclcpp::SubscriptionOptions sdsm_options;
-        sdsm_options.callback_group = sdsm_cbg;
-
-        // Subscribers with their respective callback groups
-        inbound_binary_message_sub_ = create_subscription<carma_driver_msgs::msg::ByteArray>(
-            "inbound_binary_msg", 100,
-            std::bind(&Node::inbound_binary_callback, this, std_ph::_1),
-            inbound_binary_options);
-
-        outbound_geofence_request_message_sub_ = create_subscription<j2735_v2x_msgs::msg::TrafficControlRequest>(
-            "outgoing_j2735_geofence_request", 5,
-            std::bind(&Node::outbound_control_request_callback, this, std_ph::_1),
-            outbound_geofence_request_options);
-
-        outbound_geofence_control_message_sub_ = create_subscription<j2735_v2x_msgs::msg::TrafficControlMessage>(
-            "outgoing_j2735_geofence_control", 5,
-            std::bind(&Node::outbound_control_message_callback, this, std_ph::_1),
-            outbound_geofence_control_options);
-
-        mobility_operation_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityOperation>(
-            "outgoing_mobility_operation", 5,
-            std::bind(&Node::outbound_mobility_operation_message_callback, this, std_ph::_1),
-            mobility_operation_options);
-
-        emergency_vehicle_ack_message_sub_ = create_subscription<carma_v2x_msgs::msg::EmergencyVehicleAck>(
-            "outgoing_emergency_vehicle_ack", 5,
-            std::bind(&Node::outbound_emergency_vehicle_ack_message_callback, this, std_ph::_1),
-            emergency_vehicle_ack_options);
-
-        emergency_vehicle_response_message_sub_ = create_subscription<carma_v2x_msgs::msg::EmergencyVehicleResponse>(
-            "outgoing_emergency_vehicle_response", 5,
-            std::bind(&Node::outbound_emergency_vehicle_response_message_callback, this, std_ph::_1),
-            emergency_vehicle_response_options);
-
-        mobility_response_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityResponse>(
-            "outgoing_mobility_response", 5,
-            std::bind(&Node::outbound_mobility_response_message_callback, this, std_ph::_1),
-            mobility_response_options);
-
-        mobility_path_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityPath>(
-            "outgoing_mobility_path", 5,
-            std::bind(&Node::outbound_mobility_path_message_callback, this, std_ph::_1),
-            mobility_path_options);
-
-        mobility_request_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityRequest>(
-            "outgoing_mobility_request", 5,
-            std::bind(&Node::outbound_mobility_request_message_callback, this, std_ph::_1),
-            mobility_request_options);
-
-        bsm_message_sub_ = create_subscription<j2735_v2x_msgs::msg::BSM>(
-            "outgoing_j2735_bsm", 5,
-            std::bind(&Node::outbound_bsm_message_callback, this, std_ph::_1),
-            bsm_options);
-
-        psm_message_sub_ = create_subscription<j2735_v2x_msgs::msg::PSM>(
-            "outgoing_j2735_psm", 5,
-            std::bind(&Node::outbound_psm_message_callback, this, std_ph::_1),
-            psm_options);
-
-        sdsm_message_sub_ = create_subscription<j3224_v2x_msgs::msg::SensorDataSharingMessage>(
-            "outgoing_j3224_sdsm", 5,
-            std::bind(&Node::outbound_sdsm_message_callback, this, std_ph::_1),
-            sdsm_options);
-
-        // Return success if everything initialized successfully
-        return CallbackReturn::SUCCESS;
-    }
+	{
+	    // Create callback groups based on MESSAGE FREQUENCY and processing characteristics
+	    
+	    // 1. HEAVY PROCESSING - Reentrant for parallel ASN.1 decoding (variable frequency)
+	    auto heavy_processing_cbg = create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+	    
+	    // 2. HIGH FREQUENCY (10Hz) - Reentrant for parallel processing of frequent messages
+	    auto high_freq_cbg = create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+	    
+	    // 3. LOW FREQUENCY (1Hz) - MutuallyExclusive since they're infrequent
+	    auto low_freq_cbg = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+	
+	    // Publishers (these don't need callback groups)
+	    outbound_binary_message_pub_ = create_publisher<carma_driver_msgs::msg::ByteArray>("outbound_binary_msg", 100);
+	    inbound_geofence_request_message_pub_ = create_publisher<j2735_v2x_msgs::msg::TrafficControlRequest>("incoming_j2735_geofence_request", 5);
+	    inbound_geofence_control_message_pub_ = create_publisher<j2735_v2x_msgs::msg::TrafficControlMessage>("incoming_j2735_geofence_control", 5);
+	    mobility_operation_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityOperation>("incoming_mobility_operation", 5);
+	    emergency_vehicle_ack_message_pub_ = create_publisher<carma_v2x_msgs::msg::EmergencyVehicleAck>("incoming_emergency_vehicle_ack", 5);
+	    emergency_vehicle_response_message_pub_ = create_publisher<carma_v2x_msgs::msg::EmergencyVehicleResponse>("incoming_emergency_vehicle_response", 5);
+	    mobility_response_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityResponse>("incoming_mobility_response", 5);
+	    mobility_path_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityPath>("incoming_mobility_path", 5);
+	    mobility_request_message_pub_ = create_publisher<carma_v2x_msgs::msg::MobilityRequest>("incoming_mobility_request", 5);
+	    bsm_message_pub_ = create_publisher<j2735_v2x_msgs::msg::BSM>("incoming_j2735_bsm", 5);
+	    spat_message_pub_ = create_publisher<j2735_v2x_msgs::msg::SPAT>("incoming_j2735_spat", 5);
+	    map_message_pub_ = create_publisher<j2735_v2x_msgs::msg::MapData>("incoming_j2735_map", 5);
+	    psm_message_pub_ = create_publisher<j2735_v2x_msgs::msg::PSM>("incoming_j2735_psm", 5);
+	    sdsm_message_pub_ = create_publisher<j3224_v2x_msgs::msg::SensorDataSharingMessage>("incoming_j3224_sdsm", 5);
+	
+	    // Create subscription options for each callback group
+	    rclcpp::SubscriptionOptions heavy_processing_options;
+	    heavy_processing_options.callback_group = heavy_processing_cbg;
+	
+	    rclcpp::SubscriptionOptions high_freq_options;
+	    high_freq_options.callback_group = high_freq_cbg;
+	
+	    rclcpp::SubscriptionOptions low_freq_options;
+	    low_freq_options.callback_group = low_freq_cbg;
+	
+	    // HEAVY PROCESSING: Inbound binary messages (ASN.1 decoding) - Variable frequency
+	    inbound_binary_message_sub_ = create_subscription<carma_driver_msgs::msg::ByteArray>(
+	        "inbound_binary_msg", 100,
+	        std::bind(&Node::inbound_binary_callback, this, std_ph::_1),
+	        heavy_processing_options);
+	
+	    // LOW FREQUENCY (1Hz) - Can share a single mutually exclusive group
+	    outbound_geofence_request_message_sub_ = create_subscription<j2735_v2x_msgs::msg::TrafficControlRequest>(
+	        "outgoing_j2735_geofence_request", 5,
+	        std::bind(&Node::outbound_control_request_callback, this, std_ph::_1),
+	        low_freq_options);
+	
+	    outbound_geofence_control_message_sub_ = create_subscription<j2735_v2x_msgs::msg::TrafficControlMessage>(
+	        "outgoing_j2735_geofence_control", 5,
+	        std::bind(&Node::outbound_control_message_callback, this, std_ph::_1),
+	        low_freq_options);
+	
+	    mobility_operation_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityOperation>(
+	        "outgoing_mobility_operation", 5,
+	        std::bind(&Node::outbound_mobility_operation_message_callback, this, std_ph::_1),
+	        low_freq_options);
+	
+	    // HIGH FREQUENCY (10Hz) - Need parallel processing capability
+	    mobility_response_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityResponse>(
+	        "outgoing_mobility_response", 5,
+	        std::bind(&Node::outbound_mobility_response_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    mobility_path_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityPath>(
+	        "outgoing_mobility_path", 5,
+	        std::bind(&Node::outbound_mobility_path_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    mobility_request_message_sub_ = create_subscription<carma_v2x_msgs::msg::MobilityRequest>(
+	        "outgoing_mobility_request", 5,
+	        std::bind(&Node::outbound_mobility_request_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    bsm_message_sub_ = create_subscription<j2735_v2x_msgs::msg::BSM>(
+	        "outgoing_j2735_bsm", 5,
+	        std::bind(&Node::outbound_bsm_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    psm_message_sub_ = create_subscription<j2735_v2x_msgs::msg::PSM>(
+	        "outgoing_j2735_psm", 5,
+	        std::bind(&Node::outbound_psm_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    sdsm_message_sub_ = create_subscription<j3224_v2x_msgs::msg::SensorDataSharingMessage>(
+	        "outgoing_j3224_sdsm", 5,
+	        std::bind(&Node::outbound_sdsm_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    emergency_vehicle_ack_message_sub_ = create_subscription<carma_v2x_msgs::msg::EmergencyVehicleAck>(
+	        "outgoing_emergency_vehicle_ack", 5,
+	        std::bind(&Node::outbound_emergency_vehicle_ack_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    emergency_vehicle_response_message_sub_ = create_subscription<carma_v2x_msgs::msg::EmergencyVehicleResponse>(
+	        "outgoing_emergency_vehicle_response", 5,
+	        std::bind(&Node::outbound_emergency_vehicle_response_message_callback, this, std_ph::_1),
+	        high_freq_options);
+	
+	    // Return success if everything initialized successfully
+	    return CallbackReturn::SUCCESS;
+	}
 
 
     void Node::inbound_binary_callback(carma_driver_msgs::msg::ByteArray::UniquePtr msg)
