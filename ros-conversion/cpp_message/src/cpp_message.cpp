@@ -17,7 +17,7 @@
 /**
  * CPP File containing Message method implementations
  */
-
+#include <chrono>
 #include "cpp_message/cpp_message.h"
 #include "cpp_message/MobilityOperation_Message.h"
 #include "cpp_message/EmergencyVehicleAck_Message.h"
@@ -79,195 +79,196 @@ namespace cpp_message
 
     void Node::inbound_binary_callback(carma_driver_msgs::msg::ByteArray::UniquePtr msg)
     {
+        auto start_time = std::chrono::high_resolution_clock::now();
+        RCLCPP_ERROR_STREAM(get_logger(), "PROCESSING_START: " << msg->message_type << " at " << start_time.time_since_epoch().count());
+        
         // only handle TrafficControlRequest for now
         if(msg->message_type == "TrafficControlRequest") {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "TCR_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array = msg->content;
             auto output = decode_geofence_request(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "TCR_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 inbound_geofence_request_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "TCR_PUBLISHED successfully");
             } else
             {
-                RCLCPP_WARN_STREAM(get_logger(), "Cannot decode geofence request message.");
+                RCLCPP_ERROR_STREAM(get_logger(), "TCR_DECODE_FAILED");
             }
         }
 
-            // handle TrafficControlMessage
+        // handle TrafficControlMessage
         else if(msg->message_type == "TrafficControlMessage") {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "TCM_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array = msg->content;
             auto output = decode_geofence_control(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "TCM_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 inbound_geofence_control_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "TCM_PUBLISHED successfully");
             } else
             {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode geofence control message.");
+                RCLCPP_ERROR_STREAM(get_logger(), "TCM_DECODE_FAILED");
             }
         }
         
         else if(msg->message_type=="MobilityOperation")   
         {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_OP_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array=msg->content;
             Mobility_Operation decode(this->get_node_logging_interface());
             auto output=decode.decode_mobility_operation_message(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_OP_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 mobility_operation_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_OP_PUBLISHED successfully");
             }
             else
             {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode Mobility Operation message");
+                RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_OP_DECODE_FAILED");
             }
-
         }
 
-        else if(msg->message_type=="EmergencyVehicleAck")   
-        {
-            std::vector<uint8_t> array=msg->content;
-            Emergency_Vehicle_Ack decode(this->get_node_logging_interface());
-            auto output=decode.decode_emergency_vehicle_ack_message(array);
-            if(output)
-            {
-                emergency_vehicle_ack_message_pub_->publish(output.get());
-            }
-            else
-            {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode Emergency Vehicle Acknowledgement message");
-            }
-
-        }
-
-        else if(msg->message_type=="EmergencyVehicleResponse")   
-        {
-            std::vector<uint8_t> array=msg->content;
-            Emergency_Vehicle_Response decode(this->get_node_logging_interface());
-            auto output=decode.decode_emergency_vehicle_response_message(array);
-            if(output)
-            {
-                emergency_vehicle_response_message_pub_->publish(output.get());
-            }
-            else
-            {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode Emergency Vehicle Response message");
-            }
-
-        }
-
-        else if(msg->message_type=="MobilityResponse")
-        {
-            std::vector<uint8_t> array=msg->content;
-            Mobility_Response decode(this->get_node_logging_interface());
-            auto output=decode.decode_mobility_response_message(array);
-            if(output)
-            {
-                mobility_response_message_pub_->publish(output.get());
-            }
-            else
-            {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode Mobility Response message");
-            }
-            
-        }
         else if(msg->message_type=="MobilityPath")   
         {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_PATH_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array=msg->content;
             Mobility_Path decode(this->get_node_logging_interface());
             auto output=decode.decode_mobility_path_message(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_PATH_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 mobility_path_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_PATH_PUBLISHED successfully");
             }
             else
             {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode Mobility Path message");
+                RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_PATH_DECODE_FAILED");
             }
-             
         }
-        else if(msg->message_type=="MobilityRequest")   
-        {
-            std::vector<uint8_t> array=msg->content;
-            Mobility_Request decode(this->get_node_logging_interface());
-            auto output=decode.decode_mobility_request_message(array);
-            if(output)
-            {
-                mobility_request_message_pub_->publish(output.get());
-            }
-            else
-            {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode Mobility Request message");
-            }
-             
-        }
+
         else if(msg->message_type=="BSM")   
         {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "BSM_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array=msg->content;
             BSM_Message decode(this->get_node_logging_interface());
             auto output=decode.decode_bsm_message(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "BSM_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 bsm_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "BSM_PUBLISHED successfully");
             }
             else
             {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode BSM message");
+                RCLCPP_ERROR_STREAM(get_logger(), "BSM_DECODE_FAILED");
             }
-             
         }
         else if(msg->message_type=="SPAT")
         {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "SPAT_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array=msg->content;
             SPAT_Message decode;
             auto output = decode.decode_spat_message(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "SPAT_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 spat_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "SPAT_PUBLISHED successfully");
             }
             else{
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode SPAT message");
+                RCLCPP_ERROR_STREAM(get_logger(), "SPAT_DECODE_FAILED");
             }
         }
         else if(msg->message_type=="MAP")
         {
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "MAP_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array=msg->content;
             Map_Message decode(this->get_node_logging_interface());
             auto output = decode.decode_map_message(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "MAP_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 map_message_pub_->publish(output.get());
+                RCLCPP_ERROR_STREAM(get_logger(), "MAP_PUBLISHED successfully");
             }
             else
             {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode MapData Message");
-            }
-        }
-        else if(msg->message_type=="PSM"){
-            auto current_time = this->now();
-            RCLCPP_DEBUG_STREAM(get_logger(), "Incoming PSM timestamp in nanoseconds: "<<current_time.nanoseconds());
-            std::vector<uint8_t> array = msg->content;
-            PSM_Message decode(this->get_node_logging_interface());
-            auto output = decode.decode_psm_message(array);
-            if(output)
-            {
-                psm_message_pub_->publish(output.get());
-            }
-            else{
-                RCLCPP_WARN_STREAM(get_logger(), "Cannot decode PSM Message");
+                RCLCPP_ERROR_STREAM(get_logger(), "MAP_DECODE_FAILED");
             }
         }
         // else if SDSM to decode
         else if(msg->message_type=="SensorDataSharingMessage"){
+            auto decode_start = std::chrono::high_resolution_clock::now();
+            RCLCPP_ERROR_STREAM(get_logger(), "SDSM_DECODE_START at " << decode_start.time_since_epoch().count());
+            
             std::vector<uint8_t> array=msg->content;
             SDSM_Message decode(this->get_node_logging_interface());
             auto output=decode.decode_sdsm_message(array);
+            
+            auto decode_end = std::chrono::high_resolution_clock::now();
+            auto decode_duration = std::chrono::duration_cast<std::chrono::microseconds>(decode_end - decode_start).count();
+            RCLCPP_ERROR_STREAM(get_logger(), "SDSM_DECODE_END duration_us: " << decode_duration);
+            
             if(output)
             {
                 sdsm_message_pub_->publish(output.value());
+                RCLCPP_ERROR_STREAM(get_logger(), "SDSM_PUBLISHED successfully");
             }
             else
             {
-                RCLCPP_WARN_STREAM( get_logger(), "Cannot decode SDSM message");
+                RCLCPP_ERROR_STREAM(get_logger(), "SDSM_DECODE_FAILED");
             }
         }
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto total_duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+        RCLCPP_ERROR_STREAM(get_logger(), "PROCESSING_END: " << msg->message_type << " total_duration_us: " << total_duration);
     }
 
     void Node::outbound_control_request_callback(j2735_v2x_msgs::msg::TrafficControlRequest::UniquePtr msg)
@@ -395,6 +396,8 @@ namespace cpp_message
     }
     void Node::outbound_mobility_path_message_callback(carma_v2x_msgs::msg::MobilityPath::UniquePtr msg)
     {//encode and publish as outbound binary message
+        auto start_time = std::chrono::high_resolution_clock::now();
+        RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_PATH_START at " << start_time.time_since_epoch().count());
         Mobility_Path encode(this->get_node_logging_interface());
         auto res=encode.encode_mobility_path_message(*msg.get());
         if(res)
@@ -412,6 +415,9 @@ namespace cpp_message
         {
             RCLCPP_WARN_STREAM( get_logger(), "Cannot encode mobility path message.");
         }
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+        RCLCPP_ERROR_STREAM(get_logger(), "MOBILITY_PATH_END duration_us: " << duration);
     }
     void Node::outbound_mobility_request_message_callback(carma_v2x_msgs::msg::MobilityRequest::UniquePtr msg)
     {//encode and publish as outbound binary message
@@ -435,6 +441,8 @@ namespace cpp_message
     }
     void Node::outbound_bsm_message_callback(j2735_v2x_msgs::msg::BSM::UniquePtr msg)
     {//encode and publish as outbound binary message
+        auto start_time = std::chrono::high_resolution_clock::now();
+        RCLCPP_ERROR_STREAM(get_logger(), "BSM_OUTBOUND_START at " << start_time.time_since_epoch().count());
         BSM_Message encode(this->get_node_logging_interface());
         auto res=encode.encode_bsm_message(*msg.get());
         if(res)
@@ -452,6 +460,9 @@ namespace cpp_message
         {
             RCLCPP_WARN_STREAM( get_logger(), "Cannot encode BSM message.");
         }
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+        RCLCPP_ERROR_STREAM(get_logger(), "BSM_OUTBOUND_END duration_us: " << duration);
     }
 
     void Node::outbound_psm_message_callback(j2735_v2x_msgs::msg::PSM::UniquePtr msg)
