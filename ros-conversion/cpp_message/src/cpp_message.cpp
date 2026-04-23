@@ -725,7 +725,7 @@ namespace cpp_message
         return output;
     }
 
-    j2735_v2x_msgs::msg::DayOfWeek Node::decode_day_of_week(const DSRC_DayOfWeek_t& message)
+    j2735_v2x_msgs::msg::DayOfWeek Node::decode_day_of_week(const Common_DayOfWeek_t& message)
     {
         j2735_v2x_msgs::msg::DayOfWeek output;
         
@@ -1102,7 +1102,7 @@ namespace cpp_message
         TrafficControlSchedule::TrafficControlSchedule__between* between_list;
         between_list = (TrafficControlSchedule::TrafficControlSchedule__between*) calloc(1, sizeof(TrafficControlSchedule::TrafficControlSchedule__between));
         
-        DSRC_DayOfWeek_t* dow_output = (DSRC_DayOfWeek_t*) calloc(1, sizeof(DSRC_DayOfWeek_t));
+        Common_DayOfWeek_t* dow_output = (Common_DayOfWeek_t*) calloc(1, sizeof(Common_DayOfWeek_t));
         uint8_t* dow_val = (uint8_t*) calloc(1, sizeof(uint8_t)); // 8 bits are sufficient for bit-wise encoding for 7 days
         TrafficControlVehClass_t* vclass_output = (TrafficControlVehClass_t*) calloc(1, sizeof(TrafficControlVehClass_t));
         DailySchedule_t* schedule_output = (DailySchedule_t*) calloc(1, sizeof(DailySchedule_t));
@@ -1669,7 +1669,7 @@ namespace cpp_message
         }
     }
     
-    void Node::encode_day_of_week(const j2735_v2x_msgs::msg::DayOfWeek& msg, DSRC_DayOfWeek_t* output, uint8_t* dow_val)
+    void Node::encode_day_of_week(const j2735_v2x_msgs::msg::DayOfWeek& msg, Common_DayOfWeek_t* output, uint8_t* dow_val)
     {
         // j2735_v2x_msgs day of week:
         // Array of [0, 1] for each day, with indices specified as an enum. 1 means that that day is active, 0 means inactive
