@@ -2093,7 +2093,7 @@ namespace cpp_message
                 else if (plain_msg.part_ii[i].part_ii_id == j2735_v2x_msgs::msg::BSMPartIIExtension::SUPPLEMENTAL_VEHICLE_EXT) {
                     j2735_v2x_msgs::msg::SupplementalVehicleExtensions supplemental_vehicle_ext_msg = plain_msg.part_ii[i].supplemental_vehicle_extensions;
 
-                    part_ii_element->partII_Id = PartII_Id_supplementalVehicleExt;
+                    part_ii_element->partII_Id = BasicSafetyMessage_PartII_Id_supplementalVehicleExt;
                     part_ii_element->partII_Value.present = BSMpartIIExtension__partII_Value_PR_SupplementalVehicleExtensions;
 
                     // classification
