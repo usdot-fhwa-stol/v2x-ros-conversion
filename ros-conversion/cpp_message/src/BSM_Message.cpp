@@ -1580,7 +1580,7 @@ namespace cpp_message
                             
                             // elevation
                             if(vehicle_safety_ext_msg.path_history.initial_position.presence_vector & j2735_v2x_msgs::msg::FullPositionVector::HAS_ELEVATION){
-                                auto elevation = create_store_shared<DSRC_Elevation_t>(shared_ptrs);
+                                auto elevation = create_store_shared<Common_Elevation_t>(shared_ptrs);
                                 *elevation = vehicle_safety_ext_msg.path_history.initial_position.elevation.elevation;
                                 initial_position->elevation = elevation;
                             }
@@ -2616,7 +2616,7 @@ namespace cpp_message
 
                         // elevation
                         if(plain_msg.regional[i].route_destination_points[j].elevation_exists){
-                            auto elevation_ptr = create_store_shared<DSRC_Elevation_t>(shared_ptrs);
+                            auto elevation_ptr = create_store_shared<Common_Elevation_t>(shared_ptrs);
 
                             long elevation = plain_msg.regional[i].route_destination_points[j].elevation;
                             if(elevation > j2735_v2x_msgs::msg::Position3D::ELEVATION_MAX){

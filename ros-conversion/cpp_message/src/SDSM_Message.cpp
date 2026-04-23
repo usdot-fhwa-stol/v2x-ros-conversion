@@ -235,7 +235,7 @@ namespace cpp_message
         }
 
         // Position3D | *elevation - ref_pos.elevation
-        auto elevation_ptr = create_store_shared<DSRC_Elevation_t>(shared_ptrs);
+        auto elevation_ptr = create_store_shared<Common_Elevation_t>(shared_ptrs);
 
         if(!plainMessage.ref_pos.elevation_exists || plainMessage.ref_pos.elevation == j2735_v2x_msgs::msg::Position3D::ELEVATION_UNAVAILABLE){
             *elevation_ptr = j2735_v2x_msgs::msg::Position3D::ELEVATION_UNAVAILABLE;
