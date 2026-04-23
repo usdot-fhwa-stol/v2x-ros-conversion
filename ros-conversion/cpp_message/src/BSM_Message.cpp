@@ -2479,7 +2479,7 @@ namespace cpp_message
 
                         // locationDetails
                         if(supplemental_vehicle_ext_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_LOCATION_DETAILS){
-                            auto location_details = create_store_shared<GenericLocations_t>(shared_ptrs);
+                            auto location_details = create_store_shared<ITIS_GenericLocations_t>(shared_ptrs);
                             *location_details = supplemental_vehicle_ext_msg.obstacle.location_details.generic_locations;
                             obstacle_detection->locationDetails = location_details;
                         }
@@ -2521,7 +2521,7 @@ namespace cpp_message
 
                         // locationDetails
                         if(supplemental_vehicle_ext_msg.status.presence_vector & j2735_v2x_msgs::msg::DisabledVehicle::HAS_LOCATION_DETAILS){
-                            auto location_details = create_store_shared<GenericLocations_t>(shared_ptrs);
+                            auto location_details = create_store_shared<ITIS_GenericLocations_t>(shared_ptrs);
                             *location_details = supplemental_vehicle_ext_msg.status.location_details.generic_locations;
                             status->locationDetails = location_details;
                         }
