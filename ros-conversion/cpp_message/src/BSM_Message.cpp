@@ -2151,7 +2151,7 @@ namespace cpp_message
 
                         // responderType
                         if(supplemental_vehicle_ext_msg.class_details.presence_vector & j2735_v2x_msgs::msg::VehicleClassification::HAS_RESPONDER_TYPE){
-                            auto responder_type = create_store_shared<ResponderGroupAffected_t>(shared_ptrs);
+                            auto responder_type = create_store_shared<ITIS_ResponderGroupAffected_t>(shared_ptrs);
                             *responder_type = supplemental_vehicle_ext_msg.class_details.responder_type.responder_group_affected;
                             class_details->responderType = responder_type;
                         }
