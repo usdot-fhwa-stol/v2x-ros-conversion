@@ -2137,7 +2137,7 @@ namespace cpp_message
 
                         // vehicleType
                         if(supplemental_vehicle_ext_msg.class_details.presence_vector & j2735_v2x_msgs::msg::VehicleClassification::HAS_VEHICLE_TYPE){
-                            auto vehicle_type = create_store_shared<VehicleGroupAffected_t>(shared_ptrs);
+                            auto vehicle_type = create_store_shared<ITIS_VehicleGroupAffected_t>(shared_ptrs);
                             *vehicle_type = supplemental_vehicle_ext_msg.class_details.vehicle_type.vehicle_group_affected;
                             class_details->vehicleType = vehicle_type;
                         }
