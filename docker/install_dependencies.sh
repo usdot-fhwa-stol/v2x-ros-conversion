@@ -19,11 +19,17 @@
 set -e
 
 BRANCH=develop  # The script will use this unless the -b flag updates it
+VERSION=2024  # old version": 201603
 while [[ $# -gt 0 ]]; do
       arg="$1"
       case $arg in
             -b|--branch)
                   BRANCH=$2
+                  shift
+                  shift
+            ;;
+            -v|--version)
+                  VERSION=$2
                   shift
                   shift
             ;;
@@ -52,4 +58,4 @@ echo "deb [trusted=yes] http://s3.amazonaws.com/stol-apt-repository ${APT_CODENA
 sudo apt-get update
 
 # install all things needed for deployment, always done
-sudo apt-get install -y stol-j2735-201603-carma-1
+sudo apt-get install -y stol-j2735-${VERSION}-carma-1
