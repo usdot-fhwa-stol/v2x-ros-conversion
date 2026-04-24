@@ -1569,7 +1569,7 @@ namespace cpp_message
                             }
                             
                             // Long
-                            auto longitude = create_store_shared<Longitude_t>(shared_ptrs);
+                            auto longitude = create_store_shared<Common_Longitude_t>(shared_ptrs);
                             *longitude = vehicle_safety_ext_msg.path_history.initial_position.lon.longitude;
                             initial_position->Long = *longitude;
                             
