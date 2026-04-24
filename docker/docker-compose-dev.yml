@@ -1,0 +1,48 @@
+# Docker Compose file for TurtleBot Behavior Examples
+#
+# Usage:
+#
+# To build the images:
+#   docker compose build
+#
+# To start up a specific service by name:
+#   docker compose up <service_name>
+#
+# To open an interactive shell to a running container:
+#   docker exec -it <container_name> bash
+
+services:
+  # Base image containing dependencies.
+  base:
+    image: v2x-ros-conversion:base
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: base_image
+  dev:
+    image: v2x-ros-conversion:dev
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        - ROS_DISTRO=${ROS_DISTRO:-humble}
+        - UID=1001
+        - GID=1001
+        - USERNAME=devuser
+      target: dev
+    # Interactive shell
+    stdin_open: true
+    tty: true
+    # Networking and IPC for ROS 2
+    network_mode: host
+    ipc: host
+    # Needed to display graphical applications
+    privileged: True
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+      - ../ros-conversion:/home/carma/src/ros-conversion:rw
+    command: sleep infinity
