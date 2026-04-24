@@ -1574,7 +1574,7 @@ namespace cpp_message
                             initial_position->Long = *longitude;
                             
                             // lat
-                            auto latitude = create_store_shared<Latitude_t>(shared_ptrs);
+                            auto latitude = create_store_shared<Common_Latitude_t>(shared_ptrs);
                             *latitude = vehicle_safety_ext_msg.path_history.initial_position.lat.latitude;
                             initial_position->lat = *latitude;
                             
