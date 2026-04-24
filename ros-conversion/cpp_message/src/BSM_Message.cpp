@@ -2144,7 +2144,7 @@ namespace cpp_message
 
                         // responseEquip
                         if(supplemental_vehicle_ext_msg.class_details.presence_vector & j2735_v2x_msgs::msg::VehicleClassification::HAS_RESPONSE_EQUIP){
-                            auto response_equip = create_store_shared<IncidentResponseEquipment_t>(shared_ptrs);
+                            auto response_equip = create_store_shared<ITIS_IncidentResponseEquipment_t>(shared_ptrs);
                             *response_equip = supplemental_vehicle_ext_msg.class_details.response_equip.incident_response_equipment;
                             class_details->responseEquip = response_equip;
                         }
