@@ -1387,7 +1387,7 @@ namespace cpp_message
                 if(plain_msg.part_ii[i].part_ii_id == j2735_v2x_msgs::msg::BSMPartIIExtension::VEHICLE_SAFETY_EXT){
                     j2735_v2x_msgs::msg::VehicleSafetyExtensions vehicle_safety_ext_msg = plain_msg.part_ii[i].vehicle_safety_extensions;
 
-                    part_ii_element->partII_Id = PartII_Id_vehicleSafetyExt;
+                    part_ii_element->partII_Id = BasicSafetyMessage_PartII_Id_BasicSafetyMessage_vehicleSafetyExt;
                     part_ii_element->partII_Value.present = BSMpartIIExtension__partII_Value_PR_VehicleSafetyExtensions;
 
                     // events
@@ -1678,7 +1678,7 @@ namespace cpp_message
                 else if(plain_msg.part_ii[i].part_ii_id == j2735_v2x_msgs::msg::BSMPartIIExtension::SPECIAL_VEHICLE_EXT){  
                     j2735_v2x_msgs::msg::SpecialVehicleExtensions special_vehicle_ext_msg = plain_msg.part_ii[i].special_vehicle_extensions;
 
-                    part_ii_element->partII_Id = PartII_Id_specialVehicleExt;
+                    part_ii_element->partII_Id = BasicSafetyMessage_PartII_Id_specialVehicleExt;
                     part_ii_element->partII_Value.present = BSMpartIIExtension__partII_Value_PR_SpecialVehicleExtensions;
 
                     // vehicle_alerts
