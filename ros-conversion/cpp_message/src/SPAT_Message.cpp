@@ -243,7 +243,7 @@ namespace cpp_message
                             if (state->states.list.array[j]->state_time_speed.list.array[k]->timing->startTime)
                             {
                                 timing.start_time_exists = true;
-                                DSRC_TimeMark_t *start_time = new DSRC_TimeMark_t;
+                                SPAT_TimeMark_t *start_time = new SPAT_TimeMark_t;
                                 start_time = state->states.list.array[j]->state_time_speed.list.array[k]->timing->startTime;
                                 timing.start_time = *start_time;
                             }
@@ -254,7 +254,7 @@ namespace cpp_message
                             if (state->states.list.array[j]->state_time_speed.list.array[k]->timing->maxEndTime)
                             {
                                 timing.max_end_time_exists = true;
-                                DSRC_TimeMark_t *end_time = new DSRC_TimeMark_t;
+                                SPAT_TimeMark_t *end_time = new SPAT_TimeMark_t;
                                 end_time = state->states.list.array[j]->state_time_speed.list.array[k]->timing->maxEndTime;
                                 timing.max_end_time = *end_time;
                             }
@@ -262,7 +262,7 @@ namespace cpp_message
                             if (state->states.list.array[j]->state_time_speed.list.array[k]->timing->likelyTime)
                             {
                                 timing.likely_time_exists = true;
-                                DSRC_TimeMark_t *likely_time = new DSRC_TimeMark_t;
+                                SPAT_TimeMark_t *likely_time = new SPAT_TimeMark_t;
                                 likely_time = state->states.list.array[j]->state_time_speed.list.array[k]->timing->likelyTime;
                                 timing.likely_time = *likely_time;
                             }
@@ -280,7 +280,7 @@ namespace cpp_message
                             if (state->states.list.array[j]->state_time_speed.list.array[k]->timing->nextTime)
                             {
                                 timing.next_time_exists = true;
-                                DSRC_TimeMark_t *next_time = new DSRC_TimeMark_t;
+                                SPAT_TimeMark_t *next_time = new SPAT_TimeMark_t;
                                 next_time = state->states.list.array[j]->state_time_speed.list.array[k]->timing->nextTime;
                                 timing.next_time = *next_time;
                             }
@@ -530,7 +530,7 @@ namespace cpp_message
                         
                         TimeChangeDetails_t* time_change_details  = new TimeChangeDetails_t;
                         //start time
-                        DSRC_TimeMark_t* state_start_time = new DSRC_TimeMark_t;
+                        SPAT_TimeMark_t* state_start_time = new SPAT_TimeMark_t;
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.start_time_exists){
                             *state_start_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.start_time;
                         }
@@ -539,12 +539,12 @@ namespace cpp_message
                         }
                         time_change_details->startTime = state_start_time;
                         //min_end_time
-                        DSRC_TimeMark_t* state_min_end_time = new DSRC_TimeMark_t;
+                        SPAT_TimeMark_t* state_min_end_time = new SPAT_TimeMark_t;
                         *state_min_end_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.min_end_time;
                         time_change_details->minEndTime = *state_min_end_time;
 
                         //max end time
-                        DSRC_TimeMark_t* state_max_end_time = new DSRC_TimeMark_t;
+                        SPAT_TimeMark_t* state_max_end_time = new SPAT_TimeMark_t;
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.max_end_time_exists){
                             *state_max_end_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.max_end_time;
                         }
@@ -554,7 +554,7 @@ namespace cpp_message
                         time_change_details->maxEndTime = state_max_end_time;
 
                         //likely time
-                        DSRC_TimeMark_t* state_likely_time = new DSRC_TimeMark_t;
+                        SPAT_TimeMark_t* state_likely_time = new SPAT_TimeMark_t;
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.likely_time_exists){
                             *state_likely_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.likely_time;
                         }
@@ -572,7 +572,7 @@ namespace cpp_message
                         //Else condition not defined 
 
                         //Time Mark
-                        DSRC_TimeMark_t* next_time = new DSRC_TimeMark_t;
+                        SPAT_TimeMark_t* next_time = new SPAT_TimeMark_t;
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.next_time_exists){
                             *next_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.next_time;
                         }
