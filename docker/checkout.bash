@@ -18,7 +18,7 @@
 
 #set -exo pipefail
 
-dir=~
+dir=$HOME
 BRANCH=develop  # The script will use this unless the -b flag updates it
 while [[ $# -gt 0 ]]; do
       arg="$1"
@@ -39,7 +39,7 @@ done
 git clone https://github.com/usdot-fhwa-stol/carma-msgs.git ${dir}/src/CARMAMsgs --branch $BRANCH
 git clone https://github.com/usdot-fhwa-stol/carma-utils.git ${dir}/src/CARMAUtils --branch $BRANCH
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-${SCRIPT_DIR}/install_dependencies.sh -b $BRANCH
+# ${SCRIPT_DIR}/install_dependencies.sh -b $BRANCH
 
