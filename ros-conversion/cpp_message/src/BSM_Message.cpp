@@ -1735,7 +1735,7 @@ namespace cpp_message
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Encoded EventDescription list size is greater than max. Rejecting list element.");
                                     break;
                                 }
-                                auto itis_code = create_store_shared<ITIScodes_t>(shared_ptrs);
+                                auto itis_code = create_store_shared<ITIS_ITIScodes_t>(shared_ptrs);
                                 *itis_code = special_vehicle_ext_msg.description.description[j].code;
                                 asn_sequence_add(&description_list->list, itis_code);
                             }
@@ -2471,7 +2471,7 @@ namespace cpp_message
                                 RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded obstacle description value less than min, this optional field will not be encoded");
                             }
                             else{
-                                auto itis_code2 = create_store_shared<ITIScodes_t>(shared_ptrs);
+                                auto itis_code2 = create_store_shared<ITIS_ITIScodes_t>(shared_ptrs);
                                 *itis_code2 = supplemental_vehicle_ext_msg.obstacle.description.code;
                                 obstacle_detection->description = itis_code2;
                             }
