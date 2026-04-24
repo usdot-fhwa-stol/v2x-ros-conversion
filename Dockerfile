@@ -14,15 +14,26 @@
 
 ARG DOCKER_ORG="usdotfhwastoldev"
 ARG DOCKER_TAG="develop-humble"
-FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
-COPY --chown=carma . /home/carma/src/
+FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} AS base_image
+ENV HOME=/home/carma
 
-FROM base_image as setup
+FROM base_image AS setup
+
+# copy docker files only
+COPY --chown=carma ./docker /home/carma/src/docker
+
 ARG GIT_BRANCH="develop-humble"
+ARG STANDARD_VERSION="2024"
 
-RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
+RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH}
+RUN ${HOME}/src/docker/install_dependencies.sh -b ${GIT_BRANCH} -v ${STANDARD_VERSION}
 
-RUN ~/src/docker/install.sh
+FROM setup AS prod
+
+# copy source code
+COPY --chown=carma ./ros-conversion /home/carma/src/ros-conversion
+
+RUN ${HOME}/src/docker/install.sh
 
 RUN rm -rf /home/carma/src/
 
@@ -45,3 +56,10 @@ RUN sudo chmod -R +x /opt/carma/install
 RUN pip install future
 
 CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py"]
+
+FROM setup AS dev
+SHELL ["/bin/bash", "-c"]
+
+# build all dependencies
+RUN ${HOME}/src/docker/install.sh
+ENTRYPOINT ["sh", "/home/carma/.base-image/entrypoint.sh"]
