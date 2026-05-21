@@ -575,14 +575,14 @@ namespace cpp_message
                         }
 
                         // trailers 
-                        if (part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers){
+                        if (part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse){
                             part_ii_output.special_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SpecialVehicleExtensions::HAS_TRAILERS;
 
                             // part_ii_output.special_vehicle_extensions.trailers.connection 
-                            part_ii_output.special_vehicle_extensions.trailers.connection = decode_pivot_point_description(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->connection);
+                            part_ii_output.special_vehicle_extensions.trailers.connection = decode_pivot_point_description(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->connection);
 
                             // trailers.units list
-                            for (size_t j = 0; j < part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.count; j++){
+                            for (size_t j = 0; j < part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.count; j++){
                                 if(j > j2735_v2x_msgs::msg::TrailerUnitDescriptionList::MAX_SIZE){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Decoded TrailerUnitDescriptionList size is greater than max. Rejecting list element.");
                                     break;
@@ -591,10 +591,10 @@ namespace cpp_message
                                 j2735_v2x_msgs::msg::TrailerUnitDescription trailer_unit_description;
 
                                 // isDolly
-                                trailer_unit_description.is_dolly.is_dolly = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->isDolly;
+                                trailer_unit_description.is_dolly.is_dolly = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->isDolly;
 
                                 // width
-                                long vehicle_width = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->width;
+                                long vehicle_width = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->width;
                                 if(vehicle_width < j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_MIN){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded vehicle width value less than min, setting to min");
                                     vehicle_width = j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_MIN;
@@ -606,7 +606,7 @@ namespace cpp_message
                                 trailer_unit_description.width.vehicle_width = vehicle_width;
 
                                 // length
-                                long vehicle_length = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->length;
+                                long vehicle_length = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->length;
                                 if(vehicle_length < j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_MIN){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded vehicle length value less than min, setting to min");
                                     vehicle_length = j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_MIN;
@@ -618,10 +618,10 @@ namespace cpp_message
                                 trailer_unit_description.length.vehicle_length = vehicle_length;
 
                                 // height
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->height){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->height){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_HEIGHT;
 
-                                    long vehicle_height = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->height;
+                                    long vehicle_height = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->height;
                                     if(vehicle_height < j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_MIN){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded vehicle height value less than min, setting to min");
                                         vehicle_height = j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_MIN;
@@ -634,10 +634,10 @@ namespace cpp_message
                                 }
 
                                 // mass
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->mass){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->mass){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_MASS;
 
-                                    long trailer_mass = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->mass;
+                                    long trailer_mass = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->mass;
                                     if(trailer_mass < j2735_v2x_msgs::msg::TrailerMass::TRAILER_MASS_MIN){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer mass value less than min, setting to min");
                                         trailer_mass = j2735_v2x_msgs::msg::TrailerMass::TRAILER_MASS_MIN;
@@ -646,21 +646,21 @@ namespace cpp_message
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer mass value greater than max, setting to max");
                                         trailer_mass = j2735_v2x_msgs::msg::TrailerMass::TRAILER_MASS_MAX;
                                     }
-                                    trailer_unit_description.mass.trailer_mass = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->mass;
+                                    trailer_unit_description.mass.trailer_mass = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->mass;
                                 }
 
                                 // bumperHeights
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->bumperHeights){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->bumperHeights){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_BUMPER_HEIGHTS;
 
-                                    uint8_t front_bumper_height = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->bumperHeights->front;
+                                    uint8_t front_bumper_height = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->bumperHeights->front;
                                     if(front_bumper_height > j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded front bumper height value greater than max, setting to max");
                                         front_bumper_height = j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX;
                                     }      
                                     trailer_unit_description.bumper_heights.front.bumper_height = front_bumper_height;
 
-                                    uint8_t rear_bumper_height = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->bumperHeights->rear;
+                                    uint8_t rear_bumper_height = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->bumperHeights->rear;
                                     if(rear_bumper_height > j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded rear bumper height value greater than max, setting to max");
                                         rear_bumper_height = j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX;
@@ -669,10 +669,10 @@ namespace cpp_message
                                 }
 
                                 // centerOfGravity
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->centerOfGravity){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->centerOfGravity){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_CENTER_OF_GRAVITY;
 
-                                    long center_of_gravity = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->centerOfGravity;
+                                    long center_of_gravity = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->centerOfGravity;
                                     if(center_of_gravity < j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_MIN){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded center of gravity value less than min, setting to min");
                                         center_of_gravity = j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_MIN;
@@ -685,18 +685,18 @@ namespace cpp_message
                                 }
 
                                 // frontPivot
-                                trailer_unit_description.front_pivot = decode_pivot_point_description(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->frontPivot);
+                                trailer_unit_description.front_pivot = decode_pivot_point_description(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->frontPivot);
 
                                 // rearPivot
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->rearPivot){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->rearPivot){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_PIVOT;
-                                    trailer_unit_description.rear_pivot = decode_pivot_point_description(*part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->rearPivot);
+                                    trailer_unit_description.rear_pivot = decode_pivot_point_description(*part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->rearPivot);
                                 }
 
                                 // rearWheelOffset
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->rearWheelOffset){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->rearWheelOffset){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_WHEEL_OFFSET;
-                                    long rear_wheel_offset = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->rearWheelOffset;
+                                    long rear_wheel_offset = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->rearWheelOffset;
                                     if(rear_wheel_offset < j2735_v2x_msgs::msg::OffsetB12::OFFSET_MIN){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded rear wheel offset value less than min, setting to min");
                                         rear_wheel_offset = j2735_v2x_msgs::msg::OffsetB12::OFFSET_MIN;
@@ -709,7 +709,7 @@ namespace cpp_message
                                 }
 
                                 // positionOffset.x
-                                long position_offset_x = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->positionOffset.x;
+                                long position_offset_x = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->positionOffset.x;
                                 if(position_offset_x < j2735_v2x_msgs::msg::NodeXY24b::MIN){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer units position x-offset value less than min, setting to min");
                                     position_offset_x = j2735_v2x_msgs::msg::NodeXY24b::MIN;
@@ -721,7 +721,7 @@ namespace cpp_message
                                 trailer_unit_description.position_offset.x = position_offset_x;
 
                                 // positionOffset.x
-                                long position_offset_y = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->positionOffset.y;
+                                long position_offset_y = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->positionOffset.y;
                                 if(position_offset_y < j2735_v2x_msgs::msg::NodeXY24b::MIN){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer units position y-offset value less than min, setting to min");
                                     position_offset_y = j2735_v2x_msgs::msg::NodeXY24b::MIN;
@@ -733,9 +733,9 @@ namespace cpp_message
                                 trailer_unit_description.position_offset.y = position_offset_y;
 
                                 // elevationOffset
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->elevationOffset){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->elevationOffset){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_ELEVATION_OFFSET;
-                                    long elevation_offset = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->elevationOffset;
+                                    long elevation_offset = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->elevationOffset;
                                     if(elevation_offset < j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_MIN){
                                         RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded elevation offset value less than min, setting to min");
                                         elevation_offset = j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_MIN;
@@ -748,10 +748,10 @@ namespace cpp_message
                                 }
 
                                 // crumbData
-                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData){
+                                if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData){
                                     trailer_unit_description.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_CRUMB_DATA;
 
-                                    for(size_t k = 0; k < part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.count; k++){
+                                    for(size_t k = 0; k < part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.count; k++){
                                         if(k > j2735_v2x_msgs::msg::TrailerHistoryPointList::MAX_SIZE){
                                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Decoded TrailerHistoryPointList size is greater than max. Rejecting list element.");
                                             break;
@@ -760,7 +760,7 @@ namespace cpp_message
                                         j2735_v2x_msgs::msg::TrailerHistoryPoint trailer_history_point;
 
                                         // pivotAngle
-                                        long pivot_angle = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->pivotAngle;
+                                        long pivot_angle = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->pivotAngle;
                                         if(pivot_angle < j2735_v2x_msgs::msg::Angle::ANGLE_MIN){
                                             RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded pivot angle value less than min, setting to min");
                                             pivot_angle = j2735_v2x_msgs::msg::Angle::ANGLE_MIN;
@@ -773,7 +773,7 @@ namespace cpp_message
                                         trailer_history_point.pivot_angle.angle = pivot_angle;
 
                                         // timeOffset
-                                        long time_offset = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->timeOffset;
+                                        long time_offset = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->timeOffset;
                                         if(time_offset < j2735_v2x_msgs::msg::TimeOffset::MIN){
                                             RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded time offset value less than min, setting to min");
                                             time_offset = j2735_v2x_msgs::msg::TimeOffset::MIN;
@@ -785,7 +785,7 @@ namespace cpp_message
                                         trailer_history_point.time_offset.offset = time_offset;
 
                                         // positionOffset
-                                        long point_position_offset_x = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->positionOffset.x;
+                                        long point_position_offset_x = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->positionOffset.x;
                                         if(point_position_offset_x < j2735_v2x_msgs::msg::NodeXY24b::MIN){
                                             RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer history point x-offset value less than min, setting to min");
                                             point_position_offset_x = j2735_v2x_msgs::msg::NodeXY24b::MIN;
@@ -796,7 +796,7 @@ namespace cpp_message
                                         }
                                         trailer_history_point.position_offset.x = point_position_offset_x;
 
-                                        long point_position_offset_y = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->positionOffset.y;
+                                        long point_position_offset_y = part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->positionOffset.y;
                                         if(point_position_offset_y < j2735_v2x_msgs::msg::NodeXY24b::MIN){
                                             RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer history point y-offset value less than min, setting to min");
                                             point_position_offset_y = j2735_v2x_msgs::msg::NodeXY24b::MIN;
@@ -808,10 +808,10 @@ namespace cpp_message
                                         trailer_history_point.position_offset.y = point_position_offset_y;
 
                                         // elevationOffset
-                                        if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->elevationOffset){
+                                        if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->elevationOffset){
                                             trailer_history_point.presence_vector |= j2735_v2x_msgs::msg::TrailerHistoryPoint::HAS_ELEVATION_OFFSET;
 
-                                            long elevation_offset = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->elevationOffset;
+                                            long elevation_offset = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->elevationOffset;
                                             if(elevation_offset < j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_MIN){
                                                 RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded elevation offset value less than min, setting to min");
                                                 elevation_offset = j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_MIN;
@@ -824,10 +824,10 @@ namespace cpp_message
                                         }
 
                                         // heading
-                                        if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->heading){
+                                        if(part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->heading){
                                             trailer_history_point.presence_vector |= j2735_v2x_msgs::msg::TrailerHistoryPoint::HAS_HEADING;
 
-                                            long heading = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.trailers->units.list.array[j]->crumbData->list.array[k]->heading;
+                                            long heading = *part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse->units.list.array[j]->crumbData->list.array[k]->heading;
                                             if(heading < j2735_v2x_msgs::msg::CoarseHeading::MIN){
                                                 RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded heading value less than min, setting to min");
                                                 heading = j2735_v2x_msgs::msg::CoarseHeading::MIN;
@@ -947,10 +947,10 @@ namespace cpp_message
                             }
 
                             // vehicleData.trailerWeight
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.vehicleData->trailerWeight){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.vehicleData->doNotUse){
                                 part_ii_output.supplemental_vehicle_extensions.vehicle_data.presence_vector |= j2735_v2x_msgs::msg::VehicleData::HAS_TRAILER_WEIGHT;
 
-                                uint16_t trailer_weight = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.vehicleData->trailerWeight;
+                                uint16_t trailer_weight = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.vehicleData->doNotUse;
                                 if(trailer_weight > j2735_v2x_msgs::msg::TrailerWeight::TRAILER_WEIGHT_MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded trailer weight value greater than max, setting to max");
                                     trailer_weight = j2735_v2x_msgs::msg::TrailerWeight::TRAILER_WEIGHT_MAX;
@@ -960,36 +960,36 @@ namespace cpp_message
                         }
 
                         // weatherReport
-                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport){
+                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1){
                             part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_REPORT;
 
-                            part_ii_output.supplemental_vehicle_extensions.weather_report.is_raining.precip_yes_no = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->isRaining;
+                            part_ii_output.supplemental_vehicle_extensions.weather_report.is_raining.precip_yes_no = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->isRaining;
 
                             // weatherReport.rainRate
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->rainRate){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->rainRate){
                                 part_ii_output.supplemental_vehicle_extensions.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_RAIN_RATE;
-                                part_ii_output.supplemental_vehicle_extensions.weather_report.rain_rate.precip_rate = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->rainRate;
+                                part_ii_output.supplemental_vehicle_extensions.weather_report.rain_rate.precip_rate = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->rainRate;
                             }
                             // weatherReport.precipSituation
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->precipSituation){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->precipSituation){
                                 part_ii_output.supplemental_vehicle_extensions.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_PRECIP_SITUATION;
-                                part_ii_output.supplemental_vehicle_extensions.weather_report.precip_situation.ess_precip_situation = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->precipSituation;
+                                part_ii_output.supplemental_vehicle_extensions.weather_report.precip_situation.ess_precip_situation = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->precipSituation;
                             }
                             // weatherReport.solarRadiation
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->solarRadiation){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->solarRadiation){
                                 part_ii_output.supplemental_vehicle_extensions.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_SOLAR_RADIATION;
-                                part_ii_output.supplemental_vehicle_extensions.weather_report.solar_radiation.ess_solar_radiation = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->solarRadiation;
+                                part_ii_output.supplemental_vehicle_extensions.weather_report.solar_radiation.ess_solar_radiation = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->solarRadiation;
                             }
                             // weatherReport.friction
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->friction){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->friction){
                                 part_ii_output.supplemental_vehicle_extensions.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_FRICTION;
-                                part_ii_output.supplemental_vehicle_extensions.weather_report.friction.ess_mobile_friction = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->friction;
+                                part_ii_output.supplemental_vehicle_extensions.weather_report.friction.ess_mobile_friction = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->friction;
                             }
                             // weatherReport.roadFriction
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->roadFriction){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->roadFriction){
                                 part_ii_output.supplemental_vehicle_extensions.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_ROAD_FRICTION;
 
-                                uint8_t road_friction = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherReport->roadFriction;
+                                uint8_t road_friction = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1->roadFriction;
                                 if(road_friction > j2735_v2x_msgs::msg::CoefficientOfFriction::COEFFICIENT_MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded road friction value greater than max, setting to max");
                                     road_friction = j2735_v2x_msgs::msg::CoefficientOfFriction::COEFFICIENT_MAX;   
@@ -999,48 +999,48 @@ namespace cpp_message
                         }
 
                         // weatherProbe
-                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe){
+                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2){
                             part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_PROBE;
 
                             // weatherReport.airTemp
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->airTemp){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->airTemp){
                                 part_ii_output.supplemental_vehicle_extensions.weather_probe.presence_vector |= j2735_v2x_msgs::msg::WeatherProbe::HAS_AIR_TEMP;
-                                part_ii_output.supplemental_vehicle_extensions.weather_probe.air_temp.temperature = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->airTemp;
+                                part_ii_output.supplemental_vehicle_extensions.weather_probe.air_temp.temperature = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->airTemp;
                             }
 
                             // weatherReport.airPressure
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->airPressure){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->airPressure){
                                 part_ii_output.supplemental_vehicle_extensions.weather_probe.presence_vector |= j2735_v2x_msgs::msg::WeatherProbe::HAS_AIR_PRESSURE;
-                                part_ii_output.supplemental_vehicle_extensions.weather_probe.air_pressure.pressure = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->airPressure;
+                                part_ii_output.supplemental_vehicle_extensions.weather_probe.air_pressure.pressure = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->airPressure;
                             }
 
                             // weatherReport.rainRates
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates){
                                 part_ii_output.supplemental_vehicle_extensions.weather_probe.presence_vector |= j2735_v2x_msgs::msg::WeatherProbe::HAS_RAIN_RATES;
-                                part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.status_front.wiper_status = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates->statusFront;
-                                part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.rate_front.wiper_rate = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates->rateFront;
+                                part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.status_front.wiper_status = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates->statusFront;
+                                part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.rate_front.wiper_rate = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates->rateFront;
 
-                                if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates->statusRear){
+                                if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates->statusRear){
                                     part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.presence_vector |= j2735_v2x_msgs::msg::WiperSet::HAS_STATUS_REAR;
-                                    part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.status_rear.wiper_status = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates->statusRear;
+                                    part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.status_rear.wiper_status = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates->statusRear;
                                 }
 
-                                if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates->rateRear){
+                                if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates->rateRear){
                                     part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.presence_vector |= j2735_v2x_msgs::msg::WiperSet::HAS_RATE_REAR;
-                                    part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.rate_rear.wiper_rate = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.weatherProbe->rainRates->rateRear;
+                                    part_ii_output.supplemental_vehicle_extensions.weather_probe.rain_rates.rate_rear.wiper_rate = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2->rainRates->rateRear;
                                 }
                             }
                         }
 
                         // obstacleDetection
-                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle){
+                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3){
                             part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_OBSTACLE;
 
                             // obDist
-                            part_ii_output.supplemental_vehicle_extensions.obstacle.ob_dist.distance = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->obDist;
+                            part_ii_output.supplemental_vehicle_extensions.obstacle.ob_dist.distance = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->obDist;
 
                             // obDirect
-                            long direction_angle = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->obDirect;
+                            long direction_angle = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->obDirect;
                             if(direction_angle < j2735_v2x_msgs::msg::Angle::ANGLE_MIN){
                                 RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded object direction angle value less than min, setting to min");
                                 direction_angle = j2735_v2x_msgs::msg::Angle::ANGLE_MIN;
@@ -1053,9 +1053,9 @@ namespace cpp_message
                             part_ii_output.supplemental_vehicle_extensions.obstacle.ob_direct.direction.angle = direction_angle;
 
                             // dateTime.year
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.year){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.year){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::YEAR;
-                                uint16_t year = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.year;
+                                uint16_t year = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.year;
                                 if(year > j2735_v2x_msgs::msg::DYear::MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded year value greater than max, setting to max");
                                     year = j2735_v2x_msgs::msg::DYear::MAX;   
@@ -1063,9 +1063,9 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.year.year = year;
                             }
                             // dateTime.month
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.month){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.month){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::MONTH;
-                                uint8_t month = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.month;
+                                uint8_t month = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.month;
                                 if(month > j2735_v2x_msgs::msg::DMonth::MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded month value greater than max, setting to max");
                                     month = j2735_v2x_msgs::msg::DMonth::MAX;   
@@ -1073,9 +1073,9 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.month.month = month;
                             }
                             // dateTime.day
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.day){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.day){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::DAY;
-                                uint8_t day = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.day;
+                                uint8_t day = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.day;
                                 if(day > j2735_v2x_msgs::msg::DDay::MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded day value greater than max, setting to max");
                                     day = j2735_v2x_msgs::msg::DDay::MAX;   
@@ -1083,9 +1083,9 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.day.day = day;
                             }
                             // dateTime.hour
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.hour){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.hour){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::HOUR;
-                                uint8_t hour = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.hour;
+                                uint8_t hour = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.hour;
                                 if(hour > j2735_v2x_msgs::msg::DHour::UNAVAILABLE){
                                     // Note: Value checked against 'UNAVAILABLE' since this value is larger than 'HOUR_OF_DAY_MAX'
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded hour value greater than max, setting to max");
@@ -1094,9 +1094,9 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.hour.hour = hour;
                             }
                             // dateTime.minute
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.minute){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.minute){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::MINUTE;
-                                uint8_t minute = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.minute;
+                                uint8_t minute = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.minute;
                                 if(minute > j2735_v2x_msgs::msg::DMinute::UNAVAILABLE){
                                     // Note: Value checked against 'UNAVAILABLE' since this value is larger than 'MINUTE_IN_HOUR_MAX'
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded minute value greater than max, setting to max");
@@ -1105,15 +1105,15 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.minute.minute = minute;
                             }
                             // dateTime.second
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.second){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.second){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::SECOND;
-                                uint16_t second = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.second;
+                                uint16_t second = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.second;
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.second.millisecond = second;
                             }
                             // dateTime.offset
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.offset){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.offset){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::OFFSET;
-                                long offset = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->dateTime.offset;
+                                long offset = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->dateTime.offset;
                                 if(offset > j2735_v2x_msgs::msg::DOffset::MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded offset value greater than max, setting to max");
                                     offset = j2735_v2x_msgs::msg::DOffset::MAX;   
@@ -1126,8 +1126,8 @@ namespace cpp_message
                             }
 
                             // description
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->description){
-                                int description_code = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->description;
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->description){
+                                int description_code = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->description;
                                 if(description_code > j2735_v2x_msgs::msg::ObstacleDetection::DESCRIPTION_MAX){
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded obstacle description code greater than max, this field will not be added to output");
                                 }
@@ -1136,23 +1136,23 @@ namespace cpp_message
                                 }
                                 else{
                                     part_ii_output.supplemental_vehicle_extensions.obstacle.presence_vector |= j2735_v2x_msgs::msg::ObstacleDetection::HAS_DESCRIPTION;
-                                    part_ii_output.supplemental_vehicle_extensions.obstacle.description.code = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->description;
+                                    part_ii_output.supplemental_vehicle_extensions.obstacle.description.code = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->description;
                                 }                                
                             }
 
                             // locationDetails
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->locationDetails){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->locationDetails){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.presence_vector |= j2735_v2x_msgs::msg::ObstacleDetection::HAS_LOCATION_DETAILS;
-                                part_ii_output.supplemental_vehicle_extensions.obstacle.location_details.generic_locations = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->locationDetails;
+                                part_ii_output.supplemental_vehicle_extensions.obstacle.location_details.generic_locations = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->locationDetails;
                             }
 
                             // vertEvent
-                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->vertEvent){
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->vertEvent){
                                 part_ii_output.supplemental_vehicle_extensions.obstacle.presence_vector |= j2735_v2x_msgs::msg::ObstacleDetection::HAS_VERT_EVENT;
 
-                                part_ii_output.supplemental_vehicle_extensions.obstacle.vert_event.exceeded_wheels |= part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->vertEvent->buf[0];
-                                for(int j = 1; j < part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->vertEvent->size; j++){
-                                    part_ii_output.supplemental_vehicle_extensions.obstacle.vert_event.exceeded_wheels |= (part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.obstacle->vertEvent->buf[j]);
+                                part_ii_output.supplemental_vehicle_extensions.obstacle.vert_event.exceeded_wheels |= part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->vertEvent->buf[0];
+                                for(int j = 1; j < part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->vertEvent->size; j++){
+                                    part_ii_output.supplemental_vehicle_extensions.obstacle.vert_event.exceeded_wheels |= (part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3->vertEvent->buf[j]);
                                 }
                             }
                         }
@@ -1172,11 +1172,11 @@ namespace cpp_message
                         }
 
                         // speedProfile
-                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.speedProfile){
+                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse4){
                             part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SPEED_PROFILE;
 
-                            for(size_t j = 0; j < part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.speedProfile->speedReports.list.count; j++){
-                                long speed = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.speedProfile->speedReports.list.array[j];
+                            for(size_t j = 0; j < part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse4->speedReports.list.count; j++){
+                                long speed = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse4->speedReports.list.array[j];
                                 if(speed > j2735_v2x_msgs::msg::GrossSpeed::SPEED_UNAVAILABLE){
                                     // Note: Value checked against 'SPEED_UNAVAILABLE' since this value is larger than 'SPEED_MAX'
                                     RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded speed value greater than max, setting to max");
@@ -2085,7 +2085,7 @@ namespace cpp_message
 
                         trailer_data->units = *trailer_unit_description_list;
 
-                        part_ii_element->partII_Value.choice.SpecialVehicleExtensions.trailers = trailer_data;
+                        part_ii_element->partII_Value.choice.SpecialVehicleExtensions.doNotUse = trailer_data;
                     }
                 }
 
@@ -2225,7 +2225,7 @@ namespace cpp_message
                             }
                             *trailer_weight_ptr = trailer_weight;
                             
-                            vehicle_data->trailerWeight = trailer_weight_ptr;
+                            vehicle_data->doNotUse = trailer_weight_ptr; // deprecated in J2735 2024, was trailerWeight
                         }
  
                          part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.vehicleData = vehicle_data;
@@ -2280,7 +2280,7 @@ namespace cpp_message
                             weather_report->roadFriction = road_friction_ptr;
                         }
 
-                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.weatherReport = weather_report;
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.doNotUse1 = weather_report;
                     }
 
                     // weatherProbe
@@ -2341,7 +2341,7 @@ namespace cpp_message
                             weather_probe->rainRates = rain_rates;
                         }
 
-                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.weatherProbe = weather_probe;
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.doNotUse2 = weather_probe;
                     }
 
                     // obstacleDetection
@@ -2501,7 +2501,7 @@ namespace cpp_message
                             obstacle_detection->vertEvent = vert_event;
                         }
                         
-                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.obstacle = obstacle_detection;
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.doNotUse3 = obstacle_detection;
                     }
 
                     // status
@@ -2551,7 +2551,7 @@ namespace cpp_message
                         speed_profile->speedReports = *speed_reports;
 
 
-                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.speedProfile = speed_profile;
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.doNotUse4 = speed_profile;
                     }
                 }
                 asn_sequence_add(&part_ii_list->list, part_ii_element);
