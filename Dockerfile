@@ -62,4 +62,5 @@ SHELL ["/bin/bash", "-c"]
 
 # build all dependencies
 RUN ${HOME}/src/docker/install.sh
+RUN mkdir -p /home/carma/.vscode-server && chown -R carma:carma /home/carma/.vscode-server
 ENTRYPOINT ["sh", "/home/carma/.base-image/entrypoint.sh"]
