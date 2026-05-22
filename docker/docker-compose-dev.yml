@@ -26,9 +26,6 @@ services:
       dockerfile: Dockerfile
       args:
         - ROS_DISTRO=${ROS_DISTRO:-humble}
-        - UID=1001
-        - GID=1001
-        - USERNAME=devuser
       target: dev
     # Interactive shell
     stdin_open: true
@@ -44,5 +41,12 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ../ros-conversion:/home/carma/src/ros-conversion:rw
+      - /home/vboxuser/Leidos/v2x-ros-conversion:/home/carma/src/ros-conversion:rw
+      - /home/vboxuser/Leidos/carma-msgs:/home/carma/src/CARMAMsgs:rw
+      - /home/vboxuser/Leidos/J2735-2024/J2735ASN_202409:/home/carma/src/j2735_202409:ro
+      - vscode-server:/home/carma/.vscode-server:rw
+      - /home/vboxuser/.claude:/home/carma/.claude:rw
     command: sleep infinity
+
+volumes:
+  vscode-server:
