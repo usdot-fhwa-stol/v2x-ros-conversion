@@ -220,6 +220,91 @@ The 2024 standard renames `SignPrority` → `SignPriority`. No `SignPrority.msg`
 | `carma_v2x_msgs/msg/` | 4 | ~34 | ~38 |
 | **Total** | **10** | **~194** | **~204** |
 
+#### 0.9 `doNotUse` Field Audit and Cleanup
+
+The J2735 2024 standard renames several previously-active fields to `doNotUse` to
+deprecate them while preserving wire-format backward compatibility. This step identifies
+all such fields, updates ROS `.msg` definitions, and defines the handling policy for
+converter code.
+
+##### 0.9a Complete inventory of `doNotUse` fields
+
+Searched all 43 ASN.1 modules in `j2735_202409/*.asn` for `doNotUse`. 12 occurrences found
+across 4 types in 2 message families:
+
+**BSM — `BasicSafetyMessage` module:**
+
+| # | Parent type | 2024 field name | 2016 field name | ASN.1 type | OPTIONAL? |
+|---|-------------|----------------|-----------------|------------|-----------|
+| 1 | `SpecialVehicleExtensions` | `doNotUse` | `trailers` | `TrailerData` | OPTIONAL |
+| 2 | `SupplementalVehicleExtensions` | `doNotUse1` | `weatherReport` | `WeatherReport` | OPTIONAL |
+| 3 | `SupplementalVehicleExtensions` | `doNotUse2` | `weatherProbe` | `WeatherProbe` | OPTIONAL |
+| 4 | `SupplementalVehicleExtensions` | `doNotUse3` | `obstacle` | `ObstacleDetection` | OPTIONAL |
+| 5 | `SupplementalVehicleExtensions` | `doNotUse4` | `speedProfile` | `SpeedProfile` | OPTIONAL |
+| 6 | `SupplementalVehicleExtensions` | `doNotUse5` | `theRTCM` | `RTCMPackage` | OPTIONAL |
+| 7 | `TrailerData` | `doNotUse` | `notUsed` / `sspIndex` | `SSPindex` | REQUIRED |
+| 8 | `VehicleData` | `doNotUse` | `trailerWeight` | `TrailerWeight` | OPTIONAL |
+
+**TIM — `TravelerInformation` module:**
+
+| # | Parent type | 2024 field name | 2016 field name | ASN.1 type | OPTIONAL? |
+|---|-------------|----------------|-----------------|------------|-----------|
+| 9 | `TravelerDataFrame` | `doNotUse1` | `sspTimRights` | `SSPindex` | REQUIRED |
+| 10 | `TravelerDataFrame` | `doNotUse2` | `sspLocationRights` | `SSPindex` | REQUIRED |
+| 11 | `TravelerDataFrame` | `doNotUse3` | `sspMsgRights1` | `SSPindex` | REQUIRED |
+| 12 | `TravelerDataFrame` | `doNotUse4` | `sspMsgRights2` | `SSPindex` | REQUIRED |
+
+##### 0.9b Current `.msg` state and required changes
+
+**OPTIONAL `doNotUse` fields — remove from `.msg` presence vectors:**
+
+These fields should be removed from the presence vector constants and their field
+declarations dropped entirely. They must not be decoded or encoded.
+
+| `.msg` file | Field to remove | Presence constant to remove |
+|------------|-----------------|----------------------------|
+| `j2735_v2x_msgs/msg/SpecialVehicleExtensions.msg` | `trailers` (TrailerData) | `HAS_TRAILERS = 4` |
+| `j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `weather_report` | `HAS_WEATHER_REPORT = 8` |
+| `j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `weather_probe` | `HAS_WEATHER_PROBE = 16` |
+| `j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `obstacle` | `HAS_OBSTACLE = 32` |
+| `j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `speed_profile` | `HAS_SPEED_PROFILE = 128` |
+| `j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `the_rtcm` | `HAS_THE_RTCM = 256` |
+| `j2735_v2x_msgs/msg/VehicleData.msg` | `trailer_weight` | `HAS_TRAILER_WEIGHT = 8` |
+| `carma_v2x_msgs/msg/SpecialVehicleExtensions.msg` | `trailers` | `HAS_TRAILERS = 4` |
+| `carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `weather_report` | `HAS_WEATHER_REPORT = 8` |
+| `carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `weather_probe` | `HAS_WEATHER_PROBE = 16` |
+| `carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `obstacle` | `HAS_OBSTACLE = 32` |
+| `carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `speed_profile` | `HAS_SPEED_PROFILE = 128` |
+| `carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | `the_rtcm` | `HAS_THE_RTCM = 256` |
+| `carma_v2x_msgs/msg/VehicleData.msg` | `trailer_weight` | `HAS_TRAILER_WEIGHT = 8` |
+
+**REQUIRED `doNotUse` fields — rename but keep (wire-format placeholder):**
+
+These are REQUIRED in the ASN.1 SEQUENCE, so they must remain in the `.msg` to preserve
+encoding position. Rename the field to `do_not_use` and add a comment.
+
+| `.msg` file | Current field | New field name |
+|------------|---------------|----------------|
+| `j2735_v2x_msgs/msg/TrailerData.msg` | `uint8 ssp_index` | `uint8 do_not_use` |
+| `carma_v2x_msgs/msg/TrailerData.msg` | `uint8 ssp_index` | `uint8 do_not_use` |
+| `j2735_v2x_msgs/msg/TravelerDataFrame.msg` | `do_not_use1..4` | Already correct (from TIM commit) |
+
+##### 0.9c Converter code policy for `doNotUse` fields
+
+**Decode (ASN → ROS):** Do NOT decode `doNotUse` fields into ROS messages. If the ASN.1
+struct's `doNotUse` pointer is non-null (for OPTIONAL fields) or the value is non-zero
+(for REQUIRED SSPindex fields), log a `RCLCPP_WARN` with the message:
+`"Received non-empty doNotUse field '<field_name>' in <TypeName> — ignoring per J2735 2024"`
+
+**Encode (ROS → ASN):** Do NOT encode `doNotUse` fields. For OPTIONAL fields, leave the
+pointer as `nullptr`. For REQUIRED SSPindex fields, set to `0`.
+
+##### 0.9d Renumbering of presence vector constants
+
+After removing `doNotUse` fields, the remaining presence vector constants keep their
+original bit values to avoid breaking existing code that checks specific bits.
+New fields added in Groups 2-3 continue from the next available power-of-2.
+
 ---
 
 ### Group 1 — Compile-breaking field renames in `BSM_Message.cpp`
@@ -239,10 +324,31 @@ File: `ros-conversion/ros-conversion/cpp_message/src/BSM_Message.cpp`
 | `SupplementalVehicleExtensions` | `->theRTCM` | `->doNotUse5` |
 | `VehicleData` | `->trailerWeight` | `->doNotUse` |
 
-**Policy for deprecated fields:** Keep the existing decode/encode logic but swap
-the struct member name. The ROS `.msg` field names (`trailers`, `weather_report`,
-`trailer_weight`, etc.) are **not renamed** — this preserves backward compatibility
-for ROS applications. Add a deprecation comment at the access site.
+**Policy for deprecated fields (UPDATED per 0.9c):** Do NOT process these fields.
+Remove all existing decode/encode logic for `doNotUse` fields. Instead:
+- **Decode:** If the `doNotUse` pointer is non-null, log `RCLCPP_WARN` and skip.
+- **Encode:** Leave `doNotUse` pointers as `nullptr` (do not populate from ROS msg).
+
+The corresponding ROS `.msg` fields are removed (per 0.9b), so there is nothing to
+read from or write to on the ROS side.
+
+**Specific code to remove in `BSM_Message.cpp`:**
+- `SpecialVehicleExtensions.doNotUse` (trailers): ~180 lines of trailer decode (lines ~578–754)
+  and ~100 lines of trailer encode (lines ~2020–2088). Replace with `RCLCPP_WARN`.
+- `SupplementalVehicleExtensions.doNotUse1` (weatherReport): decode ~lines 842–870 + encode ~2236–2283.
+- `SupplementalVehicleExtensions.doNotUse2` (weatherProbe): decode ~lines 872–920 + encode ~2288–2344.
+- `SupplementalVehicleExtensions.doNotUse3` (obstacle): decode ~lines 922–960 + encode ~2440–2504.
+- `SupplementalVehicleExtensions.doNotUse4` (speedProfile): decode ~lines 962–990 + encode ~2532–2554.
+- `VehicleData.doNotUse` (trailerWeight): decode ~line 480 + encode ~2217–2228.
+- `SupplementalVehicleExtensions.doNotUse5` (theRTCM): not implemented — no code to remove.
+
+**Also remove from `bsm_convertor.cpp`:**
+- `trailer_weight` conversion (~line 324–326)
+- `weather_report` conversion (~lines 330–363)
+- `weather_probe` conversion (following weather_report)
+- `obstacle` conversion
+- `speed_profile` conversion
+- `the_rtcm` — not implemented, nothing to remove
 
 ---
 
@@ -259,19 +365,23 @@ for ROS applications. Add a deprecation comment at the access site.
   (No .msg exists yet; `Axles_t` is defined in `Axles.h`)
 
 #### 2b. Update `j2735_v2x_msgs/msg/VehicleData.msg`
-- Add comment marking `HAS_TRAILER_WEIGHT` / `trailer_weight` as deprecated (maps to `doNotUse`)
+- **Remove** `HAS_TRAILER_WEIGHT = 8` and `trailer_weight` field (doNotUse per 0.9b)
 - Add presence flags: `HAS_TRAILER_PRESENT=16`, `HAS_PIVOT_POINT=32`, `HAS_AXLES=64`, `HAS_LEAN_ANGLE=128`
 - Add fields: `bool trailer_present`, `j2735_v2x_msgs/PivotPointDescription pivot_point`,
   `j2735_v2x_msgs/Axles axles`, `int32 lean_angle`
 
 #### 2c. Mirror changes in `CARMAMsgs/carma_v2x_msgs/msg/VehicleData.msg`
 
-#### 2d. `BSM_Message.cpp` — add decode/encode for new fields
+#### 2d. `BSM_Message.cpp` — add decode/encode for new fields + remove `doNotUse`
+- **Remove** existing decode/encode for `trailerWeight` / `doNotUse`. Replace with
+  `RCLCPP_WARN` if `vehicleData->doNotUse` is non-null on decode (per 0.9c).
 - In decode path: check `vehicleData->trailerPresent`, `->pivotPoint`, `->axles`, `->leanAngle`
   and populate the ROS msg with presence flags set accordingly.
 - In encode path: if presence flag set, allocate and fill the corresponding ASN struct pointers.
+  Leave `doNotUse` as `nullptr`.
 
-#### 2e. `bsm_convertor.cpp` — add conversion for new fields
+#### 2e. `bsm_convertor.cpp` — add conversion for new fields + remove `doNotUse`
+- **Remove** existing `trailer_weight` conversion (the field no longer exists in the .msg)
 - `trailer_present`: boolean, pass through (no unit conversion)
 - `pivot_point`: already handled elsewhere in the file — reuse `decode_pivot_point_description()`
 - `axles`: pass through integer counts, no unit conversion
@@ -294,18 +404,28 @@ for ROS applications. Add a deprecation comment at the access site.
 - `RptVehicleClass.msg` — enum for FHWA vehicle classes (from `RptVehicleClass.h`)
 
 #### 3b. Update `j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg`
+- **Remove** `doNotUse` fields and their presence constants (per 0.9b):
+  `HAS_WEATHER_REPORT`, `HAS_WEATHER_PROBE`, `HAS_OBSTACLE`, `HAS_SPEED_PROFILE`, `HAS_THE_RTCM`
+  and fields `weather_report`, `weather_probe`, `obstacle`, `speed_profile`, `the_rtcm`
 - Add presence flags: `HAS_FHWA_VEHICLE_CLASS=512`, `HAS_TRAILERS=1024`, `HAS_SCHOOL_BUS=2048`
 - Add fields: `j2735_v2x_msgs/RptVehicleClass fhwa_vehicle_class`,
   `j2735_v2x_msgs/TrailersJ2945Slash1B trailers`,
   `j2735_v2x_msgs/SchoolBusJ2945Slash1C school_bus`
 
 #### 3c. Mirror changes in `carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg`
+- Same removals and additions as 3b
 
-#### 3d. `BSM_Message.cpp` — add decode/encode for new extension fields
-- Decode: check pointer, set presence flag, populate ROS fields
-- Encode: if presence flag set, allocate and fill ASN struct
+#### 3d. `BSM_Message.cpp` — add decode/encode for new extension fields + remove `doNotUse`
+- **Remove** all existing decode/encode logic for `weatherReport` (`doNotUse1`),
+  `weatherProbe` (`doNotUse2`), `obstacle` (`doNotUse3`), `speedProfile` (`doNotUse4`).
+  (`theRTCM` / `doNotUse5` was never implemented — no code to remove.)
+- Replace each with an `RCLCPP_WARN` if the `doNotUse*` pointer is non-null on decode (per 0.9c).
+- On encode, leave all `doNotUse*` pointers as `nullptr`.
+- Add decode/encode for new fields: check pointer, set presence flag, populate ROS fields.
 
-#### 3e. `bsm_convertor.cpp` — add conversion for new fields
+#### 3e. `bsm_convertor.cpp` — add conversion for new fields + remove `doNotUse`
+- **Remove** existing conversion for `weather_report`, `weather_probe`, `obstacle`,
+  `speed_profile`, `the_rtcm` (these fields no longer exist in the .msg)
 - `fhwa_vehicle_class`: pass-through enum integer, no conversion
 - `trailers`: new list-based type; iterate and convert each `TrailerUnitDescJ2945Slash1B`
 - `school_bus`: boolean flags, pass through
@@ -406,14 +526,17 @@ These are pure additive changes; no conversion code changes needed in ros-conver
 
 ## Implementation Order
 
-1. **Group 1** first — these are compile blockers. Fix field renames in `BSM_Message.cpp`
-   to confirm the package compiles against 2024 headers.
-2. **Group 4 & 5** — trivial .msg-only changes, no risk.
-3. **Groups 2 & 3** — add new .msg types, update existing .msg files, then add
+1. **Group 0.9** first — update `.msg` files to remove/rename `doNotUse` fields. This
+   must happen before Groups 1-3 since the converter code changes depend on the new `.msg`
+   definitions.
+2. **Group 1** — fix field renames in `BSM_Message.cpp` and remove `doNotUse` decode/encode
+   logic. Confirm the package compiles against 2024 headers.
+3. **Group 4 & 5** — trivial .msg-only changes, no risk.
+4. **Groups 2 & 3** — add new .msg types, update existing .msg files, then add
    encode/decode in `BSM_Message.cpp`, then add conversion in `bsm_convertor.cpp`.
-4. **Group 6** — add `RoadAuthorityID.msg`, update IntersectionGeometry/State .msg files,
+5. **Group 6** — add `RoadAuthorityID.msg`, update IntersectionGeometry/State .msg files,
    then update `Map_Message.cpp` and `SPAT_Message.cpp`, then update convertors.
-5. **Group 7** — after obtaining ITIS codes from J2735 2024 standard document,
+6. **Group 7** — after obtaining ITIS codes from J2735 2024 standard document,
    add constants to .msg files.
 
 ---
@@ -422,16 +545,20 @@ These are pure additive changes; no conversion code changes needed in ros-conver
 
 | File | Change |
 |------|--------|
-| `ros-conversion/cpp_message/src/BSM_Message.cpp` | Group 1 renames + Groups 2d/3d new fields |
+| `ros-conversion/cpp_message/src/BSM_Message.cpp` | Group 1 renames + doNotUse removal + Groups 2d/3d new fields |
 | `ros-conversion/cpp_message/src/Map_Message.cpp` | Group 6e |
 | `ros-conversion/cpp_message/src/SPAT_Message.cpp` | Group 6f |
-| `ros-conversion/j2735_convertor/src/bsm_convertor.cpp` | Groups 2e, 3e |
+| `ros-conversion/j2735_convertor/src/bsm_convertor.cpp` | Groups 2e, 3e + doNotUse removal |
 | `ros-conversion/j2735_convertor/src/map_convertor.cpp` | Group 6g |
 | `ros-conversion/j2735_convertor/src/spat_convertor.cpp` | Group 6h |
-| `CARMAMsgs/j2735_v2x_msgs/msg/VehicleData.msg` | Group 2b |
-| `CARMAMsgs/carma_v2x_msgs/msg/VehicleData.msg` | Group 2c |
-| `CARMAMsgs/j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | Group 3b |
-| `CARMAMsgs/carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | Group 3c |
+| `CARMAMsgs/j2735_v2x_msgs/msg/SpecialVehicleExtensions.msg` | Group 0.9b (remove trailers) |
+| `CARMAMsgs/carma_v2x_msgs/msg/SpecialVehicleExtensions.msg` | Group 0.9b (remove trailers) |
+| `CARMAMsgs/j2735_v2x_msgs/msg/TrailerData.msg` | Group 0.9b (rename ssp_index) |
+| `CARMAMsgs/carma_v2x_msgs/msg/TrailerData.msg` | Group 0.9b (rename ssp_index) |
+| `CARMAMsgs/j2735_v2x_msgs/msg/VehicleData.msg` | Group 0.9b + 2b |
+| `CARMAMsgs/carma_v2x_msgs/msg/VehicleData.msg` | Group 0.9b + 2c |
+| `CARMAMsgs/j2735_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | Group 0.9b + 3b |
+| `CARMAMsgs/carma_v2x_msgs/msg/SupplementalVehicleExtensions.msg` | Group 0.9b + 3c |
 | `CARMAMsgs/j2735_v2x_msgs/msg/VehicleEventFlags.msg` | Group 4 |
 | `CARMAMsgs/j2735_v2x_msgs/msg/LaneSharing.msg` | Group 5 |
 | `CARMAMsgs/j2735_v2x_msgs/msg/IntersectionGeometry.msg` | Group 6b |
@@ -461,5 +588,9 @@ These are pure additive changes; no conversion code changes needed in ros-conver
 3. **Encode/decode round-trip** (manual): For BSM with VehicleData new fields and
    SupplementalVehicleExtensions new extension fields — encode a ROS msg to binary
    and decode back, verify field values are preserved.
-4. **Deprecated field handling**: Verify that a BSM binary containing the old `trailers`
-   field in SpecialVehicleExtensions (now `doNotUse` in ASN) still decodes without crash.
+4. **Deprecated field handling** (per 0.9c): Verify that a BSM binary containing any
+   of the `doNotUse` fields (trailers, weatherReport, weatherProbe, obstacle, speedProfile,
+   trailerWeight) decodes without crash and produces `RCLCPP_WARN` log messages.
+5. **Verify no data loss**: Confirm that `doNotUse` fields are NOT populated in encoded
+   output, even if the input ROS message somehow contained data for removed fields (should
+   be impossible with updated .msg, but verify at the ASN level).
