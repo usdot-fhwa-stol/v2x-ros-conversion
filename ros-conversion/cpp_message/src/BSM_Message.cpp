@@ -722,7 +722,8 @@ namespace cpp_message
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass){
                             part_ii_output.supplemental_vehicle_extensions.fhwa_vehicle_class = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass;
                         }
-
+                        
+                        // trailers (optional)
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers){
                             part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_TRAILERS;
 
@@ -789,7 +790,71 @@ namespace cpp_message
                             }
                             
                         }
-                    }
+                    
+                        // school_bus (optional)
+                        if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus){
+                            part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SCHOOL_BUS;
+                            
+                            // flashing amber lights
+                            part_ii_output.supplemental_vehicle_extensions.school_bus.flashing_amber_lights = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->flashingAmberLights;
+
+                            // flashing red lights
+                            part_ii_output.supplemental_vehicle_extensions.school_bus.flashing_red_lights = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->flashingRedLights;
+                            
+                            // students crossing front (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsCrossingFront){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_CROSSING_FRONT;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.students_crossing_front = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsCrossingFront;
+                            }
+
+                            // students crossing behind (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsCrossingBehind){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_CROSSING_BEHIND;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.students_crossing_behind = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsCrossingBehind;
+                            }
+
+                            // students loading (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsLoading){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_LOADING;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.students_loading = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsLoading;
+                            }
+
+                            // students unloading (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsUnloading){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_UNLOADING;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.students_unloading = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->studentsUnloading;
+                            }
+
+                            // wheelchair lift in use (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->wheelchairLiftInUse){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_WHEELCHAIR_LIFT_IN_USE;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.wheelchair_lift_in_use = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->wheelchairLiftInUse;
+                            }
+
+                            // emergency exit open (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyExitOpen){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_EXIT_OPEN;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.emergency_exit_open = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyExitOpen;
+                            }
+
+                            // emergency request medical (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestMedical){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_REQUEST_MEDICAL;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.emergency_request_medical = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestMedical;
+                            }
+
+                            // emergency request fire (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestFire){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_REQUEST_FIRE;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.emergency_request_fire = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestFire;
+                            }
+
+                            // emergency request police (optional)
+                            if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestPolice){
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_REQUEST_POLICE;
+                                part_ii_output.supplemental_vehicle_extensions.school_bus.emergency_request_police = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestPolice;
+                            }
+                        }
                     
                     // Add part_ii_output to output's part_ii list
                     output.part_ii.push_back(part_ii_output);
