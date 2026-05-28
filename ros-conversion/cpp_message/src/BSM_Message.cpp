@@ -1579,164 +1579,6 @@ namespace cpp_message
                          part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.vehicleData = vehicle_data;
                     }
 
-                        auto obstacle_detection = create_store_shared<ObstacleDetection_t>(shared_ptrs);
-
-                        // obDist
-                        obstacle_detection->obDist = supplemental_vehicle_ext_msg.obstacle.ob_dist.distance;
-
-                        // obDirect
-                        uint16_t ob_direct_angle = supplemental_vehicle_ext_msg.obstacle.ob_direct.direction.angle;
-                        if(ob_direct_angle > j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
-                            // Note: Value checked against 'ANGLE_UNAVAILABLE' since this value is larger than 'ANGLE_MAX'
-                            RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded object direction angle value greater than max, setting to max");
-                            ob_direct_angle = j2735_v2x_msgs::msg::Angle::ANGLE_MAX;
-                        }
-                        obstacle_detection->obDirect = ob_direct_angle;
-
-                        // dateTime
-                        auto date_time = create_store_shared<DDateTime_t>(shared_ptrs);
-
-                        // dateTime.year
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::YEAR){
-                            auto year_ptr = create_store_shared<DYear_t>(shared_ptrs);
-
-                            uint16_t year = supplemental_vehicle_ext_msg.obstacle.date_time.year.year;
-                            if(year > j2735_v2x_msgs::msg::DYear::MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded year value greater than max, setting to max");
-                                year = j2735_v2x_msgs::msg::DYear::MAX;   
-                            }
-                            *year_ptr = year;
-
-                            date_time->year = year_ptr;                           
-                        }
-
-                        // dateTime.month
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::MONTH){
-                            auto month_ptr = create_store_shared<DMonth_t>(shared_ptrs);
-
-                            uint16_t month = supplemental_vehicle_ext_msg.obstacle.date_time.month.month;
-                            if(month > j2735_v2x_msgs::msg::DMonth::MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded month value greater than max, setting to max");
-                                month = j2735_v2x_msgs::msg::DMonth::MAX;   
-                            }
-                            *month_ptr = month;
-
-                            date_time->month = month_ptr;                           
-                        }
-
-                        // dateTime.day
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::DAY){
-                            auto day_ptr = create_store_shared<DDay_t>(shared_ptrs);
-
-                            uint16_t day = supplemental_vehicle_ext_msg.obstacle.date_time.day.day;
-                            if(day > j2735_v2x_msgs::msg::DDay::MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded day value greater than max, setting to max");
-                                day = j2735_v2x_msgs::msg::DDay::MAX;   
-                            }
-                            *day_ptr = day;
-
-                            date_time->day = day_ptr;                           
-                        }
-                        
-                        // dateTime.hour
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::HOUR){
-                            auto hour_ptr = create_store_shared<DHour_t>(shared_ptrs);
-
-                            uint8_t hour = supplemental_vehicle_ext_msg.obstacle.date_time.hour.hour;
-                            if(hour > j2735_v2x_msgs::msg::DHour::UNAVAILABLE){
-                                // Note: Value checked against 'UNAVAILABLE' since this value is larger than 'HOUR_OF_DAY_MAX'
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded hour value greater than max, setting to max");
-                                hour = j2735_v2x_msgs::msg::DHour::HOUR_OF_DAY_MAX;   
-                            }
-                            *hour_ptr = hour;
-
-                            date_time->hour = hour_ptr;                           
-                        }
-
-                        // dateTime.minute
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::MINUTE){
-                            auto minute_ptr = create_store_shared<DMinute_t>(shared_ptrs);
-
-                            uint8_t minute = supplemental_vehicle_ext_msg.obstacle.date_time.minute.minute;
-                            if(minute > j2735_v2x_msgs::msg::DMinute::UNAVAILABLE){
-                                // Note: Value checked against 'UNAVAILABLE' since this value is larger than 'MINUTE_IN_HOUR_MAX'
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded minute value greater than max, setting to max");
-                                minute = j2735_v2x_msgs::msg::DMinute::MINUTE_IN_HOUR_MAX;   
-                            }
-                            *minute_ptr = minute;
-
-                            date_time->minute = minute_ptr;                           
-                        }
-
-                        // dateTime.second
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::SECOND){
-                            auto second_ptr = create_store_shared<DSecond_t>(shared_ptrs);
-                            *second_ptr = supplemental_vehicle_ext_msg.obstacle.date_time.second.millisecond;
-                            date_time->second = second_ptr;                           
-                        }
-
-                        // dateTime.offset
-                        if(supplemental_vehicle_ext_msg.obstacle.date_time.presence_vector & j2735_v2x_msgs::msg::DDateTime::OFFSET){
-                            auto offset_ptr = create_store_shared<DSecond_t>(shared_ptrs);
-
-                            long offset = supplemental_vehicle_ext_msg.obstacle.date_time.offset.offset_minute;
-                            if(offset > j2735_v2x_msgs::msg::DOffset::MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded millisecond value greater than max, setting to max");
-                                offset = j2735_v2x_msgs::msg::DOffset::MAX;   
-                            }
-                            else if(offset < j2735_v2x_msgs::msg::DOffset::MIN){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded millisecond value less than min, setting to min");
-                                offset = j2735_v2x_msgs::msg::DOffset::MIN;   
-                            }
-                            *offset_ptr = offset;
-
-                            date_time->offset = offset_ptr;                           
-                        }
-
-                        obstacle_detection->dateTime = *date_time;
-
-                        // description
-                        if(supplemental_vehicle_ext_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_DESCRIPTION){
-                            if(supplemental_vehicle_ext_msg.obstacle.description.code > j2735_v2x_msgs::msg::ObstacleDetection::DESCRIPTION_MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded obstacle description value greater than max, this optional field will not be encoded");
-                            }
-                            else if(supplemental_vehicle_ext_msg.obstacle.description.code < j2735_v2x_msgs::msg::ObstacleDetection::DESCRIPTION_MIN){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded obstacle description value less than min, this optional field will not be encoded");
-                            }
-                            else{
-                                auto itis_code2 = create_store_shared<ITIS_ITIScodes_t>(shared_ptrs);
-                                *itis_code2 = supplemental_vehicle_ext_msg.obstacle.description.code;
-                                obstacle_detection->description = itis_code2;
-                            }
-                        }
-
-                        // locationDetails
-                        if(supplemental_vehicle_ext_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_LOCATION_DETAILS){
-                            auto location_details = create_store_shared<ITIS_GenericLocations_t>(shared_ptrs);
-                            *location_details = supplemental_vehicle_ext_msg.obstacle.location_details.generic_locations;
-                            obstacle_detection->locationDetails = location_details;
-                        }
-
-                        // vertEvent
-                        if(supplemental_vehicle_ext_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_VERT_EVENT){
-                            auto vert_event = create_store_shared<VerticalAccelerationThreshold_t>(shared_ptrs);
-
-                            std::string vert_event_str = std::to_string(supplemental_vehicle_ext_msg.obstacle.vert_event.exceeded_wheels);
-                            size_t size = vert_event_str.size();
-
-                            auto vert_event_buf = create_store_shared_array<uint8_t>(shared_ptrs, size);
-                            for(size_t j = 0; j < size; j++){
-                                vert_event_buf[j] = vert_event_str[j] - '0';
-                            }
-                            vert_event->size = size;
-                            vert_event->buf = vert_event_buf;
-
-                            obstacle_detection->vertEvent = vert_event;
-                        }
-                        
-                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.doNotUse3 = obstacle_detection;
-                    }
-
                     // status
                     if(supplemental_vehicle_ext_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_STATUS){
                         auto status = create_store_shared<DisabledVehicle_t>(shared_ptrs);
@@ -1762,28 +1604,159 @@ namespace cpp_message
                         part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.status = status;
                     }
 
-                    
-                        auto speed_profile = create_store_shared<SpeedProfile_t>(shared_ptrs);
-                        auto speed_reports = create_store_shared<SpeedProfileMeasurementList_t>(shared_ptrs);
+                    // trailers
+                    if(supplemental_vehicle_ext_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_TRAILERS){
+                        auto trailers = create_store_shared<TrailersJ2945Slash1B_t>(shared_ptrs);
 
-                        for(size_t j = 0; j < supplemental_vehicle_ext_msg.speed_profile.size(); j++){
-                            auto speed_ptr = create_store_shared<GrossSpeed_t>(shared_ptrs);
+                        for(size_t j = 0; j < supplemental_vehicle_ext_msg.trailers.trailer_units.size(); j++){
+                            auto trailer_unit = create_store_shared<TrailerUnitDescJ2945Slash1B_t>(shared_ptrs);
+                            const auto& src = supplemental_vehicle_ext_msg.trailers.trailer_units[j];
 
-                            uint8_t speed = supplemental_vehicle_ext_msg.speed_profile[j].speed;
-                            if(speed > j2735_v2x_msgs::msg::GrossSpeed::SPEED_UNAVAILABLE){
-                                // Note: Value checked against 'SPEED_UNAVAILABLE' since this value is larger than 'SPEED_MAX'
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded speed value greater than max, setting to max");
-                                speed = j2735_v2x_msgs::msg::GrossSpeed::SPEED_MAX;
+                            // width (required)
+                            trailer_unit->width = src.width.vehicle_width;
+
+                            // length (required)
+                            trailer_unit->length = src.length.vehicle_length;
+
+                            // height (optional)
+                            if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_HEIGHT){
+                                auto height_ptr = create_store_shared<VehicleHeight_t>(shared_ptrs);
+                                *height_ptr = src.height.vehicle_height;
+                                trailer_unit->height = height_ptr;
                             }
-                            *speed_ptr = speed;
 
-                            asn_sequence_add(&speed_reports->list, speed_ptr);
+                            // weight (optional)
+                            if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_WEIGHT){
+                                auto weight_ptr = create_store_shared<TrailerWeight_t>(shared_ptrs);
+                                *weight_ptr = src.weight.trailer_weight;
+                                trailer_unit->weight = weight_ptr;
+                            }
+
+                            // frontPivot (required)
+                            long front_pivot_offset = src.front_pivot.pivot_offset.offset;
+                            long front_pivot_angle = src.front_pivot.pivot_angle.angle;
+                            bool front_pivots = src.front_pivot.pivots.pivoting_allowed;
+                            trailer_unit->frontPivot = encode_pivot_point_description(front_pivot_offset, front_pivot_angle, front_pivots);
+
+                            // rearPivot (optional)
+                            if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_REAR_PIVOT){
+                                auto rear_pivot = create_store_shared<PivotPointDescription_t>(shared_ptrs);
+                                long rear_pivot_offset = src.rear_pivot.pivot_offset.offset;
+                                long rear_pivot_angle = src.rear_pivot.pivot_angle.angle;
+                                bool rear_pivots = src.rear_pivot.pivots.pivoting_allowed;
+                                *rear_pivot = encode_pivot_point_description(rear_pivot_offset, rear_pivot_angle, rear_pivots);
+                                trailer_unit->rearPivot = rear_pivot;
+                            }
+
+                            // bumpers (optional)
+                            if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_BUMPERS){
+                                auto bumpers = create_store_shared<BumperHeights_t>(shared_ptrs);
+                                bumpers->front = src.bumpers.front.bumper_height;
+                                bumpers->rear = src.bumpers.rear.bumper_height;
+                                trailer_unit->bumpers = bumpers;
+                            }
+
+                            // axles (optional)
+                            if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_AXLES){
+                                auto axles = create_store_shared<Axles_t>(shared_ptrs);
+                                axles->totalAxles = src.axles.total_axles;
+
+                                if(src.axles.presence_vector & j2735_v2x_msgs::msg::Axles::HAS_FRONT_AXLES){
+                                    auto front_axles = create_store_shared<long>(shared_ptrs);
+                                    *front_axles = src.axles.front_axles;
+                                    axles->frontAxles = front_axles;
+                                }
+
+                                if(src.axles.presence_vector & j2735_v2x_msgs::msg::Axles::HAS_REAR_AXLES){
+                                    auto rear_axles = create_store_shared<long>(shared_ptrs);
+                                    *rear_axles = src.axles.rear_axles;
+                                    axles->rearAxles = rear_axles;
+                                }
+
+                                trailer_unit->axles = axles;
+                            }
+
+                            asn_sequence_add(&trailers->list, trailer_unit);
                         }
 
-                        speed_profile->speedReports = *speed_reports;
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.trailers = trailers;
+                    }
 
+                    // schoolBus
+                    if(supplemental_vehicle_ext_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SCHOOL_BUS){
+                        auto school_bus = create_store_shared<SchoolBusJ2945Slash1C_t>(shared_ptrs);
+                        const auto& sb = supplemental_vehicle_ext_msg.school_bus;
 
-                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.doNotUse4 = speed_profile;
+                        // flashingAmberLights (required)
+                        school_bus->flashingAmberLights = sb.flashing_amber_lights;
+
+                        // flashingRedLights (required)
+                        school_bus->flashingRedLights = sb.flashing_red_lights;
+
+                        // studentsCrossingFront (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_CROSSING_FRONT){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.students_crossing_front;
+                            school_bus->studentsCrossingFront = val;
+                        }
+
+                        // studentsCrossingBehind (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_CROSSING_BEHIND){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.students_crossing_behind;
+                            school_bus->studentsCrossingBehind = val;
+                        }
+
+                        // studentsLoading (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_LOADING){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.students_loading;
+                            school_bus->studentsLoading = val;
+                        }
+
+                        // studentsUnloading (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_UNLOADING){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.students_unloading;
+                            school_bus->studentsUnloading = val;
+                        }
+
+                        // wheelchairLiftInUse (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_WHEELCHAIR_LIFT_IN_USE){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.wheelchair_lift_in_use;
+                            school_bus->wheelchairLiftInUse = val;
+                        }
+
+                        // emergencyExitOpen (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_EXIT_OPEN){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.emergency_exit_open;
+                            school_bus->emergencyExitOpen = val;
+                        }
+
+                        // emergencyRequestMedical (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_REQUEST_MEDICAL){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.emergency_request_medical;
+                            school_bus->emergencyRequestMedical = val;
+                        }
+
+                        // emergencyRequestFire (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_REQUEST_FIRE){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.emergency_request_fire;
+                            school_bus->emergencyRequestFire = val;
+                        }
+
+                        // emergencyRequestPolice (optional)
+                        if(sb.presence_vector & j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_EMERGENCY_REQUEST_POLICE){
+                            auto val = create_store_shared<BOOLEAN_t>(shared_ptrs);
+                            *val = sb.emergency_request_police;
+                            school_bus->emergencyRequestPolice = val;
+                        }
+
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.schoolBus = school_bus;
                     }
                 }
                 asn_sequence_add(&part_ii_list->list, part_ii_element);
