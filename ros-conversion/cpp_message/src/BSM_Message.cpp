@@ -752,16 +752,12 @@ namespace cpp_message
                                 
 
                                 // front_pivot
-                                trailer_unit.front_pivot.pivot_offset = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->frontPivot.pivotOffset;
-                                trailer_unit.front_pivot.pivot_angle = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->frontPivot.pivotAngle;
-                                trailer_unit.front_pivot.pivots.pivoting_allowed = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->frontPivot.pivots;
+                                trailer_unit.front_pivot = decode_pivot_point_description(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->frontPivot);
 
                                 // rear_pivot (optional)
                                 if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->rearPivot){
                                     trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_REAR_PIVOT;
-                                    trailer_unit.rear_pivot.pivot_offset = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->rearPivot.pivotOffset;
-                                    trailer_unit.rear_pivot.pivot_angle = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->rearPivot.pivotAngle;
-                                    trailer_unit.rear_pivot.pivots.pivoting_allowed = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->rearPivot.pivots;
+                                    trailer_unit.rear_pivot = decode_pivot_point_description(*part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->rearPivot);
                                 }
 
                                 // bumpers (optional)
@@ -1613,22 +1609,50 @@ namespace cpp_message
                             const auto& src = supplemental_vehicle_ext_msg.trailers.trailer_units[j];
 
                             // width (required)
-                            trailer_unit->width = src.width.vehicle_width;
+                            uint16_t width = src.width.vehicle_width;
+                            if(width < j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_MIN){
+                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded vehicle width value less than min, setting to min");
+                                width = j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_MIN;
+                            }
+                            else if(width > j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_MAX){
+                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded vehicle width value greater than max, setting to max");
+                                width = j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_MAX;
+                            }
+                            trailer_unit->width = width;
 
                             // length (required)
-                            trailer_unit->length = src.length.vehicle_length;
+                            uint16_t length = src.length.vehicle_length;
+                            if(length < j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_MIN){
+                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded vehicle length value less than min, setting to min");
+                                length = j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_MIN;
+                            }
+                            else if(length > j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_MAX){
+                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded vehicle length value greater than max, setting to max");
+                                length = j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_MAX;
+                            }
+                            trailer_unit->length = length;
 
                             // height (optional)
                             if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_HEIGHT){
                                 auto height_ptr = create_store_shared<VehicleHeight_t>(shared_ptrs);
-                                *height_ptr = src.height.vehicle_height;
+                                uint8_t height = src.height.vehicle_height;
+                                if(height > j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_MAX){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded vehicle height value greater than max, setting to max");
+                                    height = j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_MAX;
+                                }
+                                *height_ptr = height;
                                 trailer_unit->height = height_ptr;
                             }
 
                             // weight (optional)
                             if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_WEIGHT){
                                 auto weight_ptr = create_store_shared<TrailerWeight_t>(shared_ptrs);
-                                *weight_ptr = src.weight.trailer_weight;
+                                uint16_t weight = src.weight.trailer_weight;
+                                if(weight > j2735_v2x_msgs::msg::TrailerWeight::TRAILER_WEIGHT_MAX){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded trailer weight value greater than max, setting to max");
+                                    weight = j2735_v2x_msgs::msg::TrailerWeight::TRAILER_WEIGHT_MAX;
+                                }
+                                *weight_ptr = weight;
                                 trailer_unit->weight = weight_ptr;
                             }
 
@@ -1651,8 +1675,21 @@ namespace cpp_message
                             // bumpers (optional)
                             if(src.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_BUMPERS){
                                 auto bumpers = create_store_shared<BumperHeights_t>(shared_ptrs);
-                                bumpers->front = src.bumpers.front.bumper_height;
-                                bumpers->rear = src.bumpers.rear.bumper_height;
+
+                                uint8_t front_bumper_height = src.bumpers.front.bumper_height;
+                                if(front_bumper_height > j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded front bumper height value greater than max, setting to max");
+                                    front_bumper_height = j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX;
+                                }
+                                bumpers->front = front_bumper_height;
+
+                                uint8_t rear_bumper_height = src.bumpers.rear.bumper_height;
+                                if(rear_bumper_height > j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Encoded rear bumper height value greater than max, setting to max");
+                                    rear_bumper_height = j2735_v2x_msgs::msg::BumperHeight::BUMPER_HEIGHT_MAX;
+                                }
+                                bumpers->rear = rear_bumper_height;
+
                                 trailer_unit->bumpers = bumpers;
                             }
 
