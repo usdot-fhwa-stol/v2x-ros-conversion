@@ -164,6 +164,27 @@ namespace cpp_message
                     new_intersection.speed_limits_exists = false;
                 }
 
+                if (map_msg_intersections->roadAuthorityID)
+                {
+                    new_intersection.road_authority_id_exists = true;
+                    if (map_msg_intersections->roadAuthorityID->present == RoadAuthorityID_PR_fullRdAuthID)
+                    {
+                        new_intersection.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+                        auto& oid = map_msg_intersections->roadAuthorityID->choice.fullRdAuthID;
+                        new_intersection.road_authority_id.full_rd_auth_id.assign(oid.buf, oid.buf + oid.size);
+                    }
+                    else if (map_msg_intersections->roadAuthorityID->present == RoadAuthorityID_PR_relRdAuthID)
+                    {
+                        new_intersection.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID;
+                        auto& oid = map_msg_intersections->roadAuthorityID->choice.relRdAuthID;
+                        new_intersection.road_authority_id.rel_rd_auth_id.assign(oid.buf, oid.buf + oid.size);
+                    }
+                }
+                else
+                {
+                    new_intersection.road_authority_id_exists = false;
+                }
+
                 if (map_msg_intersections->refPoint.elevation)
                     if (map_msg_intersections->refPoint.elevation)
                         if (map_msg_intersections->refPoint.elevation)
