@@ -719,6 +719,7 @@ namespace cpp_message
                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse4 field ('speedProfile') in SupplementalVehicleExtensions — ignoring per J2735 2024");
                         }
 
+                        // fhwa vehicle class
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass){
                             part_ii_output.supplemental_vehicle_extensions.fhwa_vehicle_class = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass;
                         }
