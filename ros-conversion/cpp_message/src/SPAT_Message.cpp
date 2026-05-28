@@ -353,6 +353,28 @@ namespace cpp_message
                 intersection.maneuever_assist_list_exists = maneuver_assist_list_exists;
                 intersection.maneuever_assist_list = maneuver_assist_list;
 
+                // roadAuthorityID
+                if (state->roadAuthorityID)
+                {
+                    intersection.road_authority_id_exists = true;
+                    if (state->roadAuthorityID->present == RoadAuthorityID_PR_fullRdAuthID)
+                    {
+                        intersection.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+                        auto& oid = state->roadAuthorityID->choice.fullRdAuthID;
+                        intersection.road_authority_id.full_rd_auth_id.assign(oid.buf, oid.buf + oid.size);
+                    }
+                    else if (state->roadAuthorityID->present == RoadAuthorityID_PR_relRdAuthID)
+                    {
+                        intersection.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID;
+                        auto& oid = state->roadAuthorityID->choice.relRdAuthID;
+                        intersection.road_authority_id.rel_rd_auth_id.assign(oid.buf, oid.buf + oid.size);
+                    }
+                }
+                else
+                {
+                    intersection.road_authority_id_exists = false;
+                }
+
                 output.intersections.intersection_state_list.push_back(intersection);
             }
 
@@ -675,6 +697,26 @@ namespace cpp_message
             
 
             //RegionalExtensions are not yet implemented in asn1c
+
+            // roadAuthorityID
+            if(plainMessage.intersections.intersection_state_list[i].road_authority_id_exists){
+                RoadAuthorityID_t* road_auth_id = new RoadAuthorityID_t;
+                memset(road_auth_id, 0, sizeof(RoadAuthorityID_t));
+                const auto& ra_msg = plainMessage.intersections.intersection_state_list[i].road_authority_id;
+                if(ra_msg.choice == j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID){
+                    road_auth_id->present = RoadAuthorityID_PR_fullRdAuthID;
+                    road_auth_id->choice.fullRdAuthID.size = ra_msg.full_rd_auth_id.size();
+                    road_auth_id->choice.fullRdAuthID.buf = (uint8_t*)calloc(ra_msg.full_rd_auth_id.size(), sizeof(uint8_t));
+                    memcpy(road_auth_id->choice.fullRdAuthID.buf, ra_msg.full_rd_auth_id.data(), ra_msg.full_rd_auth_id.size());
+                }
+                else if(ra_msg.choice == j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID){
+                    road_auth_id->present = RoadAuthorityID_PR_relRdAuthID;
+                    road_auth_id->choice.relRdAuthID.size = ra_msg.rel_rd_auth_id.size();
+                    road_auth_id->choice.relRdAuthID.buf = (uint8_t*)calloc(ra_msg.rel_rd_auth_id.size(), sizeof(uint8_t));
+                    memcpy(road_auth_id->choice.relRdAuthID.buf, ra_msg.rel_rd_auth_id.data(), ra_msg.rel_rd_auth_id.size());
+                }
+                intersectionState->roadAuthorityID = road_auth_id;
+            }
 
             asn_sequence_add(&intersectionStateList->list, intersectionState);
         }
