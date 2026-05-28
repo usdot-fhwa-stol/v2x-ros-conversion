@@ -721,7 +721,8 @@ namespace cpp_message
 
                         // fhwa vehicle class
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass){
-                            part_ii_output.supplemental_vehicle_extensions.fhwa_vehicle_class = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass;
+                            part_ii_output.supplemental_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_FHWA_VEHICLE_CLASS;
+                            part_ii_output.supplemental_vehicle_extensions.fhwa_vehicle_class.rpt_vehicle_class = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass;
                         }
                         
                         // trailers (optional)
@@ -736,7 +737,7 @@ namespace cpp_message
                                 trailer_unit.width = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->width;
 
                                 // length
-                                trailerr_unit.length = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->length;
+                                trailer_unit.length = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->length;
 
                                 // height (optional)
                                 if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->height){
@@ -772,12 +773,12 @@ namespace cpp_message
                                     trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_AXLES;
                                     trailer_unit.axles.total_axles = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->totalAxles;
 
-                                    if(art_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->frontAxles){
+                                    if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->frontAxles){
                                         trailer_unit.axles.precense_vector |= j2735_v2x_msgs::msg::Axles::HAS_FRONT_AXLES;
                                         trailer_unit.axles.front_axles = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->frontAxles;
                                     }
 
-                                    if(art_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->rearAxles){
+                                    if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->rearAxles){
                                         trailer_unit.axles.precense_vector |= j2735_v2x_msgs::msg::Axles::HAS_REAR_AXLES;
                                         trailer_unit.axles.rear_axles = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->rearAxles;
                                     }
@@ -1598,6 +1599,13 @@ namespace cpp_message
                         }
 
                         part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.status = status;
+                    }
+
+                    // fhwa vehicle class
+                    if(supplemental_vehicle_ext_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_FHWA_VEHICLE_CLASS){
+                        auto fhwa_vehicle_class = create_store_shared<RptVehicleClass_t>(shared_ptrs);
+                        *fhwa_vehicle_class = supplemental_vehicle_ext_msg.fhwa_vehicle_class.rpt_vehicle_class;
+                        part_ii_element->partII_Value.choice.SupplementalVehicleExtensions.fhwaVehicleClass = fhwa_vehicle_class;
                     }
 
                     // trailers
