@@ -133,6 +133,9 @@ namespace cpp_message
 
             // Data Parameters
             EXPECT_EQ(res.get().data_parameters_exists, false);
+
+            // Road Authority ID (not present in this message)
+            EXPECT_EQ(res.get().intersections[0].road_authority_id_exists, false);
         }
         else
             EXPECT_TRUE(false);

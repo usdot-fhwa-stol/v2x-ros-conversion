@@ -83,7 +83,7 @@ namespace cpp_message
     {
         cpp_message::SPAT_Message worker;
         j2735_v2x_msgs::msg::SPAT message;
-        
+
         //1. Intersection State List
         j2735_v2x_msgs::msg::IntersectionState intersection_state_1;
         intersection_state_1.id.id = 127;
@@ -93,6 +93,10 @@ namespace cpp_message
         intersection_state_1.moy = 386768;
         intersection_state_1.time_stamp_exists = true;
         intersection_state_1.time_stamp = 40439;
+
+        intersection_state_1.road_authority_id_exists = true;
+        intersection_state_1.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+        intersection_state_1.road_authority_id.full_rd_auth_id = {0x01, 0x02, 0x03, 0x04};
         //intersection_state_1.states.movement_list;// Add movement_state_1 to this
         
         
@@ -174,5 +178,80 @@ namespace cpp_message
 
     }
 
+    TEST(SPATTest, testEncodeDecodeSPATRoadAuthorityID)
+    {
+        cpp_message::SPAT_Message worker;
+        j2735_v2x_msgs::msg::SPAT message;
+
+        j2735_v2x_msgs::msg::IntersectionState intersection_state;
+        intersection_state.id.id = 100;
+        intersection_state.revision = 1;
+        intersection_state.status.intersection_status_object = 0;
+
+        intersection_state.road_authority_id_exists = true;
+        intersection_state.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+        intersection_state.road_authority_id.full_rd_auth_id = {0x01, 0x02, 0x03, 0x04};
+
+        j2735_v2x_msgs::msg::MovementState movement_state;
+        movement_state.signal_group = 1;
+        j2735_v2x_msgs::msg::MovementEvent movement_event;
+        movement_event.event_state.movement_phase_state = j2735_v2x_msgs::msg::MovementPhaseState::STOP_AND_REMAIN;
+        movement_event.timing_exists = true;
+        movement_event.timing.min_end_time = 5000;
+        movement_state.state_time_speed.movement_event_list.push_back(movement_event);
+        intersection_state.states.movement_list.push_back(movement_state);
+
+        message.intersections.intersection_state_list.push_back(intersection_state);
+
+        auto res = worker.encode_spat_message(message);
+        ASSERT_TRUE(res.has_value());
+
+        auto decoded = worker.decode_spat_message(res.get());
+        ASSERT_TRUE(decoded.has_value());
+
+        auto& decoded_intersection = decoded.get().intersections.intersection_state_list[0];
+        EXPECT_EQ(decoded_intersection.road_authority_id_exists, true);
+        EXPECT_EQ(decoded_intersection.road_authority_id.choice, j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID);
+        std::vector<uint8_t> expected_id = {0x01, 0x02, 0x03, 0x04};
+        EXPECT_EQ(decoded_intersection.road_authority_id.full_rd_auth_id, expected_id);
+    }
+
+    TEST(SPATTest, testEncodeDecodeSPATRelRoadAuthorityID)
+    {
+        cpp_message::SPAT_Message worker;
+        j2735_v2x_msgs::msg::SPAT message;
+
+        j2735_v2x_msgs::msg::IntersectionState intersection_state;
+        intersection_state.id.id = 200;
+        intersection_state.revision = 1;
+        intersection_state.status.intersection_status_object = 0;
+
+        intersection_state.road_authority_id_exists = true;
+        intersection_state.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID;
+        intersection_state.road_authority_id.rel_rd_auth_id = {0xAA, 0xBB};
+
+        j2735_v2x_msgs::msg::MovementState movement_state;
+        movement_state.signal_group = 1;
+        j2735_v2x_msgs::msg::MovementEvent movement_event;
+        movement_event.event_state.movement_phase_state = j2735_v2x_msgs::msg::MovementPhaseState::PERMISSIVE_MOVEMENT_ALLOWED;
+        movement_event.timing_exists = true;
+        movement_event.timing.min_end_time = 6000;
+        movement_state.state_time_speed.movement_event_list.push_back(movement_event);
+        intersection_state.states.movement_list.push_back(movement_state);
+
+        message.intersections.intersection_state_list.push_back(intersection_state);
+
+        auto res = worker.encode_spat_message(message);
+        ASSERT_TRUE(res.has_value());
+
+        auto decoded = worker.decode_spat_message(res.get());
+        ASSERT_TRUE(decoded.has_value());
+
+        auto& decoded_intersection = decoded.get().intersections.intersection_state_list[0];
+        EXPECT_EQ(decoded_intersection.road_authority_id_exists, true);
+        EXPECT_EQ(decoded_intersection.road_authority_id.choice, j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID);
+        std::vector<uint8_t> expected_id = {0xAA, 0xBB};
+        EXPECT_EQ(decoded_intersection.road_authority_id.rel_rd_auth_id, expected_id);
+    }
 
 }
