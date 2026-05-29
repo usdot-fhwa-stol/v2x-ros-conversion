@@ -734,21 +734,21 @@ namespace cpp_message
                                 j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B trailer_unit;
                                 
                                 // width
-                                trailer_unit.width = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->width;
+                                trailer_unit.width.vehicle_width = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->width;
 
                                 // length
-                                trailer_unit.length = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->length;
+                                trailer_unit.length.vehicle_length = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->length;
 
                                 // height (optional)
                                 if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->height){
                                     trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_HEIGHT;
-                                    trailer_unit.height = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->height;
+                                    trailer_unit.height.vehicle_height = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->height;
                                 }
 
                                 // weight (optional)
                                 if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->weight){
                                     trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_WEIGHT;
-                                    trailer_unit.weight = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->weight;
+                                    trailer_unit.weight.trailer_weight = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->weight;
                                 }
                                 
 
@@ -762,7 +762,7 @@ namespace cpp_message
                                 }
 
                                 // bumpers (optional)
-                                if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->bumpers){
+                                if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->bumpers){                                    
                                     trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_BUMPERS;
                                     trailer_unit.bumpers.front.bumper_height = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->bumpers->front;
                                     trailer_unit.bumpers.rear.bumper_height = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->bumpers->rear;
@@ -774,17 +774,17 @@ namespace cpp_message
                                     trailer_unit.axles.total_axles = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->totalAxles;
 
                                     if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->frontAxles){
-                                        trailer_unit.axles.precense_vector |= j2735_v2x_msgs::msg::Axles::HAS_FRONT_AXLES;
-                                        trailer_unit.axles.front_axles = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->frontAxles;
+                                        trailer_unit.axles.presence_vector |= j2735_v2x_msgs::msg::Axles::HAS_FRONT_AXLES;
+                                        trailer_unit.axles.front_axles = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->frontAxles;
                                     }
 
                                     if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->rearAxles){
-                                        trailer_unit.axles.precense_vector |= j2735_v2x_msgs::msg::Axles::HAS_REAR_AXLES;
-                                        trailer_unit.axles.rear_axles = part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->rearAxles;
+                                        trailer_unit.axles.presence_vector |= j2735_v2x_msgs::msg::Axles::HAS_REAR_AXLES;
+                                        trailer_unit.axles.rear_axles = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.trailers->list.array[i]->axles->rearAxles;
                                     }
                                 }
                                 
-                                part_ii_output.supplemental_vehicle_extensions.trailers.push_back(trailer_unit);
+                                part_ii_output.supplemental_vehicle_extensions.trailers.trailer_units.push_back(trailer_unit);
                             }
                             
                         }
@@ -943,6 +943,7 @@ namespace cpp_message
 
         return boost::optional<j2735_v2x_msgs::msg::BSM>{};
 
+    }
     }
     
     boost::optional<std::vector<uint8_t>> BSM_Message::encode_bsm_message(const j2735_v2x_msgs::msg::BSM& plain_msg)
