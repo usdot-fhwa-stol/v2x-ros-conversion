@@ -460,14 +460,14 @@ namespace cpp_message
             intersectionState->id.id = plainMessage.intersections.intersection_state_list[i].id.id;
             intersectionState->revision = plainMessage.intersections.intersection_state_list[i].revision;
 
-            //Encode Intersection Status
-            auto status_buf = create_store_shared_array<uint8_t>(shared_ptrs, 16);
+            //Encode Intersection Status (16-bit BIT STRING = 2 bytes)
+            auto status_buf = create_store_shared_array<uint8_t>(shared_ptrs, 2);
             int bit_to_set = plainMessage.intersections.intersection_state_list[i].status.intersection_status_object;
-            if(bit_to_set < 14){
-                status_buf[15 - bit_to_set] = 1;
+            if(bit_to_set >= 0 && bit_to_set < 14){
+                status_buf[bit_to_set / 8] |= (0x80 >> (bit_to_set % 8));
             }
             intersectionState->status.buf = status_buf;
-            intersectionState->status.size = 16;
+            intersectionState->status.size = 2;
 
             //Encode MinuteOfTheYear
             auto minute_of_year = create_store_shared<MinuteOfTheYear_t>(shared_ptrs);
@@ -689,6 +689,11 @@ namespace cpp_message
         }
 
         //encode message
+        char errbuf[256] = {0};
+        size_t errlen = sizeof(errbuf);
+        if(asn_check_constraints(&asn_DEF_MessageFrame, message, errbuf, &errlen) != 0){
+            std::cerr << "SPAT constraint check failed: " << errbuf << std::endl;
+        }
         ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0 , message, buffer, buffer_size);
         if(ec.encoded == -1) {
             return boost::optional<std::vector<uint8_t>>{};
