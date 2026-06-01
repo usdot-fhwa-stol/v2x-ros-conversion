@@ -856,94 +856,97 @@ namespace cpp_message
                     
                     // Add part_ii_output to output's part_ii list
                     output.part_ii.push_back(part_ii_output);
-                }
-            }
-
-            // Decode regional list
-            if (message->value.choice.BasicSafetyMessage.regional){
-                output.presence_vector |= j2735_v2x_msgs::msg::BSM::HAS_REGIONAL;
-
-                // Loop through regional list
-                for(size_t i = 0; i < message->value.choice.BasicSafetyMessage.regional->list.count; ++i){
-                    if(i > j2735_v2x_msgs::msg::BSM::REGIONAL_MAX_SIZE){
-                        RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Decoded BSM Regional Extensions list size is greater than max. Rejecting list element.");
-                        break;
                     }
+                }
 
-                    // Initialize the outputted Regional Extension object
-                    j2735_v2x_msgs::msg::BSMRegionalExtension output_regional_ext;
-                    
-                    // Obtain the decoded Regional Extensions list element
-                    Reg_BasicSafetyMessage_t regional_element = *message->value.choice.BasicSafetyMessage.regional->list.array[i];
+                // Decode regional list
+                if (message->value.choice.BasicSafetyMessage.regional){
+                    output.presence_vector |= j2735_v2x_msgs::msg::BSM::HAS_REGIONAL;
 
-                    // Decode regional extension element of type ROUTE_DESTINATIONS
-                    if(regional_element.regExtValue.present == j2735_v2x_msgs::msg::BSMRegionalExtension::ROUTE_DESTINATIONS){
-                        output_regional_ext.regional_extension_id = j2735_v2x_msgs::msg::BSMRegionalExtension::ROUTE_DESTINATIONS;
-
-                        // Loop through routeDestinationPoints list
-                        for(size_t j = 0; j < regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.count; ++j){
-                            j2735_v2x_msgs::msg::Position3D output_position_3d;
-                            
-                            // latitude
-                            long latitude = regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->lat;
-                            if(latitude > j2735_v2x_msgs::msg::Position3D::LATITUDE_MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination latitude value greater than max, setting to max");
-                                latitude = j2735_v2x_msgs::msg::Position3D::LATITUDE_MAX;
-                            }
-                            else if(latitude < j2735_v2x_msgs::msg::Position3D::LATITUDE_MIN){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination latitude value less than min, setting to min");
-                                latitude = j2735_v2x_msgs::msg::Position3D::LATITUDE_MIN;
-                            }
-                            output_position_3d.latitude = latitude;
-
-                            // longitude
-                            long longitude = regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->Long;
-                            if(longitude > j2735_v2x_msgs::msg::Position3D::LONGITUDE_MAX){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination longitude value greater than max, setting to max");
-                                longitude = j2735_v2x_msgs::msg::Position3D::LONGITUDE_MAX;
-                            }
-                            else if(longitude < j2735_v2x_msgs::msg::Position3D::LONGITUDE_MIN){
-                                RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination longitude value less than min, setting to min");
-                                longitude = j2735_v2x_msgs::msg::Position3D::LONGITUDE_MIN;
-                            }
-                            output_position_3d.longitude = longitude;
-
-                            // elevation
-                            if(regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->elevation){
-                                output_position_3d.elevation_exists = true;
-
-                                long elevation = *regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->elevation;
-                                if(elevation > j2735_v2x_msgs::msg::Position3D::ELEVATION_MAX){
-                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination elevation value greater than max, setting to max");
-                                    elevation = j2735_v2x_msgs::msg::Position3D::ELEVATION_MAX;
-                                }
-                                else if(elevation < j2735_v2x_msgs::msg::Position3D::ELEVATION_MIN){
-                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination elevation value less than min, setting to min");
-                                    elevation = j2735_v2x_msgs::msg::Position3D::ELEVATION_MIN;
-                                }
-                                output_position_3d.elevation = elevation;
-                            }
-
-                            output_regional_ext.route_destination_points.push_back(output_position_3d);
+                    // Loop through regional list
+                    for(size_t i = 0; i < message->value.choice.BasicSafetyMessage.regional->list.count; ++i){
+                        if(i > j2735_v2x_msgs::msg::BSM::REGIONAL_MAX_SIZE){
+                            RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Decoded BSM Regional Extensions list size is greater than max. Rejecting list element.");
+                            break;
                         }
+
+                        // Initialize the outputted Regional Extension object
+                        j2735_v2x_msgs::msg::BSMRegionalExtension output_regional_ext;
+                        
+                        // Obtain the decoded Regional Extensions list element
+                        Reg_BasicSafetyMessage_t regional_element = *message->value.choice.BasicSafetyMessage.regional->list.array[i];
+
+                        // Decode regional extension element of type ROUTE_DESTINATIONS
+                        if(regional_element.regExtValue.present == j2735_v2x_msgs::msg::BSMRegionalExtension::ROUTE_DESTINATIONS){
+                            output_regional_ext.regional_extension_id = j2735_v2x_msgs::msg::BSMRegionalExtension::ROUTE_DESTINATIONS;
+
+                            // Loop through routeDestinationPoints list
+                            for(size_t j = 0; j < regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.count; ++j){
+                                j2735_v2x_msgs::msg::Position3D output_position_3d;
+                                
+                                // latitude
+                                long latitude = regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->lat;
+                                if(latitude > j2735_v2x_msgs::msg::Position3D::LATITUDE_MAX){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination latitude value greater than max, setting to max");
+                                    latitude = j2735_v2x_msgs::msg::Position3D::LATITUDE_MAX;
+                                }
+                                else if(latitude < j2735_v2x_msgs::msg::Position3D::LATITUDE_MIN){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination latitude value less than min, setting to min");
+                                    latitude = j2735_v2x_msgs::msg::Position3D::LATITUDE_MIN;
+                                }
+                                output_position_3d.latitude = latitude;
+
+                                // longitude
+                                long longitude = regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->Long;
+                                if(longitude > j2735_v2x_msgs::msg::Position3D::LONGITUDE_MAX){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination longitude value greater than max, setting to max");
+                                    longitude = j2735_v2x_msgs::msg::Position3D::LONGITUDE_MAX;
+                                }
+                                else if(longitude < j2735_v2x_msgs::msg::Position3D::LONGITUDE_MIN){
+                                    RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination longitude value less than min, setting to min");
+                                    longitude = j2735_v2x_msgs::msg::Position3D::LONGITUDE_MIN;
+                                }
+                                output_position_3d.longitude = longitude;
+
+                                // elevation
+                                if(regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->elevation){
+                                    output_position_3d.elevation_exists = true;
+
+                                    long elevation = *regional_element.regExtValue.choice.BasicSafetyMessage_addGrpCarma.routeDestinationPoints->list.array[j]->elevation;
+                                    if(elevation > j2735_v2x_msgs::msg::Position3D::ELEVATION_MAX){
+                                        RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination elevation value greater than max, setting to max");
+                                        elevation = j2735_v2x_msgs::msg::Position3D::ELEVATION_MAX;
+                                    }
+                                    else if(elevation < j2735_v2x_msgs::msg::Position3D::ELEVATION_MIN){
+                                        RCLCPP_WARN_STREAM(node_logging_->get_logger(),"Decoded route destination elevation value less than min, setting to min");
+                                        elevation = j2735_v2x_msgs::msg::Position3D::ELEVATION_MIN;
+                                    }
+                                    output_position_3d.elevation = elevation;
+                                }
+
+                                output_regional_ext.route_destination_points.push_back(output_position_3d);
+                            }
+                        }
+                        output.regional.push_back(output_regional_ext);
                     }
-                    output.regional.push_back(output_regional_ext);
                 }
-            }
             
+            }  // if has part II
             // Release memory from ASN uper_decode operations to avoid memory leakage 
             ASN_STRUCT_FREE(asn_DEF_MessageFrame, message);
 
             return boost::optional<j2735_v2x_msgs::msg::BSM>(output);
-        }
-        RCLCPP_WARN_STREAM( node_logging_->get_logger(), "BasicSafetyMessage decoding failed");
+        } // decode RC_OK
+        else { // decoding failed
 
-        // Release memory from ASN uper_decode operations to avoid memory leakage 
-        ASN_STRUCT_FREE(asn_DEF_MessageFrame, message);
+            RCLCPP_WARN_STREAM( node_logging_->get_logger(), "BasicSafetyMessage decoding failed");
 
-        return boost::optional<j2735_v2x_msgs::msg::BSM>{};
+            // Release memory from ASN uper_decode operations to avoid memory leakage 
+            ASN_STRUCT_FREE(asn_DEF_MessageFrame, message);
 
-    }
+            return boost::optional<j2735_v2x_msgs::msg::BSM>{};
+        }  
+
     }
     
     boost::optional<std::vector<uint8_t>> BSM_Message::encode_bsm_message(const j2735_v2x_msgs::msg::BSM& plain_msg)
