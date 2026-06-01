@@ -853,10 +853,10 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.school_bus.emergency_request_police = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.schoolBus->emergencyRequestPolice;
                             }
                         }
-                    
+                    }
+
                     // Add part_ii_output to output's part_ii list
                     output.part_ii.push_back(part_ii_output);
-                    }
                 }
 
                 // Decode regional list
