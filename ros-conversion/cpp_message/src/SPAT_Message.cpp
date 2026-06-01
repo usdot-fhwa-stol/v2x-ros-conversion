@@ -23,6 +23,22 @@
 namespace cpp_message
 {
 
+    template <typename T>
+    T *create_store_shared(std::vector<std::shared_ptr<void>> &shared_pointers)
+    {
+        auto obj_shared = std::make_shared<T>();
+        shared_pointers.push_back(obj_shared);
+        return obj_shared.get();
+    }
+
+    template <typename T>
+    T *create_store_shared_array(std::vector<std::shared_ptr<void>> &shared_pointers, int size)
+    {
+        std::shared_ptr<T[]> array_shared(new T[size]{0});
+        shared_pointers.push_back(array_shared);
+        return array_shared.get();
+    }
+
     //Convert the SPAT j2735 message to cav_msgs
     boost::optional<j2735_v2x_msgs::msg::SPAT> SPAT_Message::decode_spat_message(std::vector<uint8_t> &binary_array)
     {
@@ -391,99 +407,71 @@ namespace cpp_message
 
     boost::optional<std::vector<uint8_t>> SPAT_Message::encode_spat_message(const j2735_v2x_msgs::msg::SPAT &plainMessage)
     {
-        //encode result placeholder
+        std::vector<std::shared_ptr<void>> shared_ptrs;
+
         uint8_t buffer[2048] = {0};
         size_t buffer_size = sizeof(buffer);
         asn_enc_rval_t ec;
-        MessageFrame_t* message;
-        message = (MessageFrame_t*) calloc(1, sizeof(MessageFrame_t));
+        MessageFrame_t *message = create_store_shared<MessageFrame_t>(shared_ptrs);
 
-        //if mem allocation fails
-        if(!message)
-        {
-            // RCLCPP_WARN_STREAM( rclcpp::get_logger(), "Cannot allocate mem for SPAT encoding");
-            return boost::optional<std::vector<uint8_t>>{};
-        }
-        //set message type to SPAT
-        message->messageId ;
+        message->messageId = 19;
         message->value.present = MessageFrame__value_PR_SPAT;
 
-        SPAT* spat_msg;
-        spat_msg = (SPAT*) calloc(1, sizeof(SPAT));
-
         //Encode timestamp
-        MinuteOfTheYear_t* timestamp = new MinuteOfTheYear_t;
+        auto timestamp = create_store_shared<MinuteOfTheYear_t>(shared_ptrs);
         if(plainMessage.time_stamp_exists){
             *timestamp = plainMessage.time_stamp;
         }
         else{
-            // RCLCPP_DEBUG_STREAM(  get_logger(), "Encoding, Assigning default timestamp");
             *timestamp = DEFAULT_TIME_STAMP_;
         }
-        
         message->value.choice.SPAT.timeStamp = timestamp;
-        //encode Descriptive Name
-        std::string name = DEFAULT_STRING_;
-        if(plainMessage.name_exists){
-            name = plainMessage.name;
-            uint8_t string_content[name.size()];
-            for(size_t i = 0; i < name.size(); i++){
-                string_content[i] = name[i];
-            }
-            message->value.choice.SPAT.name->buf = string_content;
-            message->value.choice.SPAT.name->size = name.size();
-        }
-        else{
-            // RCLCPP_DEBUG_STREAM(  get_logger(), "Encoding, name doesn't exist");
-        }
 
+        //Encode Descriptive Name
+        if(plainMessage.name_exists){
+            auto spat_name = create_store_shared<DescriptiveName_t>(shared_ptrs);
+            size_t name_size = plainMessage.name.size();
+            auto name_buf = create_store_shared_array<uint8_t>(shared_ptrs, name_size);
+            for(size_t i = 0; i < name_size; i++){
+                name_buf[i] = plainMessage.name[i];
+            }
+            spat_name->buf = name_buf;
+            spat_name->size = name_size;
+            message->value.choice.SPAT.name = spat_name;
+        }
 
         //Encode Intersections
-        IntersectionStateList_t* intersectionStateList;
-        intersectionStateList = new IntersectionStateList_t;
         for(size_t i = 0; i < plainMessage.intersections.intersection_state_list.size(); i++)
         {
-            IntersectionState_t* intersectionState;
-            intersectionState = new IntersectionState_t;
+            auto intersectionState = create_store_shared<IntersectionState_t>(shared_ptrs);
 
             if(plainMessage.intersections.intersection_state_list[i].name_exists){
+                auto int_name = create_store_shared<DescriptiveName_t>(shared_ptrs);
                 size_t name_string_size = plainMessage.intersections.intersection_state_list[i].name.size();
-                
-                uint8_t string_content_name[name_string_size];
-                for(size_t i = 0; i < name_string_size; i++){
-                    string_content_name[i] = plainMessage.intersections.intersection_state_list[i].name[i];
+                auto name_buf = create_store_shared_array<uint8_t>(shared_ptrs, name_string_size);
+                for(size_t j = 0; j < name_string_size; j++){
+                    name_buf[j] = plainMessage.intersections.intersection_state_list[i].name[j];
                 }
-
-                intersectionState->name->buf = string_content_name;
-                intersectionState->name->size = name_string_size;
+                int_name->buf = name_buf;
+                int_name->size = name_string_size;
+                intersectionState->name = int_name;
             }
-            else{
-                // RCLCPP_DEBUG_STREAM(  get_logger(), "Intersection state name doesn't exist for state "<< i);
-            }
-            //No else condition for name doesn't exist
 
-            //Intersection ID - bit string - convert from bit string to int16 
             intersectionState->id.id = plainMessage.intersections.intersection_state_list[i].id.id;
-
-            //Encode Revision
             intersectionState->revision = plainMessage.intersections.intersection_state_list[i].revision;
 
             //Encode Intersection Status
-            //Last 2 bits are reserved
-            
-            uint8_t status_object[16] = {0};
+            auto status_buf = create_store_shared_array<uint8_t>(shared_ptrs, 16);
             int bit_to_set = plainMessage.intersections.intersection_state_list[i].status.intersection_status_object;
-            //Set the bit to 1 
             if(bit_to_set < 14){
-                status_object[15 - bit_to_set] = 1;
+                status_buf[15 - bit_to_set] = 1;
             }
-            
-            intersectionState->status.buf = status_object;
+            intersectionState->status.buf = status_buf;
             intersectionState->status.size = 16;
-            //Encode MinuteoftheYear
-            MinuteOfTheYear_t* minute_of_year = new MinuteOfTheYear_t;
-            if(plainMessage.intersections.intersection_state_list[i].moy_exists)
-            {
+
+            //Encode MinuteOfTheYear
+            auto minute_of_year = create_store_shared<MinuteOfTheYear_t>(shared_ptrs);
+            if(plainMessage.intersections.intersection_state_list[i].moy_exists){
                *minute_of_year = plainMessage.intersections.intersection_state_list[i].moy;
             }
             else{
@@ -491,8 +479,8 @@ namespace cpp_message
             }
             intersectionState->moy = minute_of_year;
 
-            //Encode time stamp 
-            DSecond_t* state_time_stamp = new DSecond_t;
+            //Encode time stamp
+            auto state_time_stamp = create_store_shared<DSecond_t>(shared_ptrs);
             if(plainMessage.intersections.intersection_state_list[i].time_stamp_exists){
                 *state_time_stamp = plainMessage.intersections.intersection_state_list[i].time_stamp;
             }
@@ -503,33 +491,30 @@ namespace cpp_message
 
             //Encode Enabled lanes
             if(plainMessage.intersections.intersection_state_list[i].enabled_lanes_exists){
-                EnabledLaneList_t* enabled_lanes = new EnabledLaneList_t;
+                auto enabled_lanes = create_store_shared<EnabledLaneList_t>(shared_ptrs);
                 for(size_t j = 0; j < plainMessage.intersections.intersection_state_list[i].enabled_lanes.lane_id_list.size(); j++){
-                    LaneID_t* lane_id = new LaneID_t;
+                    auto lane_id = create_store_shared<LaneID_t>(shared_ptrs);
                     *lane_id = plainMessage.intersections.intersection_state_list[i].enabled_lanes.lane_id_list[j];
                     asn_sequence_add(&enabled_lanes->list, lane_id);
                 }
                 intersectionState->enabledLanes = enabled_lanes;
-
             }
 
-            //Movement List - List of movement states
-            //Encode Movement State
-            //1. movement name
-            MovementList_t* movementStateList = new MovementList_t;
-            //intersectionState->states.list
-            for(size_t j =0; j < plainMessage.intersections.intersection_state_list[i].states.movement_list.size(); j++){
-                MovementState_t* movementstate = new MovementState_t;
-               
-               //Movement name
+            //Encode Movement States
+            for(size_t j = 0; j < plainMessage.intersections.intersection_state_list[i].states.movement_list.size(); j++){
+                auto movementstate = create_store_shared<MovementState_t>(shared_ptrs);
+
+                //Movement name
                 if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].movement_name_exists){
+                    auto mv_name = create_store_shared<DescriptiveName_t>(shared_ptrs);
                     size_t movement_name_size = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].movement_name.size();
-                    uint8_t movement_name_array[movement_name_size];
+                    auto mv_name_buf = create_store_shared_array<uint8_t>(shared_ptrs, movement_name_size);
                     for(size_t k = 0; k < movement_name_size; k++){
-                        movement_name_array[k] = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].movement_name[k];
+                        mv_name_buf[k] = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].movement_name[k];
                     }
-                    movementstate->movementName->buf = movement_name_array;
-                    movementstate->movementName->size = movement_name_size;
+                    mv_name->buf = mv_name_buf;
+                    mv_name->size = movement_name_size;
+                    movementstate->movementName = mv_name;
                 }
 
                 //Signal group
@@ -541,18 +526,17 @@ namespace cpp_message
                 }
 
                 //Encode State time speed
-                MovementEventList_t* movement_event_list = new MovementEventList_t;
                 for(size_t k = 0; k < plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list.size(); k++){
+                    auto movement_event = create_store_shared<MovementEvent_t>(shared_ptrs);
 
-                    MovementEvent_t* movement_event = new MovementEvent_t;
-                    
-                    movement_event->eventState  = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].event_state.movement_phase_state;
+                    movement_event->eventState = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].event_state.movement_phase_state;
+
                     //Time Change Details
                     if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing_exists){
-                        
-                        TimeChangeDetails_t* time_change_details  = new TimeChangeDetails_t;
+                        auto time_change_details = create_store_shared<TimeChangeDetails_t>(shared_ptrs);
+
                         //start time
-                        SPAT_TimeMark_t* state_start_time = new SPAT_TimeMark_t;
+                        auto state_start_time = create_store_shared<SPAT_TimeMark_t>(shared_ptrs);
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.start_time_exists){
                             *state_start_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.start_time;
                         }
@@ -560,13 +544,12 @@ namespace cpp_message
                             *state_start_time = DEFAULT_TIME_MARK_;
                         }
                         time_change_details->startTime = state_start_time;
+
                         //min_end_time
-                        SPAT_TimeMark_t* state_min_end_time = new SPAT_TimeMark_t;
-                        *state_min_end_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.min_end_time;
-                        time_change_details->minEndTime = *state_min_end_time;
+                        time_change_details->minEndTime = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.min_end_time;
 
                         //max end time
-                        SPAT_TimeMark_t* state_max_end_time = new SPAT_TimeMark_t;
+                        auto state_max_end_time = create_store_shared<SPAT_TimeMark_t>(shared_ptrs);
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.max_end_time_exists){
                             *state_max_end_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.max_end_time;
                         }
@@ -576,7 +559,7 @@ namespace cpp_message
                         time_change_details->maxEndTime = state_max_end_time;
 
                         //likely time
-                        SPAT_TimeMark_t* state_likely_time = new SPAT_TimeMark_t;
+                        auto state_likely_time = create_store_shared<SPAT_TimeMark_t>(shared_ptrs);
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.likely_time_exists){
                             *state_likely_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.likely_time;
                         }
@@ -586,15 +569,14 @@ namespace cpp_message
                         time_change_details->likelyTime = state_likely_time;
 
                         //confidence
-                        TimeIntervalConfidence_t* state_confidence = new TimeIntervalConfidence_t;
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.confidence_exists){
+                            auto state_confidence = create_store_shared<TimeIntervalConfidence_t>(shared_ptrs);
                             *state_confidence = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.confidence;
+                            time_change_details->confidence = state_confidence;
                         }
-                        time_change_details->confidence = state_confidence;
-                        //Else condition not defined 
 
-                        //Time Mark
-                        SPAT_TimeMark_t* next_time = new SPAT_TimeMark_t;
+                        //next time
+                        auto next_time = create_store_shared<SPAT_TimeMark_t>(shared_ptrs);
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.next_time_exists){
                             *next_time = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].timing.next_time;
                         }
@@ -604,19 +586,17 @@ namespace cpp_message
                         time_change_details->nextTime = next_time;
 
                         movement_event->timing = time_change_details;
-                        
                     }
 
                     //Advisory Speed List
                     if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds_exists){
-                        //List of Advisory Speed
-                        AdvisorySpeedList_t* advisory_speed_list = new AdvisorySpeedList_t;
+                        auto advisory_speed_list = create_store_shared<AdvisorySpeedList_t>(shared_ptrs);
                         for(size_t l = 0; l < plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list.size(); l++){
-                            AdvisorySpeed_t* advisory_speed = new AdvisorySpeed_t;
+                            auto advisory_speed = create_store_shared<AdvisorySpeed_t>(shared_ptrs);
 
                             advisory_speed->type = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list[l].type.advisory_speed_type;
 
-                            SpeedAdvice_t*  speed_advice = new SpeedAdvice_t;
+                            auto speed_advice = create_store_shared<SpeedAdvice_t>(shared_ptrs);
                             if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list[l].speed_exists){
                                 *speed_advice = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list[l].speed;
                             }
@@ -625,13 +605,11 @@ namespace cpp_message
                             }
                             advisory_speed->speed = speed_advice;
 
-                            //Speed Confidence
-                            SpeedConfidence_t* speed_confidence = new SpeedConfidence_t;
+                            auto speed_confidence = create_store_shared<SpeedConfidence_t>(shared_ptrs);
                             *speed_confidence = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list[l].confidence.speed_confidence;
                             advisory_speed->confidence = speed_confidence;
 
-                            //Zone length
-                            ZoneLength_t* zone_length = new ZoneLength_t;
+                            auto zone_length = create_store_shared<ZoneLength_t>(shared_ptrs);
                             if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list[l].distance_exists){
                                 *zone_length = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].state_time_speed.movement_event_list[k].speeds.advisory_speed_list[l].distance;
                             }
@@ -640,106 +618,87 @@ namespace cpp_message
                             }
                             advisory_speed->distance = zone_length;
 
-                            //RestrictionClassId
-                            // RESTRICTION CLASS ID not DEFINED in incoming state message
-
-                            asn_sequence_add(&movement_event->speeds->list, advisory_speed);
-                        } 
-
+                            asn_sequence_add(&advisory_speed_list->list, advisory_speed);
+                        }
+                        movement_event->speeds = advisory_speed_list;
                     }
-                    
-                    //Regional Extensions are not yet implemented
+
                     asn_sequence_add(&movementstate->state_time_speed.list, movement_event);
                 }
 
-                //Maneuver Assist List - A List of Connection Maneuver Assist
+                //Maneuver Assist List
                 if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list_exists){
-                    ManeuverAssistList_t* maneuver_assist_list = new ManeuverAssistList_t;
+                    auto maneuver_assist_list = create_store_shared<ManeuverAssistList_t>(shared_ptrs);
                     size_t maneuver_assist_list_size = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list.size();
 
-                    for(size_t k = 0;k < maneuver_assist_list_size; k++){
-                        ConnectionManeuverAssist_t* connection_assist = new ConnectionManeuverAssist_t;
+                    for(size_t k = 0; k < maneuver_assist_list_size; k++){
+                        auto connection_assist = create_store_shared<ConnectionManeuverAssist_t>(shared_ptrs);
                         connection_assist->connectionID = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].connection_id;
-                        ZoneLength_t* zone_length = new ZoneLength_t;
+
+                        auto queue_length = create_store_shared<ZoneLength_t>(shared_ptrs);
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].queue_length_exists){
-                            //movement_event
-                            *zone_length = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].queue_length;
+                            *queue_length = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].queue_length;
                         }
                         else{
-                            *zone_length = DEFAULT_QUEUE_LENGTH_;
+                            *queue_length = DEFAULT_QUEUE_LENGTH_;
                         }
-                        connection_assist->queueLength = zone_length;
+                        connection_assist->queueLength = queue_length;
 
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].wait_on_stop_exists){
-                            *connection_assist->waitOnStop = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].wait_on_stop;
-                        }
-                        else{
-                            *connection_assist->waitOnStop = false;
+                            auto wait_on_stop = create_store_shared<WaitOnStopline_t>(shared_ptrs);
+                            *wait_on_stop = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].wait_on_stop;
+                            connection_assist->waitOnStop = wait_on_stop;
                         }
 
                         if(plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].ped_bicycle_detect_exists){
-                            *connection_assist->pedBicycleDetect = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].ped_bicycle_detect;
-                        }
-                        else{
-                            *connection_assist->pedBicycleDetect = false;
+                            auto ped_bicycle_detect = create_store_shared<PedestrianBicycleDetect_t>(shared_ptrs);
+                            *ped_bicycle_detect = plainMessage.intersections.intersection_state_list[i].states.movement_list[j].maneuver_assist_list.connection_maneuver_assist_list[k].ped_bicycle_detect;
+                            connection_assist->pedBicycleDetect = ped_bicycle_detect;
                         }
 
                         asn_sequence_add(&maneuver_assist_list->list, connection_assist);
                     }
-                    intersectionState->maneuverAssistList = maneuver_assist_list;
+                    movementstate->maneuverAssistList = maneuver_assist_list;
                 }
 
-                asn_sequence_add(&movementStateList->list, movementstate);
-
-            }   //MovementState ends
-            intersectionState->states.list = movementStateList->list;
-            intersectionState->states.list.size = plainMessage.intersections.intersection_state_list[i].states.movement_list.size();
-            
-
-            //RegionalExtensions are not yet implemented in asn1c
+                asn_sequence_add(&intersectionState->states.list, movementstate);
+            }
 
             // roadAuthorityID
             if(plainMessage.intersections.intersection_state_list[i].road_authority_id_exists){
-                RoadAuthorityID_t* road_auth_id = new RoadAuthorityID_t;
-                memset(road_auth_id, 0, sizeof(RoadAuthorityID_t));
+                auto road_auth_id = create_store_shared<RoadAuthorityID_t>(shared_ptrs);
                 const auto& ra_msg = plainMessage.intersections.intersection_state_list[i].road_authority_id;
                 if(ra_msg.choice == j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID){
                     road_auth_id->present = RoadAuthorityID_PR_fullRdAuthID;
                     road_auth_id->choice.fullRdAuthID.size = ra_msg.full_rd_auth_id.size();
-                    road_auth_id->choice.fullRdAuthID.buf = (uint8_t*)calloc(ra_msg.full_rd_auth_id.size(), sizeof(uint8_t));
-                    memcpy(road_auth_id->choice.fullRdAuthID.buf, ra_msg.full_rd_auth_id.data(), ra_msg.full_rd_auth_id.size());
+                    auto rd_buf = create_store_shared_array<uint8_t>(shared_ptrs, ra_msg.full_rd_auth_id.size());
+                    memcpy(rd_buf, ra_msg.full_rd_auth_id.data(), ra_msg.full_rd_auth_id.size());
+                    road_auth_id->choice.fullRdAuthID.buf = rd_buf;
                 }
                 else if(ra_msg.choice == j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID){
                     road_auth_id->present = RoadAuthorityID_PR_relRdAuthID;
                     road_auth_id->choice.relRdAuthID.size = ra_msg.rel_rd_auth_id.size();
-                    road_auth_id->choice.relRdAuthID.buf = (uint8_t*)calloc(ra_msg.rel_rd_auth_id.size(), sizeof(uint8_t));
-                    memcpy(road_auth_id->choice.relRdAuthID.buf, ra_msg.rel_rd_auth_id.data(), ra_msg.rel_rd_auth_id.size());
+                    auto rd_buf = create_store_shared_array<uint8_t>(shared_ptrs, ra_msg.rel_rd_auth_id.size());
+                    memcpy(rd_buf, ra_msg.rel_rd_auth_id.data(), ra_msg.rel_rd_auth_id.size());
+                    road_auth_id->choice.relRdAuthID.buf = rd_buf;
                 }
                 intersectionState->roadAuthorityID = road_auth_id;
             }
 
-            asn_sequence_add(&intersectionStateList->list, intersectionState);
+            asn_sequence_add(&message->value.choice.SPAT.intersections.list, intersectionState);
         }
-        message->value.choice.SPAT.intersections.list = intersectionStateList->list;
-        message->value.choice.SPAT.intersections.list.size = plainMessage.intersections.intersection_state_list.size();     
-
 
         //encode message
         ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0 , message, buffer, buffer_size);
-                //log a warning if that fails
         if(ec.encoded == -1) {
-            // RCLCPP_WARN_STREAM( rclcpp::get_logger(), "Encoding for SPAT Message failed");
             return boost::optional<std::vector<uint8_t>>{};
         }
-        
-        //copy to byte array msg
+
         size_t array_length=(ec.encoded + 7) / 8;
         std::vector<uint8_t> b_array(array_length);
         for(size_t i=0;i<array_length;i++)b_array[i]=buffer[i];
-                
-        //for(size_t i = 0; i < array_length; i++) std::cout<< int(b_array[i])<< ", ";
-        return boost::optional<std::vector<uint8_t>>(b_array);
 
+        return boost::optional<std::vector<uint8_t>>(b_array);
     }
 
 }
