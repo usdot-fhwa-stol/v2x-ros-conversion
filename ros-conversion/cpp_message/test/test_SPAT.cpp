@@ -79,9 +79,7 @@ namespace cpp_message
 
     }
 
-    TEST(SPATTest, DISABLED_testENCODESPAT)
-    {
-        cpp_message::SPAT_Message worker;
+    j2735_v2x_msgs::msg::SPAT makeBaseSPAT() {
         j2735_v2x_msgs::msg::SPAT message;
 
         //1. Intersection State List
@@ -173,6 +171,13 @@ namespace cpp_message
         intersection_state_1.states.movement_list.push_back(movement_state_5);
 
         message.intersections.intersection_state_list.push_back(intersection_state_1);
+        return message;
+    }
+
+    TEST(SPATTest, testENCODESPAT)
+    {
+        cpp_message::SPAT_Message worker;
+        auto message = makeBaseSPAT();
 
         auto res = worker.encode_spat_message(message);
 
@@ -181,27 +186,10 @@ namespace cpp_message
     TEST(SPATTest, testEncodeDecodeSPATRoadAuthorityID)
     {
         cpp_message::SPAT_Message worker;
-        j2735_v2x_msgs::msg::SPAT message;
-
-        j2735_v2x_msgs::msg::IntersectionState intersection_state;
-        intersection_state.id.id = 100;
-        intersection_state.revision = 1;
-        intersection_state.status.intersection_status_object = 0;
-
-        intersection_state.road_authority_id_exists = true;
-        intersection_state.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
-        intersection_state.road_authority_id.full_rd_auth_id = {0x01, 0x02, 0x03, 0x04};
-
-        j2735_v2x_msgs::msg::MovementState movement_state;
-        movement_state.signal_group = 1;
-        j2735_v2x_msgs::msg::MovementEvent movement_event;
-        movement_event.event_state.movement_phase_state = j2735_v2x_msgs::msg::MovementPhaseState::STOP_AND_REMAIN;
-        movement_event.timing_exists = true;
-        movement_event.timing.min_end_time = 5000;
-        movement_state.state_time_speed.movement_event_list.push_back(movement_event);
-        intersection_state.states.movement_list.push_back(movement_state);
-
-        message.intersections.intersection_state_list.push_back(intersection_state);
+        auto message = makeBaseSPAT();
+        message.intersections.intersection_state_list[0].road_authority_id_exists = true;
+        message.intersections.intersection_state_list[0].road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+        message.intersections.intersection_state_list[0].road_authority_id.full_rd_auth_id = {0x01, 0x02, 0x03, 0x04};
 
         auto res = worker.encode_spat_message(message);
         ASSERT_TRUE(res.has_value());
@@ -219,27 +207,11 @@ namespace cpp_message
     TEST(SPATTest, testEncodeDecodeSPATRelRoadAuthorityID)
     {
         cpp_message::SPAT_Message worker;
-        j2735_v2x_msgs::msg::SPAT message;
+        auto message = makeBaseSPAT();
 
-        j2735_v2x_msgs::msg::IntersectionState intersection_state;
-        intersection_state.id.id = 200;
-        intersection_state.revision = 1;
-        intersection_state.status.intersection_status_object = 0;
-
-        intersection_state.road_authority_id_exists = true;
-        intersection_state.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID;
-        intersection_state.road_authority_id.rel_rd_auth_id = {0xAA, 0xBB};
-
-        j2735_v2x_msgs::msg::MovementState movement_state;
-        movement_state.signal_group = 1;
-        j2735_v2x_msgs::msg::MovementEvent movement_event;
-        movement_event.event_state.movement_phase_state = j2735_v2x_msgs::msg::MovementPhaseState::PERMISSIVE_MOVEMENT_ALLOWED;
-        movement_event.timing_exists = true;
-        movement_event.timing.min_end_time = 6000;
-        movement_state.state_time_speed.movement_event_list.push_back(movement_event);
-        intersection_state.states.movement_list.push_back(movement_state);
-
-        message.intersections.intersection_state_list.push_back(intersection_state);
+        message.intersections.intersection_state_list[0].road_authority_id_exists = true;
+        message.intersections.intersection_state_list[0].road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID;
+        message.intersections.intersection_state_list[0].road_authority_id.rel_rd_auth_id = {0xAA, 0xBB};
 
         auto res = worker.encode_spat_message(message);
         ASSERT_TRUE(res.has_value());
