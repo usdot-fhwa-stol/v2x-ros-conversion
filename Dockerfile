@@ -28,6 +28,18 @@ ARG STANDARD_VERSION="2024"
 RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH}
 RUN ${HOME}/src/docker/install_dependencies.sh -b ${GIT_BRANCH} -v ${STANDARD_VERSION}
 
+
+FROM setup AS dev
+
+# build all dependencies
+RUN ${HOME}/src/docker/install.sh
+
+# create vscode server directory and set permissions for carma user for persistence of extension etc
+RUN mkdir -p /home/carma/.vscode-server && chown -R carma:carma /home/carma/.vscode-server
+
+# keep dev container running
+CMD ["sleep", "infinity"]
+
 FROM setup AS prod
 
 # copy source code
@@ -56,11 +68,3 @@ RUN sudo chmod -R +x /opt/carma/install
 RUN pip install future
 
 CMD  [ "wait-for-it", "localhost:11311", "--", "source", "/opt/carma/install/setup.bash", "&&", "ros2", "v2x-ros-conversion", "v2x-ros-conversion.launch.py"]
-
-FROM setup AS dev
-SHELL ["/bin/bash", "-c"]
-
-# build all dependencies
-RUN ${HOME}/src/docker/install.sh
-RUN mkdir -p /home/carma/.vscode-server && chown -R carma:carma /home/carma/.vscode-server
-ENTRYPOINT ["sh", "/home/carma/.base-image/entrypoint.sh"]
