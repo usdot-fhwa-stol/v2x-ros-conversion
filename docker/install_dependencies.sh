@@ -19,17 +19,12 @@
 set -e
 
 BRANCH=develop  # The script will use this unless the -b flag updates it
-VERSION=2024  # old version": 201603
+VERSION=2024  # version of compiled J2735 code; old version: 201603
 while [[ $# -gt 0 ]]; do
       arg="$1"
       case $arg in
             -b|--branch)
                   BRANCH=$2
-                  shift
-                  shift
-            ;;
-            -v|--version)
-                  VERSION=$2
                   shift
                   shift
             ;;

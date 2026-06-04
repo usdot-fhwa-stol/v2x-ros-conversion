@@ -20,7 +20,6 @@
 
 dir=$HOME
 BRANCH=develop  # The script will use this unless the -b flag updates it
-VERSION=2024  # version of compiled J2735 code
 while [[ $# -gt 0 ]]; do
       arg="$1"
       case $arg in
@@ -34,11 +33,6 @@ while [[ $# -gt 0 ]]; do
                   shift
                   shift
             ;;
-            -v|--version)
-                  VERSION=$2
-                  shift
-                  shift
-            ;;
       esac
 done
 
@@ -47,5 +41,5 @@ git clone https://github.com/usdot-fhwa-stol/carma-utils.git ${dir}/src/CARMAUti
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-${SCRIPT_DIR}/install_dependencies.sh -b $BRANCH -v $VERSION
+${SCRIPT_DIR}/install_dependencies.sh -b $BRANCH
 
