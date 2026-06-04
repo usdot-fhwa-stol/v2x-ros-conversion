@@ -19,7 +19,6 @@
 set -e
 
 BRANCH=develop  # The script will use this unless the -b flag updates it
-VERSION=2024  # version of compiled J2735 code; old version: 201603
 while [[ $# -gt 0 ]]; do
       arg="$1"
       case $arg in
@@ -53,4 +52,4 @@ echo "deb [trusted=yes] http://s3.amazonaws.com/stol-apt-repository ${APT_CODENA
 sudo apt-get update
 
 # install all things needed for deployment, always done
-sudo apt-get install -y stol-j2735-${VERSION}-carma-1
+sudo apt-get install -y stol-j2735-2024-carma-1
