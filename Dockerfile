@@ -25,20 +25,8 @@ COPY --chown=carma ./docker /home/carma/src/docker
 ARG GIT_BRANCH="develop-humble"
 ARG STANDARD_VERSION="2024"
 
-RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH}
-RUN ${HOME}/src/docker/install_dependencies.sh -b ${GIT_BRANCH} -v ${STANDARD_VERSION}
+RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH} -v ${STANDARD_VERSION}
 
-
-FROM setup AS dev
-
-# build all dependencies
-RUN ${HOME}/src/docker/install.sh
-
-# create vscode server directory and set permissions for carma user for persistence of extension etc
-RUN mkdir -p /home/carma/.vscode-server && chown -R carma:carma /home/carma/.vscode-server
-
-# keep dev container running
-CMD ["sleep", "infinity"]
 
 FROM setup AS prod
 
