@@ -23,9 +23,7 @@ FROM base_image AS setup
 COPY --chown=carma ./docker /home/carma/src/docker
 
 ARG GIT_BRANCH="develop-humble"
-ARG STANDARD_VERSION="2024"
-
-RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH} -v ${STANDARD_VERSION}
+RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH}
 
 
 FROM setup AS prod
