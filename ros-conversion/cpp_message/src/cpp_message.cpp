@@ -216,7 +216,7 @@ namespace cpp_message
         else if(msg->message_type=="SPAT")
         {
             std::vector<uint8_t> array=msg->content;
-            SPAT_Message decode;
+            SPAT_Message decode(this->get_node_logging_interface());
             auto output = decode.decode_spat_message(array);
             if(output)
             {

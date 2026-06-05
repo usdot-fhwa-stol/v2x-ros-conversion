@@ -53,7 +53,8 @@ namespace cpp_message
 }
 
     TEST(SPATTest, testDECODESPAT)
-    {
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
         std::string hex_message = "00131c44630800812f6800000c2d40100204342b3fac0a0020232159495f9c";
 
         //Convert hex string to byte message
@@ -66,7 +67,7 @@ namespace cpp_message
         }
         
 
-        cpp_message::SPAT_Message worker;        
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());        
         auto res = worker.decode_spat_message(new_binary_input_int);
         
         
@@ -175,8 +176,9 @@ namespace cpp_message
     }
 
     TEST(SPATTest, testENCODESPAT)
-    {
-        cpp_message::SPAT_Message worker;
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());
         auto message = makeBaseSPAT();
 
         auto res = worker.encode_spat_message(message);
@@ -184,8 +186,9 @@ namespace cpp_message
     }
 
     TEST(SPATTest, testEncodeDecodeSPATRoadAuthorityID)
-    {
-        cpp_message::SPAT_Message worker;
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());
         auto message = makeBaseSPAT();
         message.intersections.intersection_state_list[0].road_authority_id_exists = true;
         message.intersections.intersection_state_list[0].road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
@@ -205,8 +208,9 @@ namespace cpp_message
     }
 
     TEST(SPATTest, testEncodeDecodeSPATRelRoadAuthorityID)
-    {
-        cpp_message::SPAT_Message worker;
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());
         auto message = makeBaseSPAT();
 
         message.intersections.intersection_state_list[0].road_authority_id_exists = true;
