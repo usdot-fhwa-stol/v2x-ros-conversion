@@ -574,7 +574,7 @@ namespace cpp_message
                             }                      
                         }
 
-                        // doNotUse (was trailers) — deprecated in J2735 2024
+                        // doNotUse (was trailers — deprecated in J2735 2024)
                         if (part_ii_element.partII_Value.choice.SpecialVehicleExtensions.doNotUse){
                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse field ('trailers') in SpecialVehicleExtensions — ignoring per J2735 2024");
                         }
@@ -679,23 +679,23 @@ namespace cpp_message
                                 part_ii_output.supplemental_vehicle_extensions.vehicle_data.mass.vehicle_mass = *part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.vehicleData->mass;
                             }
 
-                            // doNotUse (was trailerWeight) — deprecated in J2735 2024
+                            // doNotUse (was trailerWeight — deprecated in J2735 2024) 
                             if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.vehicleData->doNotUse){
                                 RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse field ('trailerWeight') in VehicleData — ignoring per J2735 2024");
                             }
                         }
 
-                        // doNotUse1 (was weatherReport) — deprecated in J2735 2024
+                        // doNotUse1 (was weatherReport — deprecated in J2735 2024)
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse1){
                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse1 field ('weatherReport') in SupplementalVehicleExtensions — ignoring per J2735 2024");
                         }
 
-                        // doNotUse2 (was weatherProbe) — deprecated in J2735 2024
+                        // doNotUse2 (was weatherProbe — deprecated in J2735 2024) 
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse2){
                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse2 field ('weatherProbe') in SupplementalVehicleExtensions — ignoring per J2735 2024");
                         }
 
-                        // doNotUse3 (was obstacleDetection) — deprecated in J2735 2024
+                        // doNotUse3 (was obstacleDetection — deprecated in J2735 2024) 
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse3){
                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse3 field ('obstacleDetection') in SupplementalVehicleExtensions — ignoring per J2735 2024");
                         }
@@ -714,7 +714,7 @@ namespace cpp_message
                             }
                         }
 
-                        // doNotUse4 (was speedProfile) — deprecated in J2735 2024
+                        // doNotUse4 (was speedProfile — deprecated in J2735 2024) 
                         if(part_ii_element.partII_Value.choice.SupplementalVehicleExtensions.doNotUse4){
                             RCLCPP_WARN_STREAM(node_logging_->get_logger(), "Received non-empty doNotUse4 field ('speedProfile') in SupplementalVehicleExtensions — ignoring per J2735 2024");
                         }
