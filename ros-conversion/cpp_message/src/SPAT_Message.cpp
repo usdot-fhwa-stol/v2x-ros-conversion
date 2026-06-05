@@ -692,7 +692,7 @@ namespace cpp_message
         char errbuf[256] = {0};
         size_t errlen = sizeof(errbuf);
         if(asn_check_constraints(&asn_DEF_MessageFrame, message, errbuf, &errlen) != 0){
-            RCLCPP_WARN_STREAM( node_logging_::get_logger(), "SPAT constraint check failed: " << errbuf);
+            RCLCPP_WARN_STREAM( node_logging_->get_logger(), "SPAT constraint check failed: " << errbuf);
         }
         ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0 , message, buffer, buffer_size);
         if(ec.encoded == -1) {
