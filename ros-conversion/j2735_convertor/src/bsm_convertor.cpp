@@ -444,7 +444,6 @@ void BSMConvertor::convert(const j2735_v2x_msgs::msg::SpecialVehicleExtensions& 
         out_msg.description = in_msg.description;
     }
 
-    // trailers field removed in J2735 2024 (doNotUse)
 }
 
 void BSMConvertor::convert(const std::vector<j2735_v2x_msgs::msg::BSMRegionalExtension>& in_msg, std::vector<carma_v2x_msgs::msg::BSMRegionalExtension>& out_msg)
@@ -912,7 +911,6 @@ void BSMConvertor::convert(const carma_v2x_msgs::msg::SpecialVehicleExtensions& 
         out_msg.description = in_msg.description;
     }
 
-    // trailers field removed in J2735 2024 (doNotUse)
 }
 
 void BSMConvertor::convert(const std::vector<carma_v2x_msgs::msg::BSMRegionalExtension>& in_msg, std::vector<j2735_v2x_msgs::msg::BSMRegionalExtension>& out_msg)
