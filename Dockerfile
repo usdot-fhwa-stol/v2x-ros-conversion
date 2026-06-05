@@ -14,15 +14,24 @@
 
 ARG DOCKER_ORG="usdotfhwastoldev"
 ARG DOCKER_TAG="develop-humble"
-FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} as base_image
-COPY --chown=carma . /home/carma/src/
+FROM ${DOCKER_ORG}/carma-base:${DOCKER_TAG} AS base_image
+ENV HOME=/home/carma
 
-FROM base_image as setup
+FROM base_image AS setup
+
+# copy docker files only
+COPY --chown=carma ./docker /home/carma/src/docker
+
 ARG GIT_BRANCH="develop-humble"
+RUN ${HOME}/src/docker/checkout.bash -b ${GIT_BRANCH}
 
-RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 
-RUN ~/src/docker/install.sh
+FROM setup AS prod
+
+# copy source code
+COPY --chown=carma ./ros-conversion /home/carma/src/ros-conversion
+
+RUN ${HOME}/src/docker/install.sh
 
 RUN rm -rf /home/carma/src/
 

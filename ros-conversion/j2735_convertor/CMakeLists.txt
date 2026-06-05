@@ -77,6 +77,8 @@ if(BUILD_TESTING)
     test/control_request_test.cpp
     test/test_bsm_convertor.cpp
     test/test_sdsm_convertor.cpp
+    test/test_spat_convertor.cpp
+    test/test_map_convertor.cpp
   )
 
   ament_target_dependencies(test_j2735_convertor ${${PROJECT_NAME}_FOUND_TEST_DEPENDS})

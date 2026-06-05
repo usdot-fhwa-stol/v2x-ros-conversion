@@ -15,6 +15,6 @@
 #  the License.
 
 # Build ros2
-cd ~/
+cd ${HOME}
 source /opt/ros/humble/setup.bash
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --install-base /opt/carma/install

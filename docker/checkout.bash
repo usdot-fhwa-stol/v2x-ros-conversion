@@ -18,7 +18,7 @@
 
 #set -exo pipefail
 
-dir=~
+dir=$HOME
 BRANCH=develop  # The script will use this unless the -b flag updates it
 while [[ $# -gt 0 ]]; do
       arg="$1"
