@@ -5,7 +5,6 @@
 
 namespace cpp_message{
 
-
     /// @brief Reverses the bits of a uint8_t value
     /// @param x The input value
     /// @return The value with reversed bits
