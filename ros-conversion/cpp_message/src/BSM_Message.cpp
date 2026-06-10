@@ -410,7 +410,7 @@ namespace cpp_message
             output.core_data.accel_set.vert = core_data_msg.accelSet.vert;
             output.core_data.accel_set.yaw_rate = core_data_msg.accelSet.yaw;
             // brake_applied_status decoding
-            // reverse bits 0b0100000 to 0b00000010
+            // reverse bits e.g. 0b0100000 to 0b00000010
             output.core_data.brakes.wheel_brakes.brake_applied_status = reverseBitsUint8(core_data_msg.brakes.wheelBrakes.buf[0]);
 
             output.core_data.brakes.traction.traction_control_status = core_data_msg.brakes.traction;
@@ -1001,11 +1001,7 @@ namespace cpp_message
         
         BrakeAppliedStatus_t brake_applied_status;
         
-        uint8_t wheel_brake[1] = {0};
-
-        // there are 3 unused bits in the end: 0b000
-        // unavailable=1, leftFront=2, leftRear=4, rightFront=8, rightRear=16 in the plain msg
-        // note: more than 1 bits can be set
+        uint8_t wheel_brake[1];
         wheel_brake[0] = reverseBitsUint8(plain_msg.core_data.brakes.wheel_brakes.brake_applied_status);
         brake_applied_status.buf = wheel_brake;
         brake_applied_status.size = 1;
