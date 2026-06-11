@@ -48,4 +48,42 @@ cpp_message does not have parameters.
 
 ## Deployment Instructions
 
-cpp_message should be launched with v2x_ros_conversion as a whole, details are in ros-conversion/v2x-ros-conversion/README.md.
+### Build from Source
+
+#### Note: There is no docker image for j2735_convertor alone
+
+1. Create workspace and source directory, or enter it if it already exsists.
+
+```sh
+mkdir v2x_ws/src
+# and or
+cd v2x_ws/src
+```
+
+2. Clone the repository into workspace.
+
+```sh
+git clone https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git
+```
+
+3. Clone the dependencies into the workspace
+
+```sh
+chmod +x v2x-ros-conversion/docker/checkout.bash
+./v2x-ros-conversion/docker/checkout.bash -r v2x-ros-conversion/ -b develop # or release tag / branch of your choice
+```
+
+4. Build the package.
+
+```sh
+source /opt/ros/humble/setup.bash
+colcon build --packages-up-to cpp_message
+```
+
+5. Launch the node.
+
+```sh
+cd .. # back into your workspace root
+source install/setup.bash
+ros2 launch cpp_message cpp_message_launch.py
+```
