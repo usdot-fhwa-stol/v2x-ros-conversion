@@ -14,68 +14,56 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 -->
-
+<!-- Launch V2X subsystem nodes. -->
 <launch>
 
-    <arg name="configuration_delay" default="4.0" />
+    <!-- Launch arguments -->
+    <arg name="configuration_delay" default="4.0"
+         description="Delay in seconds before lifecycle configure+activate commands are sent" />
 
+    <!-- V2X container with cpp_message and j2735_convertor composable nodes -->
     <node_container
         pkg="carma_ros2_utils"
-        name="carma_v2x_container"
-        namespace="$(env ROS_NAMESPACE '')"
         exec="carma_component_container_mt"
+        name="carma_v2x_container"
+        namespace="/"
         on_exit="shutdown">
 
+        <!-- cpp_message node -->
         <composable_node
             pkg="cpp_message"
             plugin="cpp_message::Node"
             name="cpp_message_node">
-            <extra_arg name="use_intra_process_comms" value="true" />
-            <extra_arg name="--log-level" value="$(env CARMA_ROS_LOGGING_CONFIG WARN)" />
+            <extra_arg name="use_intra_process_comms" value="True"/>
+            <extra_arg name="--log-level" value="WARN"/>
             <remap from="inbound_binary_msg"
-                to="$(env CARMA_INTR_NS hardware_interface)/comms/inbound_binary_msg" />
+                   to="$(env CARMA_INTR_NS hardware_interface)/comms/inbound_binary_msg"/>
             <remap from="outbound_binary_msg"
-                to="$(env CARMA_INTR_NS hardware_interface)/comms/outbound_binary_msg" />
+                   to="$(env CARMA_INTR_NS hardware_interface)/comms/outbound_binary_msg"/>
         </composable_node>
 
+        <!-- j2735_convertor node -->
         <composable_node
             pkg="j2735_convertor"
             plugin="j2735_convertor::Node"
             name="j2735_convertor_node">
-            <extra_arg name="use_intra_process_comms" value="true" />
-            <extra_arg name="--log-level" value="$(env CARMA_ROS_LOGGING_CONFIG WARN)" />
-            <remap from="outgoing_bsm" to="bsm_outbound" />
+            <extra_arg name="use_intra_process_comms" value="True"/>
+            <extra_arg name="--log-level" value="WARN"/>
+            <remap from="outgoing_bsm" to="bsm_outbound"/>
         </composable_node>
 
     </node_container>
 
-    <timer period="$(var configuration_delay)">
+    <!-- After configuration_delay seconds:
+         configure then activate cpp_message_node and j2735_convertor_node. -->
+    <executable
+        cmd="sleep $(var configuration_delay) &amp;&amp; ros2 lifecycle set /cpp_message_node configure &amp;&amp; ros2 lifecycle set /cpp_message_node activate"
+        shell="true"
+        output="screen"/>
 
-        <executable
-            cmd="ros2 lifecycle set /cpp_message_node configure"
-            name="process_configure_cpp_message"
-            output="screen" />
-
-        <executable
-            cmd="ros2 lifecycle set /j2735_convertor_node configure"
-            name="process_configure_j2735_convertor"
-            output="screen" />
-
-    </timer>
-
-    <on_execution_complete
-        target="process_configure_cpp_message">
-        <executable
-            cmd="ros2 lifecycle set /cpp_message_node activate"
-            output="screen" />
-    </on_execution_complete>
-
-
-    <on_execution_complete
-        target="process_configure_j2735_convertor">
-        <executable
-            cmd="ros2 lifecycle set /j2735_convertor_node activate"
-            output="screen" />
-    </on_execution_complete>
+    <executable
+        cmd="sleep $(var configuration_delay) &amp;&amp; ros2 lifecycle set /j2735_convertor_node configure &amp;&amp; ros2 lifecycle set /j2735_convertor_node activate"
+        shell="true"
+        output="screen"/>
 
 </launch>
