@@ -54,6 +54,7 @@ ament_auto_add_library(${node_lib} SHARED
         src/Map_Message.cpp
         src/PSM_Message.cpp
         src/SDSM_Message.cpp
+        src/Util.cpp
         )
 
 target_link_libraries(${node_lib} ::stol-j2735-${J2735_REVISION}-carma)
@@ -92,6 +93,7 @@ if(BUILD_TESTING)
                         test/test_PSM.cpp
                         test/node_test.cpp
                         test/test_SDSM.cpp
+                        test/test_util.cpp
                         )
 
   ament_target_dependencies(test_cpp_message_node ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} )

@@ -19,6 +19,7 @@
  */
 
 #include "cpp_message/BSM_Message.h"
+#include "cpp_message/Util.h"
 
 namespace cpp_message
 {
@@ -409,24 +410,9 @@ namespace cpp_message
             output.core_data.accel_set.vert = core_data_msg.accelSet.vert;
             output.core_data.accel_set.yaw_rate = core_data_msg.accelSet.yaw;
             // brake_applied_status decoding
-            // e.g. make 0b0100000 to 0b0000100
-            uint8_t binary = core_data_msg.brakes.wheelBrakes.buf[0] >> 3;
-            unsigned int brake_applied_status_type = 4;
-            // e.g. shift the binary right until it equals to 1 (0b00000001) to determine the location of the non-zero bit
-            
-            for (int i = 0; i < 4; i ++)
-            {
-                if ((int)binary == 1) 
-                {
-                    output.core_data.brakes.wheel_brakes.brake_applied_status = brake_applied_status_type;
-                    break;
-                }
-                else
-                {
-                    brake_applied_status_type -= 1;
-                    binary = binary >> 1;
-                }
-            }
+            // reverse bits e.g. 0b0100000 to 0b00000010
+            output.core_data.brakes.wheel_brakes.brake_applied_status = reverseBitsUint8(core_data_msg.brakes.wheelBrakes.buf[0]);
+
             output.core_data.brakes.traction.traction_control_status = core_data_msg.brakes.traction;
             output.core_data.brakes.abs.anti_lock_brake_status = core_data_msg.brakes.abs;
             output.core_data.brakes.scs.stability_control_status = core_data_msg.brakes.scs;
@@ -1015,13 +1001,8 @@ namespace cpp_message
         
         BrakeAppliedStatus_t brake_applied_status;
         
-        uint8_t wheel_brake[1] = {8}; // dummy 8 value
-
-        // there are 3 unused bits in the end: 0b000
-        // which makes every possible encoded value to be multiples of 8: 0b00001000 (8), 0b00010000 (16), 0b00011000 (24) etc
-        // so num in brackets indicate the position in the bit string:
-        // unavailable: 0b10000000, leftFront: 0b01000000 etc
-        wheel_brake[0] = (char) (8 << (4 - plain_msg.core_data.brakes.wheel_brakes.brake_applied_status)); 
+        uint8_t wheel_brake[1];
+        wheel_brake[0] = reverseBitsUint8(plain_msg.core_data.brakes.wheel_brakes.brake_applied_status);
         brake_applied_status.buf = wheel_brake;
         brake_applied_status.size = 1;
         brake_applied_status.bits_unused = 3;

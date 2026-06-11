@@ -73,7 +73,9 @@ TEST(BSMTest, testEncodeBSM)
     message.core_data.sec_mark = 1;
     message.core_data.longitude = 1;
     message.core_data.accuracy.orientation = 1;
-    message.core_data.brakes.wheel_brakes.brake_applied_status = j2735_v2x_msgs::msg::BrakeAppliedStatus::RIGHT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status = 0u;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_FRONT;
     message.core_data.brakes.traction.traction_control_status = 1;
     message.core_data.brakes.abs.anti_lock_brake_status = 1;
     message.core_data.brakes.scs.stability_control_status = 1;
@@ -128,7 +130,9 @@ TEST(BSMTest, testEncodeDecodeBSM)
     message.core_data.sec_mark = 2;
     message.core_data.longitude = 3;
     message.core_data.accuracy.orientation = 4;
-    message.core_data.brakes.wheel_brakes.brake_applied_status = j2735_v2x_msgs::msg::BrakeAppliedStatus::RIGHT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status = 0u;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_FRONT;
     message.core_data.brakes.traction.traction_control_status = 1;
     message.core_data.brakes.abs.anti_lock_brake_status = 1;
     message.core_data.brakes.scs.stability_control_status = 1;
