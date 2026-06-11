@@ -55,4 +55,3 @@ git clone --depth=1 https://github.com/usdot-fhwa-stol/v2x-ros-conversion.git ${
 cd src/v2x-ros-conversion/docker
 ./build-image.sh
 ```
-
