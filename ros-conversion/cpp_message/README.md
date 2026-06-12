@@ -2,43 +2,39 @@
 
 The `cpp_message` is a ROS2 package handling UPER encoding and decoding of V2X messages, converting between structured ROS2 message types and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages for transmission and reception via a V2X radio driver. Supported message types include BSM, PSM, SPaT, MAP, SDSM, Traffic Control, and CARMA Mobility messages.
 
----
-
 ## ROS Topics
 
 ### Published
 
-* `/outbound_binary_msg` : carma_driver_msgs/msg/ByteArray - An UPER-encoded binary message to be transmitted by the V2X driver.
-* `/incoming_j2735_geofence_request` : j2735_v2x_msgs/msg/TrafficControlRequest - A received traffic control geofence request message.
-* `/incoming_j2735_geofence_control` : j2735_v2x_msgs/msg/TrafficControlMessage - A received traffic control geofence message.
-* `/incoming_mobility_operation` : carma_v2x_msgs/msg/MobilityOperation - A received CARMA mobility operation coordination message.
-* `/incoming_emergency_vehicle_ack` : carma_v2x_msgs/msg/EmergencyVehicleAck - A received emergency vehicle acknowledgement message.
-* `/incoming_emergency_vehicle_response` : carma_v2x_msgs/msg/EmergencyVehicleResponse - A received emergency vehicle response message.
-* `/incoming_mobility_response` : carma_v2x_msgs/msg/MobilityResponse - A received CARMA mobility response message.
-* `/incoming_mobility_path` : carma_v2x_msgs/msg/MobilityPath - A received CARMA mobility path trajectory message.
-* `/incoming_mobility_request` : carma_v2x_msgs/msg/MobilityRequest - A received CARMA mobility request message.
-* `/incoming_j2735_bsm` : j2735_v2x_msgs/msg/BSM - A received J2735 Basic Safety Message (BSM).
-* `/incoming_j2735_spat` : j2735_v2x_msgs/msg/SPAT - A received J2735 Signal Phase and Timing (SPaT) message.
-* `/incoming_j2735_map` : j2735_v2x_msgs/msg/MapData - A received J2735 MapData message.
-* `/incoming_j2735_psm` : j2735_v2x_msgs/msg/PSM - A received J2735 Personal Safety Message (PSM).
-* `/incoming_j3224_sdsm` : j3224_v2x_msgs/msg/SensorDataSharingMessage - A received J3224 Sensor Data Sharing Message (SDSM).
+* `/outbound_binary_msg` : `carma_driver_msgs/msg/ByteArray` — UPER-encoded binary message ready for transmission via the V2X driver.
+* `/incoming_j2735_geofence_request` : `j2735_v2x_msgs/msg/TrafficControlRequest` — Decoded traffic control geofence request, published for consumption by j2735_convertor.
+* `/incoming_j2735_geofence_control` : `j2735_v2x_msgs/msg/TrafficControlMessage` — Decoded traffic control geofence message, published for consumption by j2735_convertor.
+* `/incoming_mobility_operation` : `carma_v2x_msgs/msg/MobilityOperation` — Decoded mobility operation coordination message from inbound binary data.
+* `/incoming_emergency_vehicle_ack` : `carma_v2x_msgs/msg/EmergencyVehicleAck` — Decoded emergency vehicle acknowledgement message from inbound binary data.
+* `/incoming_emergency_vehicle_response` : `carma_v2x_msgs/msg/EmergencyVehicleResponse` — Decoded emergency vehicle response message from inbound binary data.
+* `/incoming_mobility_response` : `carma_v2x_msgs/msg/MobilityResponse` — Decoded mobility response message from inbound binary data.
+* `/incoming_mobility_path` : `carma_v2x_msgs/msg/MobilityPath` — Decoded mobility path trajectory message from inbound binary data.
+* `/incoming_mobility_request` : `carma_v2x_msgs/msg/MobilityRequest` — Decoded mobility request message from inbound binary data.
+* `/incoming_j2735_bsm` : `j2735_v2x_msgs/msg/BSM` — Decoded J2735 Basic Safety Message, published for consumption by j2735_convertor.
+* `/incoming_j2735_spat` : `j2735_v2x_msgs/msg/SPAT` — Decoded J2735 Signal Phase and Timing message, published for consumption by j2735_convertor.
+* `/incoming_j2735_map` : `j2735_v2x_msgs/msg/MapData` — Decoded J2735 MapData message, published for consumption by j2735_convertor.
+* `/incoming_j2735_psm` : `j2735_v2x_msgs/msg/PSM` — Decoded J2735 Personal Safety Message, published for consumption by j2735_convertor.
+* `/incoming_j3224_sdsm` : `j3224_v2x_msgs/msg/SensorDataSharingMessage` — Decoded J3224 Sensor Data Sharing Message, published for consumption by j2735_convertor.
 
 ### Subscribed
 
-* `/inbound_binary_msg` : carma_driver_msgs/msg/ByteArray - An UPER-encoded binary V2X message received from the radio driver to be decoded.
-* `/outgoing_j2735_geofence_request` : j2735_v2x_msgs/msg/TrafficControlRequest - An outbound traffic control geofence request message waiting to be encoded.
-* `/outgoing_j2735_geofence_control` : j2735_v2x_msgs/msg/TrafficControlMessage - An outbound traffic control geofence message waiting to be encoded.
-* `/outgoing_mobility_operation` : carma_v2x_msgs/msg/MobilityOperation - An outbound CARMA mobility operation coordination message waiting to be encoded.
-* `/outgoing_emergency_vehicle_ack` : carma_v2x_msgs/msg/EmergencyVehicleAck - An outbound emergency vehicle acknowledgement message waiting to be encoded.
-* `/outgoing_emergency_vehicle_response` : carma_v2x_msgs/msg/EmergencyVehicleResponse - An outbound emergency vehicle response message waiting to be encoded.
-* `/outgoing_mobility_response` : carma_v2x_msgs/msg/MobilityResponse - An outbound CARMA mobility response message waiting to be encoded.
-* `/outgoing_mobility_path` : carma_v2x_msgs/msg/MobilityPath - An outbound CARMA mobility path trajectory message waiting to be encoded.
-* `/outgoing_mobility_request` : carma_v2x_msgs/msg/MobilityRequest - An outbound CARMA mobility request message waiting to be encoded.
-* `/outgoing_j2735_bsm` : j2735_v2x_msgs/msg/BSM - An outbound J2735 Basic Safety Message (BSM) waiting to be encoded.
-* `/outgoing_j2735_psm` : j2735_v2x_msgs/msg/PSM - An outbound J2735 Personal Safety Message (PSM) waiting to be encoded.
-* `/outgoing_j3224_sdsm` : j3224_v2x_msgs/msg/SensorDataSharingMessage - An outbound J3224 Sensor Data Sharing Message (SDSM) waiting to be encoded.
-
----
+* `/inbound_binary_msg` : `carma_driver_msgs/msg/ByteArray` — UPER-encoded binary V2X message received from the V2X driver to be decoded.
+* `/outgoing_j2735_geofence_request` : `j2735_v2x_msgs/msg/TrafficControlRequest` — Outbound traffic control geofence request to be UPER-encoded, received from j2735_convertor.
+* `/outgoing_j2735_geofence_control` : `j2735_v2x_msgs/msg/TrafficControlMessage` — Outbound traffic control geofence message to be UPER-encoded, received from j2735_convertor.
+* `/outgoing_mobility_operation` : `carma_v2x_msgs/msg/MobilityOperation` — Outbound mobility operation coordination message to be UPER-encoded.
+* `/outgoing_emergency_vehicle_ack` : `carma_v2x_msgs/msg/EmergencyVehicleAck` — Outbound emergency vehicle acknowledgement message to be UPER-encoded.
+* `/outgoing_emergency_vehicle_response` : `carma_v2x_msgs/msg/EmergencyVehicleResponse` — Outbound emergency vehicle response message to be UPER-encoded.
+* `/outgoing_mobility_response` : `carma_v2x_msgs/msg/MobilityResponse` — Outbound mobility response message to be UPER-encoded.
+* `/outgoing_mobility_path` : `carma_v2x_msgs/msg/MobilityPath` — Outbound mobility path trajectory message to be UPER-encoded.
+* `/outgoing_mobility_request` : `carma_v2x_msgs/msg/MobilityRequest` — Outbound mobility request message to be UPER-encoded.
+* `/outgoing_j2735_bsm` : `j2735_v2x_msgs/msg/BSM` — Outbound J2735 Basic Safety Message to be UPER-encoded, received from j2735_convertor.
+* `/outgoing_j2735_psm` : `j2735_v2x_msgs/msg/PSM` — Outbound J2735 Personal Safety Message to be UPER-encoded, received from j2735_convertor.
+* `/outgoing_j3224_sdsm` : `j3224_v2x_msgs/msg/SensorDataSharingMessage` — Outbound J3224 Sensor Data Sharing Message to be UPER-encoded, received from j2735_convertor.
 
 ## Parameters
 
