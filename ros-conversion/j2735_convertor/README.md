@@ -1,6 +1,6 @@
 # j2735_convertor
 
-This package converts the subscribed j2735 msgs to carma msgs so that they can be parsed by the rest of the carma system.
+The `j2735_convertor` is a ROS2 package providing bidirectional conversion between standard J2735/J3224 V2X message types and their internal ROS2 representations, supporting BSM, PSM, SPaT, MAP, SDSM, and Traffic Control messages.
 
 ---
 
@@ -8,33 +8,33 @@ This package converts the subscribed j2735 msgs to carma msgs so that they can b
 
 ### Published
 
-* `/incoming_bsm` : carma_v2x_msgs/msg/BSM - A converted internal CARMA Basic Safety Message (BSM) derived from an incoming J2735 message.
-* `/outgoing_j2735_bsm` : j2735_v2x_msgs/msg/BSM - A standard J2735 Basic Safety Message (BSM) ready for outbound transmission.
-* `/incoming_psm` : carma_v2x_msgs/msg/PSM - A converted internal CARMA Personal Safety Message (PSM) derived from an incoming J2735 message.
-* `/outgoing_j2735_psm` : j2735_v2x_msgs/msg/PSM - A standard J2735 Personal Safety Message (PSM) ready for outbound transmission.
-* `/incoming_spat` : carma_v2x_msgs/msg/SPAT - A converted internal CARMA Signal Phase and Timing (SPaT) message derived from an incoming J2735 message.
-* `/incoming_map` : carma_v2x_msgs/msg/MapData - A converted internal CARMA MapData message derived from an incoming J2735 message.
-* `/incoming_sdsm` : carma_v2x_msgs/msg/SensorDataSharingMessage - A converted internal CARMA Sensor Data Sharing Message (SDSM) derived from an incoming J3224 message.
-* `/outgoing_j3224_sdsm` : j3224_v2x_msgs/msg/SensorDataSharingMessage - A standard J3224 Sensor Data Sharing Message (SDSM) ready for outbound transmission.
-* `/incoming_geofence_control` : carma_v2x_msgs/msg/TrafficControlMessage - A converted internal CARMA traffic control geofence message (published as transient local).
-* `/incoming_geofence_request` : carma_v2x_msgs/msg/TrafficControlRequest - A converted internal CARMA traffic control geofence request message.
-* `/outgoing_j2735_geofence_control` : j2735_v2x_msgs/msg/TrafficControlMessage - A standard J2735 traffic control geofence message ready for outbound transmission.
-* `/outgoing_j2735_geofence_request` : j2735_v2x_msgs/msg/TrafficControlRequest - A standard J2735 traffic control geofence request message ready for outbound transmission.
+* `/incoming_bsm` : `carma_v2x_msgs/msg/BSM` — Converted internal CARMA Basic Safety Message (BSM) derived from an incoming J2735 message.
+* `/outgoing_j2735_bsm` : `j2735_v2x_msgs/msg/BSM` — Standard J2735 Basic Safety Message (BSM) ready for outbound transmission.
+* `/incoming_psm` : `carma_v2x_msgs/msg/PSM` — Converted internal CARMA Personal Safety Message (PSM) derived from an incoming J2735 message.
+* `/outgoing_j2735_psm` : `j2735_v2x_msgs/msg/PSM` — Standard J2735 Personal Safety Message (PSM) ready for outbound transmission.
+* `/incoming_spat` : `carma_v2x_msgs/msg/SPAT` — Converted internal CARMA Signal Phase and Timing (SPaT) message derived from an incoming J2735 message.
+* `/incoming_map` : `carma_v2x_msgs/msg/MapData` — Converted internal CARMA MapData message derived from an incoming J2735 message.
+* `/incoming_sdsm` : `carma_v2x_msgs/msg/SensorDataSharingMessage` — Converted internal CARMA Sensor Data Sharing Message (SDSM) derived from an incoming J3224 message.
+* `/outgoing_j3224_sdsm` : `j3224_v2x_msgs/msg/SensorDataSharingMessage` — Standard J3224 Sensor Data Sharing Message (SDSM) ready for outbound transmission.
+* `/incoming_geofence_control` : `carma_v2x_msgs/msg/TrafficControlMessage` — Converted internal CARMA traffic control message derived from an incoming J2735 message.
+* `/incoming_geofence_request` : `carma_v2x_msgs/msg/TrafficControlRequest` — Converted internal CARMA traffic control request derived from an incoming J2735 message.
+* `/outgoing_j2735_geofence_control` : `j2735_v2x_msgs/msg/TrafficControlMessage` — Standard J2735 traffic control message ready for outbound transmission.
+* `/outgoing_j2735_geofence_request` : `j2735_v2x_msgs/msg/TrafficControlRequest` — Standard J2735 traffic control request ready for outbound transmission.
 
 ### Subscribed
 
-* `/incoming_j2735_bsm` : j2735_v2x_msgs/msg/BSM - A standard J2735 Basic Safety Message (BSM) received from the V2X driver.
-* `/outgoing_bsm` : carma_v2x_msgs/msg/BSM - An internal CARMA Basic Safety Message (BSM) intended for outbound translation and broadcast.
-* `/incoming_j2735_psm` : j2735_v2x_msgs/msg/PSM - A standard J2735 Personal Safety Message (PSM) received from the V2X driver.
-* `/outgoing_psm` : carma_v2x_msgs/msg/PSM - An internal CARMA Personal Safety Message (PSM) intended for outbound translation and broadcast.
-* `/incoming_j2735_spat` : j2735_v2x_msgs/msg/SPAT - A standard J2735 Signal Phase and Timing (SPaT) message received from the V2X driver.
-* `/incoming_j2735_map` : j2735_v2x_msgs/msg/MapData - A standard J2735 MapData message received from the V2X driver.
-* `/incoming_j3224_sdsm` : j3224_v2x_msgs/msg/SensorDataSharingMessage - A standard J3224 Sensor Data Sharing Message (SDSM) received from the V2X driver.
-* `/outgoing_sdsm` : carma_v2x_msgs/msg/SensorDataSharingMessage - An internal CARMA Sensor Data Sharing Message (SDSM) intended for outbound translation and broadcast.
-* `/incoming_j2735_geofence_control` : j2735_v2x_msgs/msg/TrafficControlMessage - A standard J2735 traffic control geofence message received from the V2X driver.
-* `/incoming_j2735_geofence_request` : j2735_v2x_msgs/msg/TrafficControlRequest - A standard J2735 traffic control geofence request message received from the V2X driver.
-* `/outgoing_geofence_control` : carma_v2x_msgs/msg/TrafficControlMessage - An internal CARMA traffic control geofence message intended for outbound translation.
-* `/outgoing_geofence_request` : carma_v2x_msgs/msg/TrafficControlRequest - An internal CARMA traffic control geofence request message intended for outbound translation.
+* `/incoming_j2735_bsm` : `j2735_v2x_msgs/msg/BSM` — Standard J2735 Basic Safety Message (BSM) received from the V2X driver.
+* `/outgoing_bsm` : `carma_v2x_msgs/msg/BSM` — Internal CARMA Basic Safety Message (BSM) to be translated and broadcast outbound.
+* `/incoming_j2735_psm` : `j2735_v2x_msgs/msg/PSM` — Standard J2735 Personal Safety Message (PSM) received from the V2X driver.
+* `/outgoing_psm` : `carma_v2x_msgs/msg/PSM` — Internal CARMA Personal Safety Message (PSM) to be translated and broadcast outbound.
+* `/incoming_j2735_spat` : `j2735_v2x_msgs/msg/SPAT` — Standard J2735 Signal Phase and Timing (SPaT) message received from the V2X driver.
+* `/incoming_j2735_map` : `j2735_v2x_msgs/msg/MapData` — Standard J2735 MapData message received from the V2X driver.
+* `/incoming_j3224_sdsm` : `j3224_v2x_msgs/msg/SensorDataSharingMessage` — Standard J3224 Sensor Data Sharing Message (SDSM) received from the V2X driver.
+* `/outgoing_sdsm` : `carma_v2x_msgs/msg/SensorDataSharingMessage` — Internal CARMA Sensor Data Sharing Message (SDSM) to be translated and broadcast outbound.
+* `/incoming_j2735_geofence_control` : `j2735_v2x_msgs/msg/TrafficControlMessage` — Standard J2735 traffic control message received from the V2X driver.
+* `/incoming_j2735_geofence_request` : `j2735_v2x_msgs/msg/TrafficControlRequest` — Standard J2735 traffic control request received from the V2X driver.
+* `/outgoing_geofence_control` : `carma_v2x_msgs/msg/TrafficControlMessage` — Internal CARMA traffic control message to be translated and broadcast outbound.
+* `/outgoing_geofence_request` : `carma_v2x_msgs/msg/TrafficControlRequest` — Internal CARMA traffic control request to be translated and broadcast outbound.
 
 ---
 

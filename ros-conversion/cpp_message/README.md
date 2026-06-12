@@ -1,6 +1,6 @@
 # cpp_message
 
-cpp message node used to publish and receive and decode and encode j2735 messages.
+The `cpp_message` is a ROS2 package handling UPER encoding and decoding of V2X messages, converting between structured ROS2 message types and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages for transmission and reception via a V2X radio driver. Supported message types include BSM, PSM, SPaT, MAP, SDSM, Traffic Control, and CARMA Mobility messages.
 
 ---
 

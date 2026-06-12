@@ -1,6 +1,6 @@
-# v2x-ros-conversion
+# v2x_ros_conversion
 
-The v2x-ros-driver is a ros2 package currently implemented in ros2-humble. but previous releases support ros2-foxy. The v2x-ros-driver contains two ROS2 nodes: Message node and J2735 Convertor Node. They handle the conversion between decoded (i.e., structured, human readable) V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data that can be forwarded to a OBU/RSU to broadcast the message.
+The `v2x-ros-conversion` is a ROS2 package currently implemented in [ros2-humble](https://docs.ros.org/en/humble/Installation.html), but previous releases support [ros2-foxy](https://docs.ros.org/en/foxy/Installation.html). It contains two ROS2 nodes, the Message Node and the J2735 Convertor Node, which handle conversion between decoded, structured V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data for broadcast via an OBU or RSU.
 
 ---
 
@@ -28,7 +28,7 @@ docker run -it --network host usdotfhwastoldev/v2x-ros-conversion:develop
 
 #### Note: Assumption here is that user is building on a ros2 humble development environment
 
-1. Create workspace and source directory, or enter it if it already exsists.
+1. Create the workspace and source directory, or enter it if it already exsists.
 
 ```sh
 mkdir v2x_ws/src
