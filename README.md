@@ -6,6 +6,8 @@
 
 The v2x-ros-conversion repository contains two ROS nodes (J2735 Convertor and Message) for handling the conversion between decoded (i.e., structured, human readable) V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data that can be forwarded to a OBU/RSU to broadcast the message.
 
+![Diagram](assets/diagram.svg)
+
 ---
 
 ## Related Repositories
