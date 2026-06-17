@@ -12,7 +12,7 @@ Topics with prefixes: `incoming_j2735_*` / `incoming_j3224_*` carry J2735/J3224-
 |---|---|---|
 | `/incoming_bsm` | `carma_v2x_msgs/msg/BSM` | Basic Safety Message: vehicle kinematics, signals, emergency info, etc. |
 | `/incoming_psm` | `carma_v2x_msgs/msg/PSM` | Personal Safety Message: state and location of vulnerable road users. |
-| `/incoming_spat` | `carma_v2x_msgs/msg/SPAT` | Signal Phase and Timing: intersection signal states and timing. |
+| `/incoming_spat` | `carma_v2x_msgs/msg/SPAT` | Signal Phase and Timing: description of an intersection's roadway geometry and its allowed navigational paths. |
 | `/incoming_map` | `carma_v2x_msgs/msg/MapData` | MapData: intersection lane geometry maps. |
 | `/incoming_sdsm` | `carma_v2x_msgs/msg/SensorDataSharingMessage` | Sensor Data Sharing Message: detected objects and sensor data. |
 | `/incoming_geofence_control` | `carma_v2x_msgs/msg/TrafficControlMessage` | Geofence geometry, response, and event data. |

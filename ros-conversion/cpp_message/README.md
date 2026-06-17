@@ -16,7 +16,7 @@ Topics published after decoding inbound UPER-encoded binary. J2735/J3224 message
 | `/incoming_j2735_bsm` | `j2735_v2x_msgs/msg/BSM` | Basic Safety Message: vehicle kinematics, signals, emergency info, etc. |
 | `/incoming_j2735_spat` | `j2735_v2x_msgs/msg/SPAT` | Signal Phase and Timing: description of an intersection's roadway geometry and its allowed navigational paths. |
 | `/incoming_j2735_map` | `j2735_v2x_msgs/msg/MapData` | MapData: conveys one or more intersection lane geometry maps within a single message. |
-| `/incoming_j2735_psm` | `j2735_v2x_msgs/msg/PSM` | Personal Safety Message: information on and related to the state of vulnerable road users |
+| `/incoming_j2735_psm` | `j2735_v2x_msgs/msg/PSM` | Personal Safety Message: information on and related to the state of vulnerable road users. |
 | `/incoming_j3224_sdsm` | `j3224_v2x_msgs/msg/SensorDataSharingMessage` | Sensor Data Sharing Message: detected objects and senor data. |
 | `/incoming_j2735_geofence_request` | `j2735_v2x_msgs/msg/TrafficControlRequest` | Request to setup a virtual, gps boundary. |
 | `/incoming_j2735_geofence_control` | `j2735_v2x_msgs/msg/TrafficControlMessage` | Geofence geometry, response, and event data. |
