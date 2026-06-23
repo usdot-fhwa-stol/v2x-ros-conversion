@@ -4,7 +4,7 @@
 | --- | --- | --- | --- |
 | [![CI](https://github.com/usdot-fhwa-stol/v2x-ros-conversion/actions/workflows/ci.yml/badge.svg)](https://github.com/usdot-fhwa-stol/v2x-ros-conversion/actions/workflows/ci.yml) | [![Docker Build](https://github.com/usdot-fhwa-stol/v2x-ros-conversion/actions/workflows/docker.yml/badge.svg)](https://github.com/usdot-fhwa-stol/v2x-ros-conversion/actions/workflows/docker.yml) | [![Dockerhub Build](https://github.com/usdot-fhwa-stol/v2x-ros-conversion/actions/workflows/dockerhub.yml/badge.svg)](https://github.com/usdot-fhwa-stol/v2x-ros-conversion/actions/workflows/dockerhub.yml) | [![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=usdot-fhwa-stol_v2x-ros-conversion-humble&metric=alert_status)](https://sonarcloud.io/dashboard?id=usdot-fhwa-stol_v2x-ros-conversion-humble) |
 
-The v2x-ros-conversion repository contains two ROS nodes (J2735 Convertor and Message) for handling the conversion between decoded (i.e., structured, human readable) V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data that can be forwarded to a OBU/RSU to broadcast the message.
+The v2x-ros-conversion repository contains two ROS nodes (J2735 Convertor and CPP Message) for handling the conversion between decoded (i.e., structured, human readable) V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data that can be forwarded to an OBU/RSU to broadcast the message.
 
 ![Diagram](assets/diagram.svg)
 
@@ -22,7 +22,7 @@ The [carma-msgs repository](https://github.com/usdot-fhwa-stol/carma-msgs) conta
 
 ### CARMA Platform
 
-[CARMA Platform](https://github.com/usdot-fhwa-stol/carma-platform) is an open-source software platform that enables researches and engineers to develop and test their Cooperative Driving Automation (CDA) features on suffciently equipped vehicles. It is built on top of ROS and allows users to install custom plugins for tactical planning of vehicle behaviors and low-level motion planning. v2x-ros-driver was initially developed for CARMA Platform.
+[CARMA Platform](https://github.com/usdot-fhwa-stol/carma-platform) is an open-source software platform that enables researchers and engineers to develop and test their Cooperative Driving Automation (CDA) features on sufficiently equipped vehicles. It is built on top of ROS and allows users to install custom plugins for tactical planning of vehicle behaviors and low-level motion planning. v2x-ros-driver was initially developed for CARMA Platform.
 
 ### CDA 1Tenth
 

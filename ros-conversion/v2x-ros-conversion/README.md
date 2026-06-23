@@ -1,6 +1,6 @@
 # v2x_ros_conversion
 
-The `v2x-ros-conversion` is a ROS2 package currently implemented in [ros2-humble](https://docs.ros.org/en/humble/Installation.html), but previous releases support [ros2-foxy](https://docs.ros.org/en/foxy/Installation.html). It contains two ROS2 nodes, the Message Node and the J2735 Convertor Node, which handle conversion between decoded, structured V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data for broadcast via an OBU or RSU.
+The `v2x-ros-conversion` is a ROS2 package currently implemented in [ros2-humble](https://docs.ros.org/en/humble/Installation.html), but previous releases support [ros2-foxy](https://docs.ros.org/en/foxy/Installation.html). It contains two ROS2 nodes, the CPP Message Node and the J2735 Convertor Node, which handle conversion between decoded, structured V2X ROS messages and [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) messages containing UPER-encoded V2X data for broadcast via an OBU or RSU.
 
 ---
 
