@@ -1,6 +1,7 @@
 # j2735_convertor
 
-The `j2735_convertor` is a ROS2 package providing bidirectional conversion between standard [J2735](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j2735_v2x_msgs)/[J3224](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j3224_v2x_msgs) V2X message types and their internal [CARMA](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/carma_v2x_msgs) ROS2 representations. Supported message types: BSM, PSM, SPaT, MAP, SDSM, and Traffic Control.
+The `j2735_convertor` is a ROS2 package providing bidirectional conversion between standard [J2735](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j2735_v2x_msgs)/[J3224](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j3224_v2x_msgs) V2X message types and their internal [CARMA](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/carma_v2x_msgs) ROS2 representations. Supported message types: BSM, PSM, SPaT, MAP, SDSM, and Traffic Control. This package now supports J2735 2024, and revisions backward compatible with it.
+---
 
 ## ROS Topics
 

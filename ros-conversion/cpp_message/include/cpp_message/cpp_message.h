@@ -204,7 +204,7 @@ namespace cpp_message
             j2735_v2x_msgs::msg::TrafficControlVehClass decode_geofence_control_veh_class(const TrafficControlVehClass_t& message);
             j2735_v2x_msgs::msg::TrafficControlSchedule decode_geofence_control_schedule(const TrafficControlSchedule_t& message);
             j2735_v2x_msgs::msg::TrafficControlDetail decode_geofence_control_detail(const TrafficControlDetail_t& message);
-            j2735_v2x_msgs::msg::DayOfWeek decode_day_of_week(const DSRC_DayOfWeek_t& message);
+            j2735_v2x_msgs::msg::DayOfWeek decode_day_of_week(const Common_DayOfWeek_t& message);
             j2735_v2x_msgs::msg::DailySchedule decode_daily_schedule(const DailySchedule_t& message);
             j2735_v2x_msgs::msg::RepeatParams decode_repeat_params(const RepeatParams_t& message);
             j2735_v2x_msgs::msg::PathNode decode_path_node(const PathNode_t& message);
@@ -215,7 +215,7 @@ namespace cpp_message
             void encode_geofence_control_veh_class(const j2735_v2x_msgs::msg::TrafficControlVehClass& msg, TrafficControlVehClass_t* output);
             void encode_geofence_control_detail(const j2735_v2x_msgs::msg::TrafficControlDetail& msg, TrafficControlDetail_t* output, 
                         uint8_t* signal_content, TrafficControlDetail::TrafficControlDetail_u::TrafficControlDetail__latperm* latperm_p, long** item_p);
-            void encode_day_of_week(const j2735_v2x_msgs::msg::DayOfWeek& msg, DSRC_DayOfWeek_t* output, uint8_t* dow_val);
+            void encode_day_of_week(const j2735_v2x_msgs::msg::DayOfWeek& msg, Common_DayOfWeek_t* output, uint8_t* dow_val);
             void encode_daily_schedule(const j2735_v2x_msgs::msg::DailySchedule& msg, DailySchedule_t* output);
             void encode_repeat_params (const j2735_v2x_msgs::msg::RepeatParams& msg, RepeatParams_t* output);
             void encode_path_node (const j2735_v2x_msgs::msg::PathNode& msg, PathNode_t* output, long* z_temp, long* width_temp);

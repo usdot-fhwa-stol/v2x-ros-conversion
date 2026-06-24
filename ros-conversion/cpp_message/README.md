@@ -1,7 +1,6 @@
 # cpp_message
 
-The `cpp_message` is a ROS2 package for converting [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) containing UPER encoded binary into ROS messages [j2735_v2x_msgs/msg](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j2735_v2x_msgs) or [j3224_v2x_msgs/msg](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j3224_v2x_msgs) which match their corresponding SAE schemas. Some messages can be decoded directly into [carma_v2x_msgs/msg](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/carma_v2x_msgs). Supported message types include BSM, PSM, SPaT, MAP, SDSM, Traffic Control, and CARMA Mobility messages.
-
+The `cpp_message` is a ROS2 package for converting [carma_driver_msgs/msg/ByteArray](https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/carma_driver_msgs/msg/ByteArray.msg) containing UPER encoded binary into ROS messages [j2735_v2x_msgs/msg](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j2735_v2x_msgs) or [j3224_v2x_msgs/msg](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/j3224_v2x_msgs) which match their corresponding SAE schemas. Some messages can be decoded directly into [carma_v2x_msgs/msg](https://github.com/usdot-fhwa-stol/carma-msgs/tree/develop/carma_v2x_msgs). Supported message types include BSM, PSM, SPaT, MAP, SDSM, Traffic Control, and CARMA Mobility messages. This package now supports J2735 2024, and revisions backward compatible with it.
 ---
 
 ## ROS Topics

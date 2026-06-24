@@ -23,7 +23,9 @@ find_package(carma_cmake_common REQUIRED)
 list(APPEND CMAKE_PREFIX_PATH "/opt/carma/cmake/")
 set(CMAKE_INSTALL_RPATH "/opt/carma/lib")
 
-find_package(stol-j2735-201603-carma REQUIRED)
+set(J2735_REVISION "2024")
+
+find_package(stol-j2735-${J2735_REVISION}-carma REQUIRED)
 
 carma_check_ros_version(2)
 carma_package()
@@ -52,14 +54,15 @@ ament_auto_add_library(${node_lib} SHARED
         src/Map_Message.cpp
         src/PSM_Message.cpp
         src/SDSM_Message.cpp
+        src/Util.cpp
         )
 
-target_link_libraries(${node_lib} ::stol-j2735-201603-carma)
+target_link_libraries(${node_lib} ::stol-j2735-${J2735_REVISION}-carma)
 target_include_directories(${node_lib}
         PUBLIC
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                 $<INSTALL_INTERFACE:include>
-                /opt/carma/include/stol-j2735-201603-carma
+                /opt/carma/include/stol-j2735-${J2735_REVISION}-carma
                 )
 
 ament_auto_add_executable(${node_exec}
@@ -90,6 +93,7 @@ if(BUILD_TESTING)
                         test/test_PSM.cpp
                         test/node_test.cpp
                         test/test_SDSM.cpp
+                        test/test_util.cpp
                         )
 
   ament_target_dependencies(test_cpp_message_node ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} )

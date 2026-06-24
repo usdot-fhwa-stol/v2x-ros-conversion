@@ -117,6 +117,9 @@ void SPATConvertor::convertIntersectionState(const j2735_v2x_msgs::msg::Intersec
 
   out_msg.connection_maneuver_assist_list = in_msg.maneuever_assist_list.connection_maneuver_assist_list;
   out_msg.maneuever_assist_list_exists = in_msg.maneuever_assist_list_exists;
+
+  out_msg.road_authority_id = in_msg.road_authority_id;
+  out_msg.road_authority_id_exists = in_msg.road_authority_id_exists;
 }
 
 void SPATConvertor::convert(const j2735_v2x_msgs::msg::SPAT& in_msg, carma_v2x_msgs::msg::SPAT& out_msg)

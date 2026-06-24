@@ -53,7 +53,8 @@ namespace cpp_message
 }
 
     TEST(SPATTest, testDECODESPAT)
-    {
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
         std::string hex_message = "00131c44630800812f6800000c2d40100204342b3fac0a0020232159495f9c";
 
         //Convert hex string to byte message
@@ -66,7 +67,7 @@ namespace cpp_message
         }
         
 
-        cpp_message::SPAT_Message worker;        
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());        
         auto res = worker.decode_spat_message(new_binary_input_int);
         
         
@@ -79,11 +80,9 @@ namespace cpp_message
 
     }
 
-    TEST(SPATTest, DISABLED_testENCODESPAT)
-    {
-        cpp_message::SPAT_Message worker;
+    j2735_v2x_msgs::msg::SPAT makeBaseSPAT() {
         j2735_v2x_msgs::msg::SPAT message;
-        
+
         //1. Intersection State List
         j2735_v2x_msgs::msg::IntersectionState intersection_state_1;
         intersection_state_1.id.id = 127;
@@ -93,6 +92,10 @@ namespace cpp_message
         intersection_state_1.moy = 386768;
         intersection_state_1.time_stamp_exists = true;
         intersection_state_1.time_stamp = 40439;
+
+        intersection_state_1.road_authority_id_exists = true;
+        intersection_state_1.road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+        intersection_state_1.road_authority_id.full_rd_auth_id = {0x01, 0x02, 0x03, 0x04};
         //intersection_state_1.states.movement_list;// Add movement_state_1 to this
         
         
@@ -169,10 +172,62 @@ namespace cpp_message
         intersection_state_1.states.movement_list.push_back(movement_state_5);
 
         message.intersections.intersection_state_list.push_back(intersection_state_1);
+        return message;
+    }
+
+    TEST(SPATTest, testENCODESPAT)
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());
+        auto message = makeBaseSPAT();
 
         auto res = worker.encode_spat_message(message);
 
     }
 
+    TEST(SPATTest, testEncodeDecodeSPATRoadAuthorityID)
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());
+        auto message = makeBaseSPAT();
+        message.intersections.intersection_state_list[0].road_authority_id_exists = true;
+        message.intersections.intersection_state_list[0].road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID;
+        message.intersections.intersection_state_list[0].road_authority_id.full_rd_auth_id = {0x01, 0x02, 0x03, 0x04};
+
+        auto res = worker.encode_spat_message(message);
+        ASSERT_TRUE(res.has_value());
+
+        auto decoded = worker.decode_spat_message(res.get());
+        ASSERT_TRUE(decoded.has_value());
+
+        auto& decoded_intersection = decoded.get().intersections.intersection_state_list[0];
+        EXPECT_EQ(decoded_intersection.road_authority_id_exists, true);
+        EXPECT_EQ(decoded_intersection.road_authority_id.choice, j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID);
+        std::vector<uint8_t> expected_id = {0x01, 0x02, 0x03, 0x04};
+        EXPECT_EQ(decoded_intersection.road_authority_id.full_rd_auth_id, expected_id);
+    }
+
+    TEST(SPATTest, testEncodeDecodeSPATRelRoadAuthorityID)
+    {   
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SPAT_Message worker(node->get_node_logging_interface());
+        auto message = makeBaseSPAT();
+
+        message.intersections.intersection_state_list[0].road_authority_id_exists = true;
+        message.intersections.intersection_state_list[0].road_authority_id.choice = j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID;
+        message.intersections.intersection_state_list[0].road_authority_id.rel_rd_auth_id = {0xAA, 0xBB};
+
+        auto res = worker.encode_spat_message(message);
+        ASSERT_TRUE(res.has_value());
+
+        auto decoded = worker.decode_spat_message(res.get());
+        ASSERT_TRUE(decoded.has_value());
+
+        auto& decoded_intersection = decoded.get().intersections.intersection_state_list[0];
+        EXPECT_EQ(decoded_intersection.road_authority_id_exists, true);
+        EXPECT_EQ(decoded_intersection.road_authority_id.choice, j2735_v2x_msgs::msg::RoadAuthorityID::RELATIVE_ROAD_AUTHORITY_ID);
+        std::vector<uint8_t> expected_id = {0xAA, 0xBB};
+        EXPECT_EQ(decoded_intersection.road_authority_id.rel_rd_auth_id, expected_id);
+    }
 
 }

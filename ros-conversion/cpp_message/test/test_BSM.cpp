@@ -73,7 +73,9 @@ TEST(BSMTest, testEncodeBSM)
     message.core_data.sec_mark = 1;
     message.core_data.longitude = 1;
     message.core_data.accuracy.orientation = 1;
-    message.core_data.brakes.wheel_brakes.brake_applied_status = j2735_v2x_msgs::msg::BrakeAppliedStatus::RIGHT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status = 0u;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_FRONT;
     message.core_data.brakes.traction.traction_control_status = 1;
     message.core_data.brakes.abs.anti_lock_brake_status = 1;
     message.core_data.brakes.scs.stability_control_status = 1;
@@ -128,7 +130,9 @@ TEST(BSMTest, testEncodeDecodeBSM)
     message.core_data.sec_mark = 2;
     message.core_data.longitude = 3;
     message.core_data.accuracy.orientation = 4;
-    message.core_data.brakes.wheel_brakes.brake_applied_status = j2735_v2x_msgs::msg::BrakeAppliedStatus::RIGHT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status = 0u;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_REAR;
+    message.core_data.brakes.wheel_brakes.brake_applied_status |= j2735_v2x_msgs::msg::BrakeAppliedStatus::LEFT_FRONT;
     message.core_data.brakes.traction.traction_control_status = 1;
     message.core_data.brakes.abs.anti_lock_brake_status = 1;
     message.core_data.brakes.scs.stability_control_status = 1;
@@ -178,58 +182,6 @@ TEST(BSMTest, testEncodeDecodeBSM)
     part_ii_element.special_vehicle_extensions.description.presence_vector |= j2735_v2x_msgs::msg::EventDescription::HAS_EXTENT;
     part_ii_element.special_vehicle_extensions.description.extent.extent_value = j2735_v2x_msgs::msg::Extent::USE_FOR_50000_METERS; 
 
-    // Add special_vehicle_extensions.trailers
-    part_ii_element.special_vehicle_extensions.presence_vector |= j2735_v2x_msgs::msg::SpecialVehicleExtensions::HAS_TRAILERS;
-    part_ii_element.special_vehicle_extensions.trailers.connection.pivot_offset.offset = 50;
-    part_ii_element.special_vehicle_extensions.trailers.connection.pivot_angle.angle = 104;
-    part_ii_element.special_vehicle_extensions.trailers.connection.pivots.pivoting_allowed = true;
-
-    j2735_v2x_msgs::msg::TrailerUnitDescription trailer_unit_description_msg;
-    trailer_unit_description_msg.is_dolly.is_dolly = true;
-    trailer_unit_description_msg.width.vehicle_width = 220;
-    trailer_unit_description_msg.length.vehicle_length = 955;
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_HEIGHT;
-    trailer_unit_description_msg.height.vehicle_height = 53;
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_MASS;
-    trailer_unit_description_msg.mass.trailer_mass = 91;
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_BUMPER_HEIGHTS;
-    trailer_unit_description_msg.bumper_heights.front.bumper_height = 48;
-    trailer_unit_description_msg.bumper_heights.rear.bumper_height = 49;
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_CENTER_OF_GRAVITY;
-    trailer_unit_description_msg.center_of_gravity.vehicle_height = 50;
-
-    trailer_unit_description_msg.front_pivot.pivot_offset.offset = 19;
-    trailer_unit_description_msg.front_pivot.pivot_angle.angle = 20;
-    trailer_unit_description_msg.front_pivot.pivots.pivoting_allowed = true;
-
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_PIVOT;
-    trailer_unit_description_msg.rear_pivot.pivot_offset.offset = 21;
-    trailer_unit_description_msg.rear_pivot.pivot_angle.angle = 22;
-    trailer_unit_description_msg.rear_pivot.pivots.pivoting_allowed = false;
-
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_WHEEL_OFFSET;
-    trailer_unit_description_msg.rear_wheel_offset.offset = 199;
-
-    trailer_unit_description_msg.position_offset.x = 200;
-    trailer_unit_description_msg.position_offset.y = 201;
-
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_ELEVATION_OFFSET;
-    trailer_unit_description_msg.elevation_offset.offset = 50;
-
-    trailer_unit_description_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_CRUMB_DATA;
-    j2735_v2x_msgs::msg::TrailerHistoryPoint trailer_history_point_msg;
-    trailer_history_point_msg.pivot_angle.angle = 30;
-    trailer_history_point_msg.time_offset.offset = 3400;
-    trailer_history_point_msg.position_offset.x = 99;
-    trailer_history_point_msg.position_offset.y = 100;
-    trailer_history_point_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerHistoryPoint::HAS_ELEVATION_OFFSET;
-    trailer_history_point_msg.elevation_offset.offset = 50;
-    trailer_history_point_msg.presence_vector |= j2735_v2x_msgs::msg::TrailerHistoryPoint::HAS_HEADING;
-    trailer_history_point_msg.heading.heading = 83;
-    trailer_unit_description_msg.crumb_data.trailer_history_points.push_back(trailer_history_point_msg);
-
-    part_ii_element.special_vehicle_extensions.trailers.units.trailer_unit_descriptions.push_back(trailer_unit_description_msg);
-
     message.part_ii.push_back(part_ii_element);
 
     // Add supplemental_vehicle_extensions
@@ -270,61 +222,6 @@ TEST(BSMTest, testEncodeDecodeBSM)
     supp_vehicle_ext.vehicle_data.bumpers.rear.bumper_height = 89;
     supp_vehicle_ext.vehicle_data.presence_vector |= j2735_v2x_msgs::msg::VehicleData::HAS_MASS;
     supp_vehicle_ext.vehicle_data.mass.vehicle_mass = 90;
-    supp_vehicle_ext.vehicle_data.presence_vector |= j2735_v2x_msgs::msg::VehicleData::HAS_TRAILER_WEIGHT;
-    supp_vehicle_ext.vehicle_data.trailer_weight.trailer_weight = 450;
-
-    // Add supplemental_vehicle_extensions.weather_report
-    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_REPORT;
-    supp_vehicle_ext.weather_report.is_raining.precip_yes_no = j2735_v2x_msgs::msg::NTCIPEssPrecipYesNo::PRECIP;
-    supp_vehicle_ext.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_RAIN_RATE;
-    supp_vehicle_ext.weather_report.rain_rate.precip_rate = 205;
-    supp_vehicle_ext.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_PRECIP_SITUATION;
-    supp_vehicle_ext.weather_report.precip_situation.ess_precip_situation = j2735_v2x_msgs::msg::NTCIPEssPrecipSituation::RAIN_SLIGHT;
-    supp_vehicle_ext.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_SOLAR_RADIATION;
-    supp_vehicle_ext.weather_report.solar_radiation.ess_solar_radiation = 206;
-    supp_vehicle_ext.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_FRICTION;
-    supp_vehicle_ext.weather_report.friction.ess_mobile_friction = 90;
-    supp_vehicle_ext.weather_report.presence_vector |= j2735_v2x_msgs::msg::WeatherReport::HAS_ROAD_FRICTION;
-    supp_vehicle_ext.weather_report.road_friction.coefficient = 30;
-
-    // Add supplemental_vehicle_extensions.weather_probe
-    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_PROBE;
-    supp_vehicle_ext.weather_probe.presence_vector |= j2735_v2x_msgs::msg::WeatherProbe::HAS_AIR_TEMP;
-    supp_vehicle_ext.weather_probe.air_temp.temperature = 180;
-    supp_vehicle_ext.weather_probe.presence_vector |= j2735_v2x_msgs::msg::WeatherProbe::HAS_AIR_PRESSURE;
-    supp_vehicle_ext.weather_probe.air_pressure.pressure = 200;
-    supp_vehicle_ext.weather_probe.presence_vector |= j2735_v2x_msgs::msg::WeatherProbe::HAS_RAIN_RATES;
-    supp_vehicle_ext.weather_probe.rain_rates.status_front.wiper_status = j2735_v2x_msgs::msg::WiperStatus::INTERMITTENT;
-    supp_vehicle_ext.weather_probe.rain_rates.rate_front.wiper_rate = 40;
-    supp_vehicle_ext.weather_probe.rain_rates.presence_vector |= j2735_v2x_msgs::msg::WiperSet::HAS_STATUS_REAR;
-    supp_vehicle_ext.weather_probe.rain_rates.status_rear.wiper_status = j2735_v2x_msgs::msg::WiperStatus::LOW;
-    supp_vehicle_ext.weather_probe.rain_rates.presence_vector |= j2735_v2x_msgs::msg::WiperSet::HAS_RATE_REAR;
-    supp_vehicle_ext.weather_probe.rain_rates.rate_rear.wiper_rate = 41;
-
-    // Add supplemental_vehicle_extensions.obstacle_detection
-    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_OBSTACLE;
-    supp_vehicle_ext.obstacle.ob_dist.distance = 500;
-    supp_vehicle_ext.obstacle.ob_direct.direction.angle = 1600;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::YEAR;
-    supp_vehicle_ext.obstacle.date_time.year.year = 1000;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::MONTH;
-    supp_vehicle_ext.obstacle.date_time.month.month = 10;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::DAY;
-    supp_vehicle_ext.obstacle.date_time.day.day = 20;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::HOUR;
-    supp_vehicle_ext.obstacle.date_time.hour.hour = 21;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::MINUTE;
-    supp_vehicle_ext.obstacle.date_time.minute.minute = 22;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::SECOND;
-    supp_vehicle_ext.obstacle.date_time.second.millisecond = 20000;
-    supp_vehicle_ext.obstacle.date_time.presence_vector |= j2735_v2x_msgs::msg::DDateTime::OFFSET;
-    supp_vehicle_ext.obstacle.date_time.offset.offset_minute = 800;
-    supp_vehicle_ext.obstacle.presence_vector |= j2735_v2x_msgs::msg::ObstacleDetection::HAS_DESCRIPTION;
-    supp_vehicle_ext.obstacle.description.code = 540;
-    supp_vehicle_ext.obstacle.presence_vector |= j2735_v2x_msgs::msg::ObstacleDetection::HAS_LOCATION_DETAILS;
-    supp_vehicle_ext.obstacle.location_details.generic_locations = j2735_v2x_msgs::msg::ITISGenericLocations::IN_STREET;
-    supp_vehicle_ext.obstacle.presence_vector |= j2735_v2x_msgs::msg::ObstacleDetection::HAS_VERT_EVENT;
-    supp_vehicle_ext.obstacle.vert_event.exceeded_wheels = j2735_v2x_msgs::msg::VerticalAccelerationThreshold::RIGHT_REAR;
 
     // Add supplemental_vehicle_extensions.status
     supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_STATUS;
@@ -332,14 +229,51 @@ TEST(BSMTest, testEncodeDecodeBSM)
     supp_vehicle_ext.status.presence_vector |= j2735_v2x_msgs::msg::DisabledVehicle::HAS_LOCATION_DETAILS;
     supp_vehicle_ext.status.location_details.generic_locations = j2735_v2x_msgs::msg::ITISGenericLocations::CROSS_ROAD;
 
-    // Add supplemental_vehicle_extensions.speed_profile
-    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SPEED_PROFILE;
-    j2735_v2x_msgs::msg::GrossSpeed speed_point1;
-    speed_point1.speed = 20;
-    j2735_v2x_msgs::msg::GrossSpeed speed_point2;
-    speed_point2.speed = 25;
-    supp_vehicle_ext.speed_profile.push_back(speed_point1);
-    supp_vehicle_ext.speed_profile.push_back(speed_point2);
+    // Add supplemental_vehicle_extensions.fhwa_vehicle_class
+    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_FHWA_VEHICLE_CLASS;
+    supp_vehicle_ext.fhwa_vehicle_class.rpt_vehicle_class = 7;
+
+    // Add supplemental_vehicle_extensions.trailers
+    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_TRAILERS;
+
+    j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B trailer_unit;
+    trailer_unit.width.vehicle_width = 220;
+    trailer_unit.length.vehicle_length = 955;
+    trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_HEIGHT;
+    trailer_unit.height.vehicle_height = 53;
+    trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_WEIGHT;
+    trailer_unit.weight.trailer_weight = 91;
+
+    trailer_unit.front_pivot.pivot_offset.offset = 19;
+    trailer_unit.front_pivot.pivot_angle.angle = 20;
+    trailer_unit.front_pivot.pivots.pivoting_allowed = true;
+
+    trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_REAR_PIVOT;
+    trailer_unit.rear_pivot.pivot_offset.offset = 21;
+    trailer_unit.rear_pivot.pivot_angle.angle = 22;
+    trailer_unit.rear_pivot.pivots.pivoting_allowed = false;
+
+    trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_BUMPERS;
+    trailer_unit.bumpers.front.bumper_height = 48;
+    trailer_unit.bumpers.rear.bumper_height = 49;
+
+    trailer_unit.presence_vector |= j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_AXLES;
+    trailer_unit.axles.total_axles = 3;
+    trailer_unit.axles.presence_vector |= j2735_v2x_msgs::msg::Axles::HAS_FRONT_AXLES;
+    trailer_unit.axles.front_axles = 1;
+    trailer_unit.axles.presence_vector |= j2735_v2x_msgs::msg::Axles::HAS_REAR_AXLES;
+    trailer_unit.axles.rear_axles = 2;
+
+    supp_vehicle_ext.trailers.trailer_units.push_back(trailer_unit);
+
+    // Add supplemental_vehicle_extensions.school_bus
+    supp_vehicle_ext.presence_vector |= j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SCHOOL_BUS;
+    supp_vehicle_ext.school_bus.flashing_amber_lights = true;
+    supp_vehicle_ext.school_bus.flashing_red_lights = false;
+    supp_vehicle_ext.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_CROSSING_FRONT;
+    supp_vehicle_ext.school_bus.students_crossing_front = true;
+    supp_vehicle_ext.school_bus.presence_vector |= j2735_v2x_msgs::msg::SchoolBusJ2945Slash1C::HAS_STUDENTS_CROSSING_BEHIND;
+    supp_vehicle_ext.school_bus.students_crossing_behind = false;
 
     extension2.supplemental_vehicle_extensions = supp_vehicle_ext;
 
