@@ -66,8 +66,8 @@ namespace cpp_message
             new_binary_input_int.push_back(new_binary_input[i]);
         }
 
-        rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_;
-        cpp_message::Map_Message worker(node_logging_);
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::Map_Message worker(node->get_node_logging_interface());
 
         auto res = worker.decode_map_message(new_binary_input_int);
 
@@ -137,6 +137,31 @@ namespace cpp_message
             // OID arcs 1.2.3.4 are BER-encoded as: 40*1+2=0x2A, 3, 4
             std::vector<uint8_t> expected_id = {0x2A, 0x03, 0x04};
             EXPECT_EQ(res.get().intersections[0].road_authority_id.full_rd_auth_id, expected_id);
+        }
+        else
+            EXPECT_TRUE(false);
+    }
+
+    TEST(MapMessageTest, testDecodeMapMessageNoVerify)
+    {   // this test is added since it does not contain layerType and was triggering
+        // seg fault. only confirms that the decode will succeed.
+        std::string hex_message = "0012827c08000308b3e59102d413f963d187964412f76fc500010069022543dcd81c3b2c838168120c01400000100004c70ecbded2a1edce4c70ece11d2a1ec248c70ece8e52a1ebf04101e0418048000004000098e1d9786a543dc6418e1da7442543d12498e1dae19a543cbf90202808300d000000a000131c3b2f454a87b9a531c3b4ecf4a87a33631c3b5c73ca8798f514048120100800108000000031c3b2ee7ca87bdf831c3b2f314a87bf160005200000000c70ecb91d2a1ef928c70ecba412a1efdf43019000000c000131c3b2d9c4a87bea231c3b345dca87d93b31c3b384f4a87ea6d140982203c10301d0000008000131c3b2cd0ca87be8931c3b33c5ca87d9c331c3b37b7ca87eac90407020604200000040004638765832950f7f92638765944950f8180638765c45950f8c74638765f1e950f95c80809040009200000000c70eca8232a1ef754c70eca5772a1ef90c00288000000031c3b29b1ca87bcc731c3b28fcca87bd400c0b400000100004c70eca61b2a1eee38c70ec8c972a1f014cc70ec860b2a1f0460100a0c18188000004000098e1d94fbe543dd0318e1d8ab82543e53c18e1d7f66e543ed9d8204c183035000000a000231c3b2a77ca87b8bc31c3b1f01ca87c17031c3b15c0ca87c91731c3aff47ca87d9e814090320381800388000000031c3b2a7e4a87b57b31c3b2a3eca87b472000f200000000c70ecac2d2a1ed4b8c70ecab052a1ecffc3041000000c000031c3b2bbf4a87b4b031c3b25a54a879d631405042014203045000000a000031c3b2c57ca87b45331c3b2640ca879ca814020420482000488000000031c3b2f1a4a87b4f331c3b2ff64a87b4470013200000000c70ecbd092a1ed800c70ecc0952a1ed5680";
+
+        std::vector<char> new_binary_input = Hex2Bytes(hex_message);
+        std::vector<uint8_t> new_binary_input_int;
+        for (int i = 0; i < new_binary_input.size(); i++)
+        {
+            new_binary_input_int.push_back(new_binary_input[i]);
+        }
+
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::Map_Message worker(node->get_node_logging_interface());
+
+        auto res = worker.decode_map_message(new_binary_input_int);
+
+        if (res)
+        {   
+            EXPECT_TRUE(true);
         }
         else
             EXPECT_TRUE(false);
