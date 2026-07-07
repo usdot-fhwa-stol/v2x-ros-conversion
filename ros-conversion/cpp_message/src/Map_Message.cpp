@@ -57,7 +57,9 @@ namespace cpp_message
 
         output.msg_issue_revision = map_msg.msgIssueRevision;
 
-        output.layer_type.layer_type = *map_msg.layerType;
+        if(map_msg.layerType){  // optional
+            output.layer_type.layer_type = *map_msg.layerType;
+        }
 
         // Layer ID
         if (map_msg.layerID)
