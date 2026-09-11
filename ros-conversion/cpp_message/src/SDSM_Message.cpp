@@ -235,7 +235,7 @@ namespace cpp_message
         }
 
         // Position3D | *elevation - ref_pos.elevation
-        auto elevation_ptr = create_store_shared<DSRC_Elevation_t>(shared_ptrs);
+        auto elevation_ptr = create_store_shared<Common_Elevation_t>(shared_ptrs);
 
         if(!plainMessage.ref_pos.elevation_exists || plainMessage.ref_pos.elevation == j2735_v2x_msgs::msg::Position3D::ELEVATION_UNAVAILABLE){
             *elevation_ptr = j2735_v2x_msgs::msg::Position3D::ELEVATION_UNAVAILABLE;
@@ -414,7 +414,7 @@ namespace cpp_message
 
             // PositionOffsetXYZ | *pos.offsetZ - pos.offset_z.object_dist
             if(in_object.detected_object_common_data.pos.presence_vector & j3224_v2x_msgs::msg::PositionOffsetXYZ::HAS_OFFSET_Z){
-                auto offset_z_ptr = create_store_shared<ObjectDistance_t>(shared_ptrs);
+                auto offset_z_ptr = create_store_shared<SensorDataSharingMessage_ObjectDistance_t>(shared_ptrs);
 
                 long temp_offset_z = in_object.detected_object_common_data.pos.offset_z.object_distance;
                 if(temp_offset_z < j3224_v2x_msgs::msg::ObjectDistance::MIN_OBJECT_DISTANCE){

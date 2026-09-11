@@ -50,6 +50,12 @@ namespace cpp_message
          */
         boost::optional<std::vector<uint8_t>> encode_spat_message(const j2735_v2x_msgs::msg::SPAT& plainMessage);
 
+        rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_;
+
+        explicit SPAT_Message(rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging) {
+            node_logging_ = node_logging;
+        };
+
 
     };
 }

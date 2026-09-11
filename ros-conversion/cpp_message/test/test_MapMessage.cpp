@@ -57,10 +57,7 @@ namespace cpp_message
 
     TEST(MapMessageTest, testDecodeMapMessage)
     {
-        std::string hex_message = "0012815338033020204bda0d4cdcf8143d4dc48811860224164802280008002297d4bc80a0a0a9825825923a90b2f2e418986f41b7006480602403812020084015480010004521d9f001414160c7c42a1879858619502a42a060e927100662000400105be6bf41c8aded5816ebc050507dcb860ec57aead5079e02828900890001000417223a50728b750f9c6ea9e8ae480a0a0f68746ad447c002828900a0880704404020803b9000200062b68d5305d1f9269a725027d8352f72867d6c82403340004000c53f5b761abbb7d35d3c0813ec1a3baac16bfc048050240301202008402208001000310fe55f849acd608d8ace136b440000dfe4808880008002086365c0017d1612eb34026067404895390907bd848050440302201c100024000200000090026180a0a0f2852600140001000000169fc1585bd1da000b00008000000a3bb2f439459a80060000400000046d55c416c67f40";
-
-        // Convert hex string to byte message
-        std::vector<uint8_t> binary_input = {0, 18, 129, 83, 56, 3, 48, 32, 32, 75, 218, 13, 76, 220, 248, 20, 61, 77, 196, 136, 17, 134, 2, 36, 22, 72, 2, 40, 0, 8, 0, 34, 151, 212, 188, 128, 160, 160, 169, 130, 88, 37, 146, 58, 144, 178, 242, 228, 24, 152, 111, 65, 183, 0, 100, 128, 96, 36, 3, 129, 32, 32, 8, 64, 21, 72, 0, 16, 0, 69, 33, 217, 240, 1, 65, 65, 96, 199, 196, 42, 24, 121, 133, 134, 25, 80, 42, 66, 160, 96, 233, 39, 16, 6, 98, 0, 4, 0, 16, 91, 230, 191, 65, 200, 173, 237, 88, 22, 235, 192, 80, 80, 125, 203, 134, 14, 197, 122, 234, 213, 7, 158, 2, 130, 137, 0, 137, 0, 1, 0, 4, 23, 34, 58, 80, 114, 139, 117, 15, 156, 110, 169, 232, 174, 72, 10, 10, 15, 104, 116, 106, 212, 71, 192, 2, 130, 137, 0, 160, 136, 7, 4, 64, 64, 32, 128, 59, 144, 0, 32, 0, 98, 182, 141, 83, 5, 209, 249, 38, 154, 114, 80, 39, 216, 53, 47, 114, 134, 125, 108, 130, 64, 51, 64, 0, 64, 0, 197, 63, 91, 118, 26, 187, 183, 211, 93, 60, 8, 19, 236, 26, 59, 170, 193, 107, 252, 4, 128, 80, 36, 3, 1, 32, 32, 8, 64, 34, 8, 0, 16, 0, 49, 15, 229, 95, 132, 154, 205, 96, 141, 138, 206, 19, 107, 68, 0, 0, 223, 228, 128, 136, 128, 0, 128, 2, 8, 99, 101, 192, 1, 125, 22, 18, 235, 52, 2, 96, 103, 64, 72, 149, 57, 9, 7, 189, 132, 128, 80, 68, 3, 2, 32, 28, 16, 0, 36, 0, 2, 0, 0, 0, 144, 2, 97, 128, 160, 160, 242, 133, 38, 0, 20, 0, 1, 0, 0, 0, 22, 159, 193, 88, 91, 209, 218, 0, 11, 0, 0, 128, 0, 0, 10, 59, 178, 244, 57, 69, 154, 128, 6, 0, 0, 64, 0, 0, 4, 109, 85, 196, 22, 198, 127, 64};
+        std::string hex_message = "0012815a38033020a04bda0d4cdcf8143d4dc48811860224164802280008002297d4bc80a0a0a9825825923a90b2f2e418986f41b7006480602403812020084015480010004521d9f001414160c7c42a1879858619502a42a060e927100662000400105be6bf41c8aded5816ebc050507dcb860ec57aead5079e02828900890001000417223a50728b750f9c6ea9e8ae480a0a0f68746ad447c002828900a0880704404020803b9000200062b68d5305d1f9269a725027d8352f72867d6c82403340004000c53f5b761abbb7d35d3c0813ec1a3baac16bfc048050240301202008402208001000310fe55f849acd608d8ace136b440000dfe4808880008002086365c0017d1612eb34026067404895390907bd848050440302201c100024000200000090026180a0a0f2852600140001000000169fc1585bd1da000b00008000000a3bb2f439459a80060000400000046d55c416c67f40414032a0304000";
 
         std::vector<char> new_binary_input = Hex2Bytes(hex_message);
         std::vector<uint8_t> new_binary_input_int;
@@ -69,8 +66,8 @@ namespace cpp_message
             new_binary_input_int.push_back(new_binary_input[i]);
         }
 
-        rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_;
-        cpp_message::Map_Message worker(node_logging_);
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::Map_Message worker(node->get_node_logging_interface());
 
         auto res = worker.decode_map_message(new_binary_input_int);
 
@@ -133,6 +130,38 @@ namespace cpp_message
 
             // Data Parameters
             EXPECT_EQ(res.get().data_parameters_exists, false);
+
+            // Road Authority ID
+            EXPECT_EQ(res.get().intersections[0].road_authority_id_exists, true);
+            EXPECT_EQ(res.get().intersections[0].road_authority_id.choice, j2735_v2x_msgs::msg::RoadAuthorityID::FULL_ROAD_AUTHORITY_ID);
+            // OID arcs 1.2.3.4 are BER-encoded as: 40*1+2=0x2A, 3, 4
+            std::vector<uint8_t> expected_id = {0x2A, 0x03, 0x04};
+            EXPECT_EQ(res.get().intersections[0].road_authority_id.full_rd_auth_id, expected_id);
+        }
+        else
+            EXPECT_TRUE(false);
+    }
+
+    TEST(MapMessageTest, testDecodeMapMessageNoVerify)
+    {   // this test is added since it does not contain layerType and was triggering
+        // seg fault. only confirms that the decode will succeed.
+        std::string hex_message = "0012827c08000308b3e59102d413f963d187964412f76fc500010069022543dcd81c3b2c838168120c01400000100004c70ecbded2a1edce4c70ece11d2a1ec248c70ece8e52a1ebf04101e0418048000004000098e1d9786a543dc6418e1da7442543d12498e1dae19a543cbf90202808300d000000a000131c3b2f454a87b9a531c3b4ecf4a87a33631c3b5c73ca8798f514048120100800108000000031c3b2ee7ca87bdf831c3b2f314a87bf160005200000000c70ecb91d2a1ef928c70ecba412a1efdf43019000000c000131c3b2d9c4a87bea231c3b345dca87d93b31c3b384f4a87ea6d140982203c10301d0000008000131c3b2cd0ca87be8931c3b33c5ca87d9c331c3b37b7ca87eac90407020604200000040004638765832950f7f92638765944950f8180638765c45950f8c74638765f1e950f95c80809040009200000000c70eca8232a1ef754c70eca5772a1ef90c00288000000031c3b29b1ca87bcc731c3b28fcca87bd400c0b400000100004c70eca61b2a1eee38c70ec8c972a1f014cc70ec860b2a1f0460100a0c18188000004000098e1d94fbe543dd0318e1d8ab82543e53c18e1d7f66e543ed9d8204c183035000000a000231c3b2a77ca87b8bc31c3b1f01ca87c17031c3b15c0ca87c91731c3aff47ca87d9e814090320381800388000000031c3b2a7e4a87b57b31c3b2a3eca87b472000f200000000c70ecac2d2a1ed4b8c70ecab052a1ecffc3041000000c000031c3b2bbf4a87b4b031c3b25a54a879d631405042014203045000000a000031c3b2c57ca87b45331c3b2640ca879ca814020420482000488000000031c3b2f1a4a87b4f331c3b2ff64a87b4470013200000000c70ecbd092a1ed800c70ecc0952a1ed5680";
+
+        std::vector<char> new_binary_input = Hex2Bytes(hex_message);
+        std::vector<uint8_t> new_binary_input_int;
+        for (int i = 0; i < new_binary_input.size(); i++)
+        {
+            new_binary_input_int.push_back(new_binary_input[i]);
+        }
+
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::Map_Message worker(node->get_node_logging_interface());
+
+        auto res = worker.decode_map_message(new_binary_input_int);
+
+        if (res)
+        {   
+            EXPECT_TRUE(true);
         }
         else
             EXPECT_TRUE(false);

@@ -12,23 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from launch.actions import Shutdown
 from launch import LaunchDescription
+from launch.actions import Shutdown, DeclareLaunchArgument, ExecuteProcess, TimerAction, RegisterEventHandler
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration, FindExecutable
+from launch.event_handlers import OnExecutionComplete
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
-from launch.substitutions import EnvironmentVariable
 from carma_ros2_utils.launch.get_log_level import GetLogLevel
 from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
-
-import launch.actions
-import launch.events
-
-import launch_ros.actions
-import launch_ros.events 
-import launch_ros.events.lifecycle
-import lifecycle_msgs.msg
 
 
 def generate_launch_description():
@@ -82,17 +73,17 @@ def generate_launch_description():
         on_exit= Shutdown()
     )
 
-    ros2_cmd = launch.substitutions.FindExecutable(name='ros2')
+    ros2_cmd = FindExecutable(name='ros2')
 
-    process_configure_cpp_message = launch.actions.ExecuteProcess(
+    process_configure_cpp_message = ExecuteProcess(
         cmd=[ros2_cmd, "lifecycle", "set", "/cpp_message_node", "configure"],
     )
 
-    process_configure_j2735_convertor = launch.actions.ExecuteProcess(
+    process_configure_j2735_convertor = ExecuteProcess(
         cmd=[ros2_cmd, "lifecycle", "set", "/j2735_convertor_node", "configure"],
     )
 
-    configuration_trigger = launch.actions.TimerAction(
+    configuration_trigger = TimerAction(
         period=configuration_delay,
         actions=[
             process_configure_cpp_message,
@@ -100,19 +91,19 @@ def generate_launch_description():
         ]
     )
 
-    configured_event_handler_cpp_message = launch.actions.RegisterEventHandler(launch.event_handlers.OnExecutionComplete(
+    configured_event_handler_cpp_message = RegisterEventHandler(OnExecutionComplete(
             target_action=process_configure_cpp_message,
             on_completion=[ 
-                launch.actions.ExecuteProcess(
+                ExecuteProcess(
                     cmd=[ros2_cmd, "lifecycle", "set", "/cpp_message_node", "activate"],
                 )
             ]
         )
     )
 
-    configured_event_handler_j2735_convertor = launch.actions.RegisterEventHandler(launch.event_handlers.OnExecutionComplete(
-        target_action=process_configure_cpp_message, on_completion=[ 
-            launch.actions.ExecuteProcess(
+    configured_event_handler_j2735_convertor = RegisterEventHandler(OnExecutionComplete(
+        target_action=process_configure_j2735_convertor, on_completion=[ 
+            ExecuteProcess(
                 cmd=[ros2_cmd, "lifecycle", "set", "/j2735_convertor_node", "activate"],
             )
         ])
