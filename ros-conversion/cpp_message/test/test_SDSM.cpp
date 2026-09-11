@@ -798,4 +798,42 @@ namespace cpp_message
 
     }
 
+    // MsgCount is 0..127, so every value in range, including MSG_COUNT_MAX itself, must survive encode/decode
+    TEST(SDSMTest, testEncodeDecodeSDSMMsgCountRange){
+
+        auto node = std::make_shared<rclcpp::Node>("test_node");
+        cpp_message::SDSM_Message worker(node->get_node_logging_interface());
+
+        j3224_v2x_msgs::msg::SensorDataSharingMessage message;
+        message.source_id.id = {1,2,3,4};
+        message.equipment_type.equipment_type |= j3224_v2x_msgs::msg::EquipmentType::RSU;
+        message.sdsm_time_stamp.presence_vector |= j2735_v2x_msgs::msg::DDateTime::YEAR;
+        message.sdsm_time_stamp.year.year = 2026;
+        message.ref_pos.latitude = 389519791;
+        message.ref_pos.longitude = -771483512;
+
+        j3224_v2x_msgs::msg::DetectedObjectData object1;
+        object1.detected_object_common_data.obj_type.object_type |= j3224_v2x_msgs::msg::ObjectType::VRU;
+        object1.detected_object_common_data.obj_type_cfd.classification_confidence = 100;
+        object1.detected_object_common_data.detected_id.object_id = 54557;
+        object1.detected_object_common_data.measurement_time.measurement_time_offset = 100;
+        object1.detected_object_common_data.pos.offset_x.object_distance = 3300;
+        object1.detected_object_common_data.pos.offset_y.object_distance = -85;
+        object1.detected_object_common_data.speed.speed = 50;
+        object1.detected_object_common_data.heading.heading = 1600;
+        message.objects.detected_object_data.push_back(object1);
+
+        for (const uint8_t msg_cnt : {0, 1, 126, static_cast<int>(j2735_v2x_msgs::msg::MsgCount::MSG_COUNT_MAX)}) {
+            message.msg_cnt.msg_cnt = msg_cnt;
+
+            const auto res = worker.encode_sdsm_message(message);
+            ASSERT_TRUE(res) << "Encoding failed for msg_cnt " << static_cast<int>(msg_cnt);
+
+            const auto res_decoded = worker.decode_sdsm_message(res.value());
+            ASSERT_TRUE(res_decoded) << "Decoding failed for msg_cnt " << static_cast<int>(msg_cnt);
+
+            EXPECT_EQ(msg_cnt, res_decoded.value().msg_cnt.msg_cnt);
+        }
+    }
+
 }
