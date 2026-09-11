@@ -1104,7 +1104,7 @@ namespace cpp_message
             SensorDataSharingMessage_t sdsm_core = message->value.choice.SensorDataSharingMessage;
 
             // MessageCount
-            if(sdsm_core.msgCnt < j2735_v2x_msgs::msg::MsgCount::MSG_COUNT_MAX){
+            if(sdsm_core.msgCnt <= j2735_v2x_msgs::msg::MsgCount::MSG_COUNT_MAX){
                 output.msg_cnt.msg_cnt = sdsm_core.msgCnt;
             }
             else{
