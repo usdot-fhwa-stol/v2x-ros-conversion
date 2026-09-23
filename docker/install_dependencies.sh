@@ -37,7 +37,7 @@ if [[ "${BRANCH}" =~ feature/.* ]]; then
     APT_CODENAME=feature-${NO_UNDERSCORE_NAME##*/}
 # check for release candidate branches
 elif [[ "${BRANCH}" =~ release/.* ]]; then
-    APT_CODENAME=candidate-${NO_UNDERSCORE_NAME##*/}
+    APT_CODENAME=release-${NO_UNDERSCORE_NAME##*/}
 # check for release tags
 elif [[ "${BRANCH}" =~ carma-system* ]]; then
     APT_CODENAME=main
