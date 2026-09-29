@@ -12,15 +12,12 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
-
-import os
 
 
 '''

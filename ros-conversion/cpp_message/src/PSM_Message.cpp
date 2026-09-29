@@ -680,7 +680,7 @@ namespace cpp_message
         }
         
         //elevation
-        DSRC_Elevation_t* elevation_ptr = new DSRC_Elevation_t;
+        Common_Elevation_t* elevation_ptr = new Common_Elevation_t;
         if(!plainMessage.position.elevation_exists || plainMessage.position.elevation == j2735_v2x_msgs::msg::Position3D::ELEVATION_UNAVAILABLE){
             
             *elevation_ptr = j2735_v2x_msgs::msg::Position3D::ELEVATION_UNAVAILABLE;

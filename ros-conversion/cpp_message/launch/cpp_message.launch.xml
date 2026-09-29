@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+Copyright (C) 2024 LEIDOS.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+-->
+<!--
+This file can be used to launch the CARMA cpp_message_node.
+  Though in carma-platform it may be launched directly from the base launch file.
+-->
+<launch>
+
+    <!-- Declare the log_level launch argument -->
+    <arg name="log_level" default="WARN" />
+
+    <!-- Launch node(s) in a carma container to allow logging to be configured -->
+    <node_container
+        pkg="carma_ros2_utils"
+        name="cpp_message_container"
+        namespace="$(env ROS_NAMESPACE '')"
+        exec="carma_component_container_mt">
+
+        <!-- Launch the core node(s) -->
+        <composable_node
+            pkg="cpp_message"
+            plugin="cpp_message::Node"
+            name="cpp_message_node">
+            <extra_arg name="use_intra_process_comms" value="true" />
+            <extra_arg name="--log-level" value="$(var log_level)" />
+        </composable_node>
+
+    </node_container>
+
+</launch>

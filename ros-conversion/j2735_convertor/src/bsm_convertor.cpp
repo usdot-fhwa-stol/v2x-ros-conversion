@@ -321,160 +321,109 @@ void BSMConvertor::convert(const j2735_v2x_msgs::msg::SupplementalVehicleExtensi
             }            
         }
 
-        // vehicle_data.trailer_weight
-        if(in_msg.vehicle_data.presence_vector & j2735_v2x_msgs::msg::VehicleData::HAS_TRAILER_WEIGHT){
-            out_msg.vehicle_data.trailer_weight.trailer_weight = in_msg.vehicle_data.trailer_weight.trailer_weight * units::TWO_KG;
-        }
-    }
-
-    // weather_report
-    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_REPORT){
-        // presence_vector
-        out_msg.weather_report.presence_vector = in_msg.weather_report.presence_vector;
-
-        // is_raining
-        out_msg.weather_report.is_raining.precip_yes_no = in_msg.weather_report.is_raining.precip_yes_no;
-
-        // weather_report.rain_rate
-        if(in_msg.weather_report.presence_vector & j2735_v2x_msgs::msg::WeatherReport::HAS_RAIN_RATE){
-            out_msg.weather_report.rain_rate.precip_rate = in_msg.weather_report.rain_rate.precip_rate / units::TENTH_GRAM_PER_GRAM;
-        }    
-
-        // weather_report.precip_situation
-        if(in_msg.weather_report.presence_vector & j2735_v2x_msgs::msg::WeatherReport::HAS_PRECIP_SITUATION){
-            out_msg.weather_report.precip_situation.ess_precip_situation = in_msg.weather_report.precip_situation.ess_precip_situation;
-        }    
-
-        // weather_report.solar_radiation
-        if(in_msg.weather_report.presence_vector & j2735_v2x_msgs::msg::WeatherReport::HAS_SOLAR_RADIATION){
-            out_msg.weather_report.solar_radiation.ess_solar_radiation = in_msg.weather_report.solar_radiation.ess_solar_radiation;
-        }   
-
-        // weather_report.friction
-        if(in_msg.weather_report.presence_vector & j2735_v2x_msgs::msg::WeatherReport::HAS_FRICTION){
-            out_msg.weather_report.friction.ess_mobile_friction = in_msg.weather_report.friction.ess_mobile_friction;
-        }    
-
-        // weather_report.road_friction
-        if(in_msg.weather_report.presence_vector & j2735_v2x_msgs::msg::WeatherReport::HAS_ROAD_FRICTION){
-            if(in_msg.weather_report.road_friction.coefficient == j2735_v2x_msgs::msg::CoefficientOfFriction::COEFFICIENT_UNAVAILABLE){
-                out_msg.weather_report.road_friction.unavailable = true;
-            }
-            else{
-                out_msg.weather_report.road_friction.coefficient = in_msg.weather_report.road_friction.coefficient * units::TWO_TENTHS_MICRO;
-            }
-        }    
-    }
-
-    // weather_probe
-    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_PROBE){
-        // presence_vector
-        out_msg.weather_probe.presence_vector = in_msg.weather_probe.presence_vector;
-
-        // weather_probe.air_temp
-        if(in_msg.weather_probe.presence_vector & j2735_v2x_msgs::msg::WeatherProbe::HAS_AIR_TEMP){
-            if(in_msg.weather_probe.air_temp.temperature == j2735_v2x_msgs::msg::AmbientAirTemperature::TEMPERATURE_UNKNOWN){
-                out_msg.weather_probe.air_temp.unavailable = true;
-            }
-            else{
-                out_msg.weather_probe.air_temp.temperature = in_msg.weather_probe.air_temp.temperature - units::FORTY_DEGREES_C;
-            }
-        }       
-
-        // weather_probe.air_pressure
-        if(in_msg.weather_probe.presence_vector & j2735_v2x_msgs::msg::WeatherProbe::HAS_AIR_PRESSURE){
-            if(in_msg.weather_probe.air_pressure.pressure == j2735_v2x_msgs::msg::AmbientAirPressure::PRESSURE_UNAVAILABLE){
-                out_msg.weather_probe.air_pressure.unavailable = true;
-            }
-            else{
-                out_msg.weather_probe.air_pressure.pressure = in_msg.weather_probe.air_pressure.pressure / units::HPA_PER_TWO_PA;
-            }
-        }    
-
-        // weather_probe.rain_rates
-        if(in_msg.weather_probe.presence_vector & j2735_v2x_msgs::msg::WeatherProbe::HAS_RAIN_RATES){
-            // presence_vector
-            out_msg.weather_probe.rain_rates.presence_vector = in_msg.weather_probe.rain_rates.presence_vector;
-
-            // weather_probe.rain_rates.status_front
-            out_msg.weather_probe.rain_rates.status_front.wiper_status = in_msg.weather_probe.rain_rates.status_front.wiper_status;
-
-            // weather_probe.rain_rates.rate_front
-            out_msg.weather_probe.rain_rates.rate_front.wiper_rate = in_msg.weather_probe.rain_rates.rate_front.wiper_rate / units::SEC_PER_MIN;
-
-            // weather_probe.rain_rates.status_rear
-            if(in_msg.weather_probe.rain_rates.presence_vector & j2735_v2x_msgs::msg::WiperSet::HAS_STATUS_REAR){
-                out_msg.weather_probe.rain_rates.status_rear.wiper_status = in_msg.weather_probe.rain_rates.status_rear.wiper_status;
-            }
-
-            // weather_probe.rain_rates.rate_rear
-            if(in_msg.weather_probe.rain_rates.presence_vector & j2735_v2x_msgs::msg::WiperSet::HAS_RATE_REAR){
-                out_msg.weather_probe.rain_rates.rate_rear.wiper_rate = in_msg.weather_probe.rain_rates.rate_rear.wiper_rate / units::SEC_PER_MIN;
-            }
-        }    
-    }
-
-    // obstacle
-    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_OBSTACLE){
-        // presence_vector
-        out_msg.obstacle.presence_vector = in_msg.obstacle.presence_vector;
-
-        // obstacle.ob_dist
-        out_msg.obstacle.ob_dist.distance = in_msg.obstacle.ob_dist.distance / units::UNCHANGED;
-
-        // obstacle.ob_direct
-        if(in_msg.obstacle.ob_direct.direction.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
-            out_msg.obstacle.ob_direct.direction.unavailable = true;
-        }
-        else{
-            out_msg.obstacle.ob_direct.direction.angle = in_msg.obstacle.ob_direct.direction.angle / units::EIGHTIETH_DEG_PER_DEG;
-        }
-
-        // obstacle.date_time
-        out_msg.obstacle.date_time = in_msg.obstacle.date_time;
-
-        // obstacle.description
-        if(in_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_DESCRIPTION){
-            out_msg.obstacle.description = in_msg.obstacle.description;
-        }
-
-        // obstacle.location_details
-        if(in_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_LOCATION_DETAILS){
-            out_msg.obstacle.location_details = in_msg.obstacle.location_details;
-        }
-
-        // obstacle.vert_event
-        if(in_msg.obstacle.presence_vector & j2735_v2x_msgs::msg::ObstacleDetection::HAS_VERT_EVENT){
-            out_msg.obstacle.vert_event = in_msg.obstacle.vert_event;
-        }
     }
 
     // status
     if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_STATUS){
-        // presence_vector
         out_msg.status.presence_vector = in_msg.status.presence_vector;
-
-        // status_details
         out_msg.status.status_details = in_msg.status.status_details;
-
-        // location_details
         out_msg.status.location_details = in_msg.status.location_details;
     }
 
-    // speed_profile
-    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SPEED_PROFILE){
-        for(size_t i = 0; i < in_msg.speed_profile.size(); i++){
-            carma_v2x_msgs::msg::GrossSpeed out_speed;
+    // fhwa_vehicle_class
+    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_FHWA_VEHICLE_CLASS){
+        out_msg.fhwa_vehicle_class = in_msg.fhwa_vehicle_class;
+    }
 
-            if(in_msg.speed_profile[i].speed == j2735_v2x_msgs::msg::GrossSpeed::SPEED_UNAVAILABLE){
-                out_speed.unavailable = true;
-                out_msg.speed_profile.push_back(out_speed);
+    // trailers
+    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_TRAILERS){
+        for(size_t i = 0; i < in_msg.trailers.trailer_units.size(); i++){
+            const auto& in_unit = in_msg.trailers.trailer_units[i];
+            carma_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B out_unit;
+
+            out_unit.presence_vector = in_unit.presence_vector;
+
+            // width
+            if(in_unit.width.vehicle_width == j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_UNAVAILABLE){
+                out_unit.width.unavailable = true;
             }
             else{
-                out_speed.speed = in_msg.speed_profile[i].speed;
-                out_msg.speed_profile.push_back(out_speed);
+                out_unit.width.vehicle_width = in_unit.width.vehicle_width / units::CM_PER_M;
             }
+
+            // length
+            if(in_unit.length.vehicle_length == j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_UNAVAILABLE){
+                out_unit.length.unavailable = true;
+            }
+            else{
+                out_unit.length.vehicle_length = in_unit.length.vehicle_length / units::CM_PER_M;
+            }
+
+            // height
+            if(in_unit.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_HEIGHT){
+                if(in_unit.height.vehicle_height == j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_UNAVAILABLE){
+                    out_unit.height.unavailable = true;
+                }
+                else{
+                    out_unit.height.vehicle_height = in_unit.height.vehicle_height / units::TWENTIETH_M_PER_M;
+                }
+            }
+
+            // weight
+            if(in_unit.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_WEIGHT){
+                out_unit.weight.trailer_weight = in_unit.weight.trailer_weight * units::TWO_KG;
+            }
+
+            // front_pivot
+            if(in_unit.front_pivot.pivot_offset.offset == j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN){
+                out_unit.front_pivot.pivot_offset.unavailable = true;
+            }
+            else{
+                out_unit.front_pivot.pivot_offset.offset = in_unit.front_pivot.pivot_offset.offset / units::CM_PER_M;
+            }
+            if(in_unit.front_pivot.pivot_angle.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
+                out_unit.front_pivot.pivot_angle.unavailable = true;
+            }
+            else{
+                out_unit.front_pivot.pivot_angle.angle = in_unit.front_pivot.pivot_angle.angle / units::EIGHTIETH_DEG_PER_DEG;
+            }
+            out_unit.front_pivot.pivots = in_unit.front_pivot.pivots;
+
+            // rear_pivot
+            if(in_unit.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_REAR_PIVOT){
+                if(in_unit.rear_pivot.pivot_offset.offset == j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN){
+                    out_unit.rear_pivot.pivot_offset.unavailable = true;
+                }
+                else{
+                    out_unit.rear_pivot.pivot_offset.offset = in_unit.rear_pivot.pivot_offset.offset / units::CM_PER_M;
+                }
+                if(in_unit.rear_pivot.pivot_angle.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
+                    out_unit.rear_pivot.pivot_angle.unavailable = true;
+                }
+                else{
+                    out_unit.rear_pivot.pivot_angle.angle = in_unit.rear_pivot.pivot_angle.angle / units::EIGHTIETH_DEG_PER_DEG;
+                }
+                out_unit.rear_pivot.pivots = in_unit.rear_pivot.pivots;
+            }
+
+            // bumpers
+            if(in_unit.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_BUMPERS){
+                out_unit.bumpers.front.bumper_height = in_unit.bumpers.front.bumper_height / units::CM_PER_M;
+                out_unit.bumpers.rear.bumper_height = in_unit.bumpers.rear.bumper_height / units::CM_PER_M;
+            }
+
+            // axles
+            if(in_unit.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_AXLES){
+                out_unit.axles = in_unit.axles;
+            }
+
+            out_msg.trailers.trailer_units.push_back(out_unit);
         }
+    }
+
+    // school_bus
+    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SCHOOL_BUS){
+        out_msg.school_bus = in_msg.school_bus;
     }
 }
 
@@ -495,240 +444,6 @@ void BSMConvertor::convert(const j2735_v2x_msgs::msg::SpecialVehicleExtensions& 
         out_msg.description = in_msg.description;
     }
 
-    // trailers
-    if(in_msg.presence_vector & j2735_v2x_msgs::msg::SpecialVehicleExtensions::HAS_TRAILERS){
-        // ssp_index
-        out_msg.trailers.ssp_index = in_msg.trailers.ssp_index;
-
-        // connection.pivot_offset.offset
-        if(in_msg.trailers.connection.pivot_offset.offset == j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN){
-            out_msg.trailers.connection.pivot_offset.unavailable = true;
-        }
-        else{
-            out_msg.trailers.connection.pivot_offset.offset = in_msg.trailers.connection.pivot_offset.offset / units::CM_PER_M;
-        }
-
-        // connection.pivot_angle.angle
-        if(in_msg.trailers.connection.pivot_angle.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
-            out_msg.trailers.connection.pivot_angle.unavailable = true;
-        }
-        else{
-            out_msg.trailers.connection.pivot_angle.angle = in_msg.trailers.connection.pivot_angle.angle / units::EIGHTIETH_DEG_PER_DEG;
-        }
-
-        // connection.pivots.pivoting_allowed
-        out_msg.trailers.connection.pivots.pivoting_allowed = in_msg.trailers.connection.pivots.pivoting_allowed;
-
-        // units
-        for(size_t i = 0; i < in_msg.trailers.units.trailer_unit_descriptions.size(); i++){
-            j2735_v2x_msgs::msg::TrailerUnitDescription in_trailer_unit_description = in_msg.trailers.units.trailer_unit_descriptions[i];
-            carma_v2x_msgs::msg::TrailerUnitDescription out_trailer_unit_description;
-
-            // presence_vector
-            out_trailer_unit_description.presence_vector = in_trailer_unit_description.presence_vector;
-            
-            // is_dolly
-            out_trailer_unit_description.is_dolly.is_dolly = in_trailer_unit_description.is_dolly.is_dolly;
-
-            // width
-            if(in_trailer_unit_description.width.vehicle_width == j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_UNAVAILABLE){
-                out_trailer_unit_description.width.unavailable = true;
-            }
-            else{
-                out_trailer_unit_description.width.vehicle_width = in_trailer_unit_description.width.vehicle_width / units::CM_PER_M;
-            }
-
-            // length
-            if(in_trailer_unit_description.length.vehicle_length == j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_UNAVAILABLE){
-                out_trailer_unit_description.length.unavailable = true;
-            }
-            else{
-                out_trailer_unit_description.length.vehicle_length = in_trailer_unit_description.length.vehicle_length / units::CM_PER_M;
-            }
-
-            // height
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_HEIGHT){
-                if(in_trailer_unit_description.height.vehicle_height == j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_UNAVAILABLE){
-                    out_trailer_unit_description.height.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.height.vehicle_height = in_trailer_unit_description.height.vehicle_height / units::TWENTIETH_M_PER_M;
-                }
-            }
-
-            // mass
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_MASS){
-                if(in_trailer_unit_description.mass.trailer_mass == j2735_v2x_msgs::msg::TrailerMass::TRAILER_MASS_UNKNOWN){
-                    out_trailer_unit_description.mass.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.mass.trailer_mass = in_trailer_unit_description.mass.trailer_mass * units::KG_PER_HALF_METRIC_TON;
-                }
-            }
-
-            // bumper_heights
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_BUMPER_HEIGHTS){
-                out_trailer_unit_description.bumper_heights.front.bumper_height = in_msg.trailers.units.trailer_unit_descriptions[i].bumper_heights.front.bumper_height / units::CM_PER_M;
-                out_trailer_unit_description.bumper_heights.rear.bumper_height = in_msg.trailers.units.trailer_unit_descriptions[i].bumper_heights.rear.bumper_height / units::CM_PER_M;
-            }
-
-            // center_of_gravity
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_CENTER_OF_GRAVITY){
-                if(in_trailer_unit_description.center_of_gravity.vehicle_height == j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_UNAVAILABLE){
-                    out_trailer_unit_description.center_of_gravity.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.center_of_gravity.vehicle_height = in_trailer_unit_description.center_of_gravity.vehicle_height / units::TWENTIETH_M_PER_M;
-                }
-            }
-
-            // front_pivot.pivot_offset (OffsetB11)
-            if(in_trailer_unit_description.front_pivot.pivot_offset.offset == j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN){
-                out_trailer_unit_description.front_pivot.pivot_offset.unavailable = true;
-            }
-            else{
-                out_trailer_unit_description.front_pivot.pivot_offset.offset = in_trailer_unit_description.front_pivot.pivot_offset.offset / units::CM_PER_M;
-            }
-
-            // front_pivot.pivot_angle 
-            if(in_trailer_unit_description.front_pivot.pivot_angle.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
-                out_trailer_unit_description.front_pivot.pivot_offset.unavailable = true;
-            }
-            else{
-                out_trailer_unit_description.front_pivot.pivot_angle.angle = in_trailer_unit_description.front_pivot.pivot_angle.angle / units::EIGHTIETH_DEG_PER_DEG;
-            }
-
-            // front_pivot.pivots
-            out_trailer_unit_description.front_pivot.pivots.pivoting_allowed = in_trailer_unit_description.front_pivot.pivots.pivoting_allowed;
-
-
-            // rear_pivot
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_PIVOT){
-                // rear_pivot.pivot_offset (OffsetB11)
-                if(in_trailer_unit_description.rear_pivot.pivot_offset.offset == j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN){
-                    out_trailer_unit_description.rear_pivot.pivot_offset.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.rear_pivot.pivot_offset.offset = in_trailer_unit_description.rear_pivot.pivot_offset.offset / units::CM_PER_M;
-                }
-
-                // rear_pivot.pivot_angle 
-                if(in_trailer_unit_description.rear_pivot.pivot_angle.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
-                    out_trailer_unit_description.rear_pivot.pivot_offset.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.rear_pivot.pivot_angle.angle = in_trailer_unit_description.rear_pivot.pivot_angle.angle / units::EIGHTIETH_DEG_PER_DEG;
-                }
-
-                // rear_pivot.pivots
-                out_trailer_unit_description.rear_pivot.pivots.pivoting_allowed = in_trailer_unit_description.rear_pivot.pivots.pivoting_allowed;
-            }
-
-            // rear_wheel_offset
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_WHEEL_OFFSET){
-                if(in_trailer_unit_description.rear_wheel_offset.offset == j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN){
-                    out_trailer_unit_description.rear_wheel_offset.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.rear_wheel_offset.offset = in_trailer_unit_description.rear_wheel_offset.offset / units::CM_PER_M;
-                }
-            }
-
-            // position_offset.x
-            if(in_trailer_unit_description.position_offset.x == j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN){
-                out_trailer_unit_description.position_offset.x.unavailable = true;
-            }
-            else{
-                out_trailer_unit_description.position_offset.x.offset = in_trailer_unit_description.position_offset.x / units::CM_PER_M;
-            }
-
-            // position_offset.y
-            if(in_trailer_unit_description.position_offset.y == j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN){
-                out_trailer_unit_description.position_offset.y.unavailable = true;
-            }
-            else{
-                out_trailer_unit_description.position_offset.y.offset = in_trailer_unit_description.position_offset.y / units::CM_PER_M;
-            }
-
-            // elevation_offset
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_ELEVATION_OFFSET){
-                if(in_trailer_unit_description.elevation_offset.offset == j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_UNAVAILABLE){
-                    out_trailer_unit_description.elevation_offset.unavailable = true;
-                }
-                else{
-                    out_trailer_unit_description.elevation_offset.offset = in_trailer_unit_description.elevation_offset.offset / units::DECI_M_PER_M;
-                }
-            }
-
-            // crumb_data
-            if(in_trailer_unit_description.presence_vector & j2735_v2x_msgs::msg::TrailerUnitDescription::HAS_CRUMB_DATA){
-                for(size_t j = 0; j < in_trailer_unit_description.crumb_data.trailer_history_points.size(); j++){
-                    j2735_v2x_msgs::msg::TrailerHistoryPoint in_trailer_history_point = in_trailer_unit_description.crumb_data.trailer_history_points[j];
-                    carma_v2x_msgs::msg::TrailerHistoryPoint out_trailer_history_point;
-
-                    // crumb_data.presence_vector
-                    out_trailer_history_point.presence_vector = in_trailer_history_point.presence_vector;
-
-                    // crumb_data.angle
-                    if(in_trailer_history_point.pivot_angle.angle == j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE){
-                        out_trailer_history_point.pivot_angle.unavailable = true;
-                    }
-                    else{
-                        out_trailer_history_point.pivot_angle.angle = in_trailer_history_point.pivot_angle.angle / units::EIGHTIETH_DEG_PER_DEG;
-                    }
-
-                    // crumb_data.time_offset
-                    if(in_trailer_history_point.time_offset.offset == j2735_v2x_msgs::msg::TimeOffset::UNAVAILABLE){
-                        out_trailer_history_point.time_offset.unavailable = true;
-                    }
-                    else{
-                        out_trailer_history_point.time_offset.offset = in_trailer_history_point.time_offset.offset / units::CENTI_S_PER_S;
-                    }
-
-                    // crumb_data.position_offset.x
-                    if(in_trailer_history_point.position_offset.x == j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN){
-                        out_trailer_history_point.position_offset.x.unavailable = true;
-                    }
-                    else{
-                        out_trailer_history_point.position_offset.x.offset = in_trailer_history_point.position_offset.x / units::CM_PER_M;
-                    }
-
-                    // crumb_data.position_offset.y
-                    if(in_trailer_history_point.position_offset.y == j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN){
-                        out_trailer_history_point.position_offset.y.unavailable = true;
-                    }
-                    else{
-                        out_trailer_history_point.position_offset.y.offset = in_trailer_history_point.position_offset.y / units::CM_PER_M;
-                    }
-
-                    // crumb_data.elevation_offset
-                    if(in_trailer_history_point.presence_vector & carma_v2x_msgs::msg::TrailerHistoryPoint::HAS_ELEVATION_OFFSET){
-                        if(in_trailer_history_point.elevation_offset.offset == j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_UNAVAILABLE){
-                            out_trailer_history_point.elevation_offset.unavailable = true;
-                        }
-                        else{
-                            out_trailer_history_point.elevation_offset.offset = in_trailer_history_point.elevation_offset.offset / units::DECI_M_PER_M;
-                        }
-                    }
-
-                    // crumb_data.heading
-                    if(in_trailer_history_point.presence_vector & j2735_v2x_msgs::msg::TrailerHistoryPoint::HAS_HEADING){
-                        if(in_trailer_history_point.heading.heading == j2735_v2x_msgs::msg::CoarseHeading::UNAVAILABLE){
-                            out_trailer_history_point.heading.unavailable = true;
-                        }
-                        else{
-                            out_trailer_history_point.heading.heading = in_trailer_history_point.heading.heading * units::ONE_AND_A_HALF_DEG;
-                        }
-                    }
-
-                    out_trailer_unit_description.crumb_data.trailer_history_points.push_back(out_trailer_history_point);
-                }
-            }
-            
-            out_msg.trailers.units.trailer_unit_descriptions.push_back(out_trailer_unit_description);
-        }
-
-    }
 }
 
 void BSMConvertor::convert(const std::vector<j2735_v2x_msgs::msg::BSMRegionalExtension>& in_msg, std::vector<carma_v2x_msgs::msg::BSMRegionalExtension>& out_msg)
@@ -1073,160 +788,109 @@ void BSMConvertor::convert(const carma_v2x_msgs::msg::SupplementalVehicleExtensi
             }            
         }
 
-        // vehicle_data.trailer_weight
-        if(in_msg.vehicle_data.presence_vector & carma_v2x_msgs::msg::VehicleData::HAS_TRAILER_WEIGHT){
-            out_msg.vehicle_data.trailer_weight.trailer_weight = in_msg.vehicle_data.trailer_weight.trailer_weight / units::TWO_KG;
-        }
-    }
-
-    // weather_report
-    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_REPORT){
-        // presence_vector
-        out_msg.weather_report.presence_vector = in_msg.weather_report.presence_vector;
-
-        // is_raining
-        out_msg.weather_report.is_raining.precip_yes_no = in_msg.weather_report.is_raining.precip_yes_no;
-
-        // weather_report.rain_rate
-        if(in_msg.weather_report.presence_vector & carma_v2x_msgs::msg::WeatherReport::HAS_RAIN_RATE){
-            out_msg.weather_report.rain_rate.precip_rate = in_msg.weather_report.rain_rate.precip_rate * units::TENTH_GRAM_PER_GRAM;
-        }    
-
-        // weather_report.precip_situation
-        if(in_msg.weather_report.presence_vector & carma_v2x_msgs::msg::WeatherReport::HAS_PRECIP_SITUATION){
-            out_msg.weather_report.precip_situation.ess_precip_situation = in_msg.weather_report.precip_situation.ess_precip_situation;
-        }    
-
-        // weather_report.solar_radiation
-        if(in_msg.weather_report.presence_vector & carma_v2x_msgs::msg::WeatherReport::HAS_SOLAR_RADIATION){
-            out_msg.weather_report.solar_radiation.ess_solar_radiation = in_msg.weather_report.solar_radiation.ess_solar_radiation;
-        }   
-
-        // weather_report.friction
-        if(in_msg.weather_report.presence_vector & carma_v2x_msgs::msg::WeatherReport::HAS_FRICTION){
-            out_msg.weather_report.friction.ess_mobile_friction = in_msg.weather_report.friction.ess_mobile_friction;
-        }    
-
-        // weather_report.road_friction
-        if(in_msg.weather_report.presence_vector & carma_v2x_msgs::msg::WeatherReport::HAS_ROAD_FRICTION){
-            if(in_msg.weather_report.road_friction.unavailable){
-                out_msg.weather_report.road_friction.coefficient = j2735_v2x_msgs::msg::CoefficientOfFriction::COEFFICIENT_UNAVAILABLE;
-            }
-            else{
-                out_msg.weather_report.road_friction.coefficient = in_msg.weather_report.road_friction.coefficient / units::TWO_TENTHS_MICRO;
-            }
-        }    
-    }
-
-    // weather_probe
-    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_WEATHER_PROBE){
-        // presence_vector
-        out_msg.weather_probe.presence_vector = in_msg.weather_probe.presence_vector;
-
-        // weather_probe.air_temp
-        if(in_msg.weather_probe.presence_vector & carma_v2x_msgs::msg::WeatherProbe::HAS_AIR_TEMP){
-            if(in_msg.weather_probe.air_temp.unavailable){
-                out_msg.weather_probe.air_temp.temperature = j2735_v2x_msgs::msg::AmbientAirTemperature::TEMPERATURE_UNKNOWN;
-            }
-            else{
-                out_msg.weather_probe.air_temp.temperature = in_msg.weather_probe.air_temp.temperature + units::FORTY_DEGREES_C;
-            }
-        }       
-
-        // weather_probe.air_pressure
-        if(in_msg.weather_probe.presence_vector & carma_v2x_msgs::msg::WeatherProbe::HAS_AIR_PRESSURE){
-            if(in_msg.weather_probe.air_pressure.unavailable){
-                out_msg.weather_probe.air_pressure.pressure = j2735_v2x_msgs::msg::AmbientAirPressure::PRESSURE_UNAVAILABLE;
-            }
-            else{
-                out_msg.weather_probe.air_pressure.pressure = in_msg.weather_probe.air_pressure.pressure * units::HPA_PER_TWO_PA;
-            }
-        }    
-
-        // weather_probe.rain_rates
-        if(in_msg.weather_probe.presence_vector & carma_v2x_msgs::msg::WeatherProbe::HAS_RAIN_RATES){
-            // presence_vector
-            out_msg.weather_probe.rain_rates.presence_vector = in_msg.weather_probe.rain_rates.presence_vector;
-
-            // weather_probe.rain_rates.status_front
-            out_msg.weather_probe.rain_rates.status_front.wiper_status = in_msg.weather_probe.rain_rates.status_front.wiper_status;
-
-            // weather_probe.rain_rates.rate_front
-            out_msg.weather_probe.rain_rates.rate_front.wiper_rate = in_msg.weather_probe.rain_rates.rate_front.wiper_rate * units::SEC_PER_MIN;
-
-            // weather_probe.rain_rates.status_rear
-            if(in_msg.weather_probe.rain_rates.presence_vector & carma_v2x_msgs::msg::WiperSet::HAS_STATUS_REAR){
-                out_msg.weather_probe.rain_rates.status_rear.wiper_status = in_msg.weather_probe.rain_rates.status_rear.wiper_status;
-            }
-
-            // weather_probe.rain_rates.rate_rear
-            if(in_msg.weather_probe.rain_rates.presence_vector & carma_v2x_msgs::msg::WiperSet::HAS_RATE_REAR){
-                out_msg.weather_probe.rain_rates.rate_rear.wiper_rate = in_msg.weather_probe.rain_rates.rate_rear.wiper_rate * units::SEC_PER_MIN;
-            }
-        }    
-    }
-
-    // obstacle
-    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_OBSTACLE){
-        // presence_vector
-        out_msg.obstacle.presence_vector = in_msg.obstacle.presence_vector;
-
-        // obstacle.ob_dist
-        out_msg.obstacle.ob_dist.distance = in_msg.obstacle.ob_dist.distance * units::UNCHANGED;
-
-        // obstacle.ob_direct
-        if(in_msg.obstacle.ob_direct.direction.unavailable){
-            out_msg.obstacle.ob_direct.direction.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
-        }
-        else{
-            out_msg.obstacle.ob_direct.direction.angle = in_msg.obstacle.ob_direct.direction.angle * units::EIGHTIETH_DEG_PER_DEG;
-        }
-
-        // obstacle.date_time
-        out_msg.obstacle.date_time = in_msg.obstacle.date_time;
-
-        // obstacle.description
-        if(in_msg.obstacle.presence_vector & carma_v2x_msgs::msg::ObstacleDetection::HAS_DESCRIPTION){
-            out_msg.obstacle.description = in_msg.obstacle.description;
-        }
-
-        // obstacle.location_details
-        if(in_msg.obstacle.presence_vector & carma_v2x_msgs::msg::ObstacleDetection::HAS_LOCATION_DETAILS){
-            out_msg.obstacle.location_details = in_msg.obstacle.location_details;
-        }
-
-        // obstacle.vert_event
-        if(in_msg.obstacle.presence_vector & carma_v2x_msgs::msg::ObstacleDetection::HAS_VERT_EVENT){
-            out_msg.obstacle.vert_event = in_msg.obstacle.vert_event;
-        }
     }
 
     // status
     if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_STATUS){
-        // presence_vector
         out_msg.status.presence_vector = in_msg.status.presence_vector;
-
-        // status_details
         out_msg.status.status_details = in_msg.status.status_details;
-
-        // location_details
         out_msg.status.location_details = in_msg.status.location_details;
     }
 
-    // speed_profile
-    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SPEED_PROFILE){
-        for(size_t i = 0; i < in_msg.speed_profile.size(); i++){
-            j2735_v2x_msgs::msg::GrossSpeed out_speed;
+    // fhwa_vehicle_class
+    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_FHWA_VEHICLE_CLASS){
+        out_msg.fhwa_vehicle_class = in_msg.fhwa_vehicle_class;
+    }
 
-            if(in_msg.speed_profile[i].unavailable){
-                out_speed.speed = j2735_v2x_msgs::msg::GrossSpeed::SPEED_UNAVAILABLE;
-                out_msg.speed_profile.push_back(out_speed);
+    // trailers
+    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_TRAILERS){
+        for(size_t i = 0; i < in_msg.trailers.trailer_units.size(); i++){
+            const auto& in_unit = in_msg.trailers.trailer_units[i];
+            j2735_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B out_unit;
+
+            out_unit.presence_vector = in_unit.presence_vector;
+
+            // width
+            if(in_unit.width.unavailable){
+                out_unit.width.vehicle_width = j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_UNAVAILABLE;
             }
             else{
-                out_speed.speed = in_msg.speed_profile[i].speed;
-                out_msg.speed_profile.push_back(out_speed);
+                out_unit.width.vehicle_width = in_unit.width.vehicle_width * units::CM_PER_M;
             }
+
+            // length
+            if(in_unit.length.unavailable){
+                out_unit.length.vehicle_length = j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_UNAVAILABLE;
+            }
+            else{
+                out_unit.length.vehicle_length = in_unit.length.vehicle_length * units::CM_PER_M;
+            }
+
+            // height
+            if(in_unit.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_HEIGHT){
+                if(in_unit.height.unavailable){
+                    out_unit.height.vehicle_height = j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_UNAVAILABLE;
+                }
+                else{
+                    out_unit.height.vehicle_height = in_unit.height.vehicle_height * units::TWENTIETH_M_PER_M;
+                }
+            }
+
+            // weight
+            if(in_unit.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_WEIGHT){
+                out_unit.weight.trailer_weight = in_unit.weight.trailer_weight / units::TWO_KG;
+            }
+
+            // front_pivot
+            if(in_unit.front_pivot.pivot_offset.unavailable){
+                out_unit.front_pivot.pivot_offset.offset = j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN;
+            }
+            else{
+                out_unit.front_pivot.pivot_offset.offset = in_unit.front_pivot.pivot_offset.offset * units::CM_PER_M;
+            }
+            if(in_unit.front_pivot.pivot_angle.unavailable){
+                out_unit.front_pivot.pivot_angle.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
+            }
+            else{
+                out_unit.front_pivot.pivot_angle.angle = in_unit.front_pivot.pivot_angle.angle * units::EIGHTIETH_DEG_PER_DEG;
+            }
+            out_unit.front_pivot.pivots = in_unit.front_pivot.pivots;
+
+            // rear_pivot
+            if(in_unit.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_REAR_PIVOT){
+                if(in_unit.rear_pivot.pivot_offset.unavailable){
+                    out_unit.rear_pivot.pivot_offset.offset = j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN;
+                }
+                else{
+                    out_unit.rear_pivot.pivot_offset.offset = in_unit.rear_pivot.pivot_offset.offset * units::CM_PER_M;
+                }
+                if(in_unit.rear_pivot.pivot_angle.unavailable){
+                    out_unit.rear_pivot.pivot_angle.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
+                }
+                else{
+                    out_unit.rear_pivot.pivot_angle.angle = in_unit.rear_pivot.pivot_angle.angle * units::EIGHTIETH_DEG_PER_DEG;
+                }
+                out_unit.rear_pivot.pivots = in_unit.rear_pivot.pivots;
+            }
+
+            // bumpers
+            if(in_unit.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_BUMPERS){
+                out_unit.bumpers.front.bumper_height = in_unit.bumpers.front.bumper_height * units::CM_PER_M;
+                out_unit.bumpers.rear.bumper_height = in_unit.bumpers.rear.bumper_height * units::CM_PER_M;
+            }
+
+            // axles
+            if(in_unit.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescJ2945Slash1B::HAS_AXLES){
+                out_unit.axles = in_unit.axles;
+            }
+
+            out_msg.trailers.trailer_units.push_back(out_unit);
         }
+    }
+
+    // school_bus
+    if(in_msg.presence_vector & carma_v2x_msgs::msg::SupplementalVehicleExtensions::HAS_SCHOOL_BUS){
+        out_msg.school_bus = in_msg.school_bus;
     }
 }
 
@@ -1247,240 +911,6 @@ void BSMConvertor::convert(const carma_v2x_msgs::msg::SpecialVehicleExtensions& 
         out_msg.description = in_msg.description;
     }
 
-    // trailers
-    if(in_msg.presence_vector & carma_v2x_msgs::msg::SpecialVehicleExtensions::HAS_TRAILERS){
-        // ssp_index
-        out_msg.trailers.ssp_index = in_msg.trailers.ssp_index;
-
-        // connection.pivot_offset.offset
-        if(in_msg.trailers.connection.pivot_offset.unavailable){
-            out_msg.trailers.connection.pivot_offset.offset = j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN;
-        }
-        else{
-            out_msg.trailers.connection.pivot_offset.offset = in_msg.trailers.connection.pivot_offset.offset * units::CM_PER_M;
-        }
-
-        // connection.pivot_angle.angle
-        if(in_msg.trailers.connection.pivot_angle.unavailable){
-            out_msg.trailers.connection.pivot_angle.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
-        }
-        else{
-            out_msg.trailers.connection.pivot_angle.angle = in_msg.trailers.connection.pivot_angle.angle * units::EIGHTIETH_DEG_PER_DEG;
-        }
-
-        // connection.pivots.pivoting_allowed
-        out_msg.trailers.connection.pivots.pivoting_allowed = in_msg.trailers.connection.pivots.pivoting_allowed;
-
-        // units
-        for(size_t i = 0; i < in_msg.trailers.units.trailer_unit_descriptions.size(); i++){
-            carma_v2x_msgs::msg::TrailerUnitDescription in_trailer_unit_description = in_msg.trailers.units.trailer_unit_descriptions[i];
-            j2735_v2x_msgs::msg::TrailerUnitDescription out_trailer_unit_description;
-
-            // presence_vector
-            out_trailer_unit_description.presence_vector = in_trailer_unit_description.presence_vector;
-            
-            // is_dolly
-            out_trailer_unit_description.is_dolly.is_dolly = in_trailer_unit_description.is_dolly.is_dolly;
-
-            // width
-            if(in_trailer_unit_description.width.unavailable){
-                out_trailer_unit_description.width.vehicle_width = j2735_v2x_msgs::msg::VehicleWidth::VEHICLE_WIDTH_UNAVAILABLE;
-            }
-            else{
-                out_trailer_unit_description.width.vehicle_width = in_trailer_unit_description.width.vehicle_width * units::CM_PER_M;
-            }
-
-            // length
-            if(in_trailer_unit_description.length.unavailable){
-                out_trailer_unit_description.length.vehicle_length = j2735_v2x_msgs::msg::VehicleLength::VEHICLE_LENGTH_UNAVAILABLE;
-            }
-            else{
-                out_trailer_unit_description.length.vehicle_length = in_trailer_unit_description.length.vehicle_length * units::CM_PER_M;
-            }
-
-            // height
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_HEIGHT){
-                if(in_trailer_unit_description.height.unavailable){
-                    out_trailer_unit_description.height.vehicle_height = j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_UNAVAILABLE;
-                }
-                else{
-                    out_trailer_unit_description.height.vehicle_height = in_trailer_unit_description.height.vehicle_height * units::TWENTIETH_M_PER_M;
-                }
-            }
-
-            // mass
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_MASS){
-                if(in_trailer_unit_description.mass.unavailable){
-                    out_trailer_unit_description.mass.trailer_mass = j2735_v2x_msgs::msg::TrailerMass::TRAILER_MASS_UNKNOWN;
-                }
-                else{
-                    out_trailer_unit_description.mass.trailer_mass = in_trailer_unit_description.mass.trailer_mass / units::KG_PER_HALF_METRIC_TON;
-                }
-            }
-
-            // bumper_heights
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_BUMPER_HEIGHTS){
-                out_trailer_unit_description.bumper_heights.front.bumper_height = in_msg.trailers.units.trailer_unit_descriptions[i].bumper_heights.front.bumper_height * units::CM_PER_M;
-                out_trailer_unit_description.bumper_heights.rear.bumper_height = in_msg.trailers.units.trailer_unit_descriptions[i].bumper_heights.rear.bumper_height * units::CM_PER_M;
-            }
-
-            // center_of_gravity
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_CENTER_OF_GRAVITY){
-                if(in_trailer_unit_description.center_of_gravity.unavailable){
-                    out_trailer_unit_description.center_of_gravity.vehicle_height = j2735_v2x_msgs::msg::VehicleHeight::VEHICLE_HEIGHT_UNAVAILABLE;
-                }
-                else{
-                    out_trailer_unit_description.center_of_gravity.vehicle_height = in_trailer_unit_description.center_of_gravity.vehicle_height * units::TWENTIETH_M_PER_M;
-                }
-            }
-
-            // front_pivot.pivot_offset (OffsetB11)
-            if(in_trailer_unit_description.front_pivot.pivot_offset.unavailable){
-                out_trailer_unit_description.front_pivot.pivot_offset.offset = j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN;
-            }
-            else{
-                out_trailer_unit_description.front_pivot.pivot_offset.offset = in_trailer_unit_description.front_pivot.pivot_offset.offset * units::CM_PER_M;
-            }
-
-            // front_pivot.pivot_angle 
-            if(in_trailer_unit_description.front_pivot.pivot_offset.unavailable){
-                out_trailer_unit_description.front_pivot.pivot_angle.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
-            }
-            else{
-                out_trailer_unit_description.front_pivot.pivot_angle.angle = in_trailer_unit_description.front_pivot.pivot_angle.angle * units::EIGHTIETH_DEG_PER_DEG;
-            }
-
-            // front_pivot.pivots
-            out_trailer_unit_description.front_pivot.pivots.pivoting_allowed = in_trailer_unit_description.front_pivot.pivots.pivoting_allowed;
-
-
-            // rear_pivot
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_PIVOT){
-                // rear_pivot.pivot_offset (OffsetB11)
-                if(in_trailer_unit_description.rear_pivot.pivot_offset.unavailable){
-                    out_trailer_unit_description.rear_pivot.pivot_offset.offset = j2735_v2x_msgs::msg::OffsetB11::OFFSET_UNKNOWN;
-                }
-                else{
-                    out_trailer_unit_description.rear_pivot.pivot_offset.offset = in_trailer_unit_description.rear_pivot.pivot_offset.offset * units::CM_PER_M;
-                }
-
-                // rear_pivot.pivot_angle 
-                if(in_trailer_unit_description.rear_pivot.pivot_offset.unavailable){
-                    out_trailer_unit_description.rear_pivot.pivot_angle.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
-                }
-                else{
-                    out_trailer_unit_description.rear_pivot.pivot_angle.angle = in_trailer_unit_description.rear_pivot.pivot_angle.angle * units::EIGHTIETH_DEG_PER_DEG;
-                }
-
-                // rear_pivot.pivots
-                out_trailer_unit_description.rear_pivot.pivots.pivoting_allowed = in_trailer_unit_description.rear_pivot.pivots.pivoting_allowed;
-            }
-
-            // rear_wheel_offset
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_REAR_WHEEL_OFFSET){
-                if(in_trailer_unit_description.rear_wheel_offset.unavailable){
-                    out_trailer_unit_description.rear_wheel_offset.offset = j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN;
-                }
-                else{
-                    out_trailer_unit_description.rear_wheel_offset.offset = in_trailer_unit_description.rear_wheel_offset.offset * units::CM_PER_M;
-                }
-            }
-
-            // position_offset.x
-            if(in_trailer_unit_description.position_offset.x.unavailable){
-                out_trailer_unit_description.position_offset.x = j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN;
-            }
-            else{
-                out_trailer_unit_description.position_offset.x = in_trailer_unit_description.position_offset.x.offset * units::CM_PER_M;
-            }
-
-            // position_offset.y
-            if(in_trailer_unit_description.position_offset.y.unavailable){
-                out_trailer_unit_description.position_offset.y = j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN;
-            }
-            else{
-                out_trailer_unit_description.position_offset.y = in_trailer_unit_description.position_offset.y.offset * units::CM_PER_M;
-            }
-
-            // elevation_offset
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_ELEVATION_OFFSET){
-                if(in_trailer_unit_description.elevation_offset.unavailable){
-                    out_trailer_unit_description.elevation_offset.offset = j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_UNAVAILABLE;
-                }
-                else{
-                    out_trailer_unit_description.elevation_offset.offset = in_trailer_unit_description.elevation_offset.offset * units::DECI_M_PER_M;
-                }
-            }
-
-            // crumb_data
-            if(in_trailer_unit_description.presence_vector & carma_v2x_msgs::msg::TrailerUnitDescription::HAS_CRUMB_DATA){
-                for(size_t j = 0; j < in_trailer_unit_description.crumb_data.trailer_history_points.size(); j++){
-                    carma_v2x_msgs::msg::TrailerHistoryPoint in_trailer_history_point = in_trailer_unit_description.crumb_data.trailer_history_points[j];
-                    j2735_v2x_msgs::msg::TrailerHistoryPoint out_trailer_history_point;
-
-                    // crumb_data.presence_vector
-                    out_trailer_history_point.presence_vector = in_trailer_history_point.presence_vector;
-
-                    // crumb_data.angle
-                    if(in_trailer_history_point.pivot_angle.unavailable){
-                        out_trailer_history_point.pivot_angle.angle = j2735_v2x_msgs::msg::Angle::ANGLE_UNAVAILABLE;
-                    }
-                    else{
-                        out_trailer_history_point.pivot_angle.angle = in_trailer_history_point.pivot_angle.angle * units::EIGHTIETH_DEG_PER_DEG;
-                    }
-
-                    // crumb_data.time_offset
-                    if(in_trailer_history_point.time_offset.unavailable){
-                        out_trailer_history_point.time_offset.offset = j2735_v2x_msgs::msg::TimeOffset::UNAVAILABLE;
-                    }
-                    else{
-                        out_trailer_history_point.time_offset.offset = in_trailer_history_point.time_offset.offset * units::CENTI_S_PER_S;
-                    }
-
-                    // crumb_data.position_offset.x
-                    if(in_trailer_history_point.position_offset.x.unavailable){
-                        out_trailer_history_point.position_offset.x = j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN;
-                    }
-                    else{
-                        out_trailer_history_point.position_offset.x = in_trailer_history_point.position_offset.x.offset * units::CM_PER_M;
-                    }
-
-                    // crumb_data.position_offset.y
-                    if(in_trailer_history_point.position_offset.y.unavailable){
-                        out_trailer_history_point.position_offset.y = j2735_v2x_msgs::msg::OffsetB12::OFFSET_UNKNOWN;
-                    }
-                    else{
-                        out_trailer_history_point.position_offset.y = in_trailer_history_point.position_offset.y.offset * units::CM_PER_M;
-                    }
-
-                    // crumb_data.elevation_offset
-                    if(in_trailer_history_point.presence_vector & carma_v2x_msgs::msg::TrailerHistoryPoint::HAS_ELEVATION_OFFSET){
-                        if(in_trailer_history_point.elevation_offset.unavailable){
-                            out_trailer_history_point.elevation_offset.offset = j2735_v2x_msgs::msg::VertOffsetB07::OFFSET_UNAVAILABLE;
-                        }
-                        else{
-                            out_trailer_history_point.elevation_offset.offset = in_trailer_history_point.elevation_offset.offset * units::DECI_M_PER_M;
-                        }
-                    }
-
-                    // crumb_data.heading
-                    if(in_trailer_history_point.presence_vector & carma_v2x_msgs::msg::TrailerHistoryPoint::HAS_HEADING){
-                        if(in_trailer_history_point.heading.unavailable){
-                            out_trailer_history_point.heading.heading = j2735_v2x_msgs::msg::CoarseHeading::UNAVAILABLE;
-                        }
-                        else{
-                            out_trailer_history_point.heading.heading = in_trailer_history_point.heading.heading / units::ONE_AND_A_HALF_DEG;
-                        }
-                    }
-
-                    out_trailer_unit_description.crumb_data.trailer_history_points.push_back(out_trailer_history_point);
-                }
-            }
-            
-            out_msg.trailers.units.trailer_unit_descriptions.push_back(out_trailer_unit_description);
-        }
-
-    }
 }
 
 void BSMConvertor::convert(const std::vector<carma_v2x_msgs::msg::BSMRegionalExtension>& in_msg, std::vector<j2735_v2x_msgs::msg::BSMRegionalExtension>& out_msg)

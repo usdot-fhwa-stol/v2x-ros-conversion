@@ -52,4 +52,4 @@ echo "deb [trusted=yes] http://s3.amazonaws.com/stol-apt-repository ${APT_CODENA
 sudo apt-get update
 
 # install all things needed for deployment, always done
-sudo apt-get install -y stol-j2735-201603-carma-1
+sudo apt-get install -y stol-j2735-2024-carma-1

@@ -268,6 +268,9 @@ void MapConvertor::convertIntersectionGeometry(const j2735_v2x_msgs::msg::Inters
 
   out_msg.preempt_priority_list = in_msg.preempt_priority_data.preempt_priority_list;
   out_msg.preempt_priority_data_exists = in_msg.preempt_priority_data_exists;
+
+  out_msg.road_authority_id = in_msg.road_authority_id;
+  out_msg.road_authority_id_exists = in_msg.road_authority_id_exists;
 }
 
 void MapConvertor::convertRoadSegment(const j2735_v2x_msgs::msg::RoadSegment& in_msg, carma_v2x_msgs::msg::RoadSegment& out_msg)
